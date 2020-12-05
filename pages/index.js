@@ -26,30 +26,24 @@ export default function Home() {
         <hr />
       </main>
       <footer className={styles.footer}>
-        <SocialMediaCard>
-          <Image
-            src="/linkedin-icon.svg"
-            alt="Linkedin icon"
-            width="80"
-            height="80"
-          />
-        </SocialMediaCard>
-        <SocialMediaCard>
-          <Image
-            src="/github-icon.svg"
-            alt="Github icon"
-            width="80"
-            height="80"
-          />
-        </SocialMediaCard>
-        <SocialMediaCard>
-          <Image
-            src="/gmail-icon.svg"
-            alt="Gmail icon"
-            width="80"
-            height="80"
-          />
-        </SocialMediaCard>
+        <SocialMediaCard
+          href=""
+          iconPath="/linkedin-icon.svg"
+          iconLabel="Linkedin icon"
+          activeColor="#1C4D96"
+        />
+        <SocialMediaCard
+          href=""
+          iconPath="/github-icon.svg"
+          iconLabel="Github icon"
+          activeColor="#000"
+        />
+        <SocialMediaCard
+          href=""
+          iconPath="/gmail-icon.svg"
+          iconLabel="Gmail icon"
+          activeColor="#BC1E1E"
+        />
       </footer>
     </>
   );
