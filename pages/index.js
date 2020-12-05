@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 
@@ -6,18 +5,19 @@ import SocialMediaCard from "../components/SocialMediaCard";
 
 export default function Home() {
   return (
-    <>
-      <Head>
-        <title>Raphael Oliveira</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div className={styles.container}>
       <header className={styles.header}>
-        <Image
-          src="/github-icon.svg"
-          alt="Github icon"
-          width="32"
-          height="32"
-        />
+        <a
+          href="https://github.com/RaphaelOliveiraMoura/raphaeloliveira-website"
+          target="_blank"
+        >
+          <Image
+            src="/github-icon.svg"
+            alt="Github repository link icon"
+            width="32"
+            height="32"
+          />
+        </a>
         <hr />
       </header>
       <main className={styles.main}>
@@ -27,24 +27,24 @@ export default function Home() {
       </main>
       <footer className={styles.footer}>
         <SocialMediaCard
-          href=""
+          href="https://www.linkedin.com/in/raphaeloliveiramoura/"
           iconPath="/linkedin-icon.svg"
-          iconLabel="Linkedin icon"
+          iconLabel="Linkedin social media icon"
           activeColor="#1C4D96"
         />
         <SocialMediaCard
-          href=""
+          href="https://github.com/RaphaelOliveiraMoura"
           iconPath="/github-icon.svg"
-          iconLabel="Github icon"
+          iconLabel="Github social media icon"
           activeColor="#000"
         />
         <SocialMediaCard
-          href=""
+          href="mailto:raphaeldeoliveiramoura@gmail.com"
           iconPath="/gmail-icon.svg"
-          iconLabel="Gmail icon"
+          iconLabel="Gmail social media icon"
           activeColor="#BC1E1E"
         />
       </footer>
-    </>
+    </div>
   );
 }

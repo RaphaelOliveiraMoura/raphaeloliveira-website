@@ -6,7 +6,7 @@ export default function SocialMediaCard({ children, className, href }) {
   const { front, back, onMouseOver, onMouseOut } = children();
 
   return (
-    <a href={href}>
+    <a href={href} target="_blank">
       <article
         className={styles.container}
         onMouseOver={onMouseOver}
