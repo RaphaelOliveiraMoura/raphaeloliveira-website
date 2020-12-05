@@ -22,11 +22,6 @@ hr {
 }
 
 #__next {
-  height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
   background: #5a5454;
   color: #fff;
-  display: flex;
-  flex-direction: column;
 }
