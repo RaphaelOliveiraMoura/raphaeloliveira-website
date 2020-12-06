@@ -1,0 +1,42 @@
+.container {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  color: #5a5454;
+  font-weight: 100;
+  text-align: center;
+}
+
+.container > div {
+  height: 100%;
+  max-width: 800px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container h1,
+.container strong {
+  font-weight: 100;
+}
+
+.container img {
+  border-radius: 100%;
+}
+
+.container h1 {
+  margin-bottom: 26px;
+}
+
+.container main {
+  margin-top: 26px;
+}
+
+.container p {
+  margin-top: 30px;
+}
