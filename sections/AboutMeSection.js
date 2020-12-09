@@ -9,7 +9,7 @@ export default function AboutMeSection() {
   const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
 
   return (
-    <div className={styles.container}>
+    <section className={styles.container}>
       <div>
         <h1>
           About me <Emoji label="Emoji de nuvem">💭</Emoji>
@@ -50,6 +50,6 @@ export default function AboutMeSection() {
           </p>
         </main>
       </div>
-    </div>
+    </section>
   );
 }

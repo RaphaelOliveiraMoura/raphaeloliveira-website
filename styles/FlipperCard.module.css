@@ -6,7 +6,7 @@
   transition: 0.6s;
   transform-style: preserve-3d;
   position: relative;
-  border: 2px solid #fff;
+  border: 2px solid var(--secondary-color);
   border-radius: 16px;
 }
 
@@ -25,7 +25,7 @@
   align-items: center;
   border-radius: 16px;
   cursor: pointer;
-  background-color: #5a5454;
+  background-color: var(--primary-color);
   overflow: hidden;
 }
 
