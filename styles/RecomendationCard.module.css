@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 26px;
+}
+
+.container > div {
+  text-align: left;
+}
+
+.align-right {
+  flex-direction: row-reverse;
+}
+
+.align-right > div {
+  text-align: right;
+}
+
+.container > div > h1 {
+  margin-bottom: 16px;
+  font-size: 30px;
+}
+
+.container img {
+  width: 180px;
+  margin: 0 26px;
+}

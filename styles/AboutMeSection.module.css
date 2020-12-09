@@ -5,8 +5,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #fff;
-  color: #5a5454;
+  background: var(--secondary-color);
+  color: var(--primary-color);
   font-weight: 100;
   text-align: center;
 }
