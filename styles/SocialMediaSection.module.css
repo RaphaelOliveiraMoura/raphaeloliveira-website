@@ -1,6 +1,5 @@
 .container {
-  height: 100vh;
-  max-height: 100vh;
+  min-height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -50,4 +49,16 @@
   align-items: center;
   justify-content: space-around;
   height: 100%;
+  flex-wrap: wrap;
+  margin: 24px;
+}
+
+@media (max-width: 600px) {
+  .main h1 {
+    font-size: 36px;
+  }
+
+  .main h2 {
+    font-weight: 24px;
+  }
 }
