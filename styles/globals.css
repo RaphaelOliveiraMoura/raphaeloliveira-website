@@ -35,3 +35,9 @@ hr {
   background: var(--primary-color);
   color: var(--secondary-color);
 }
+
+.box {
+  width: 100px;
+  height: 100px;
+  background: white;
+}

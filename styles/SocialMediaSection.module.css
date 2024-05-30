@@ -20,12 +20,20 @@
   width: 40%;
 }
 
+
+.header img {
+  transition: all;
+}
+
+.header img:hover {
+  filter: brightness(80%);
+}
+
 .main {
   position: relative;
   margin-bottom: 26px;
   padding-top: 14px;
   padding-bottom: 32px;
-  padding-left: 20%;
 }
 
 .main h1 {
