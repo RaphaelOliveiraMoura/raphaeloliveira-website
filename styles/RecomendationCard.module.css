@@ -27,6 +27,7 @@
 .container img {
   width: 180px;
   margin: 0 26px;
+  border-radius: 100%;
 }
 
 @media (max-width: 800px) {
