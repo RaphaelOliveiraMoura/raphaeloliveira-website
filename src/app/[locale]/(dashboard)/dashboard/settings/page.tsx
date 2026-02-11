@@ -1,0 +1,300 @@
+"use client";
+
+import { useState } from "react";
+import {
+  Sun,
+  Moon,
+  Monitor,
+  Globe,
+  Shield,
+  Keyboard,
+  Bell,
+  Info,
+  Wifi,
+  WifiOff,
+  Share2,
+  Download,
+} from "lucide-react";
+
+import { useTranslations } from "@/lib/i18n";
+import { toast } from "@/lib/feedback";
+import {
+  useOnlineStatus,
+  useToggle,
+  useKeyboardShortcut,
+  usePWAInstall,
+  useShare,
+} from "@/hooks";
+import { useTheme } from "@/providers/theme-provider";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  LanguageSwitcher,
+  CookieConsentBanner,
+  ShortcutCheatSheet,
+  OfflineBanner,
+  type ShortcutItem,
+} from "@/components/shared";
+import { Breadcrumbs } from "@/components/navigation";
+
+const DEMO_SHORTCUTS: ShortcutItem[] = [
+  { id: "search", keys: "Ctrl+K", description: "Open command palette" },
+  { id: "save", keys: "Ctrl+S", description: "Save changes" },
+  { id: "new", keys: "Ctrl+N", description: "New item" },
+  { id: "close", keys: "Escape", description: "Close dialog" },
+  { id: "theme", keys: "Ctrl+T", description: "Toggle theme" },
+];
+
+export default function SettingsPage() {
+  const t = useTranslations("examples");
+  const { theme, setTheme, toggleTheme } = useTheme();
+  const isOnline = useOnlineStatus();
+  const [shortcutsOpen, toggleShortcuts] = useToggle(false);
+  const [showCookieBanner, setShowCookieBanner] = useState(false);
+  const { isInstallable, install } = usePWAInstall();
+  const { share } = useShare();
+
+  useKeyboardShortcut("Ctrl+T", () => {
+    toggleTheme();
+    toast.info(t("settings.theme") + ": " + theme);
+  });
+
+  const handleShare = async () => {
+    try {
+      await share({
+        title: "Core Stack",
+        text: t("settings.aboutDesc"),
+        url: window.location.origin,
+      });
+    } catch {
+      toast.error("Share not supported in this browser");
+    }
+  };
+
+  const simulatePromise = () => {
+    toast.promise(
+      new Promise<string>((resolve) => setTimeout(() => resolve("ok"), 2000)),
+      {
+        loading: t("settings.toastPromiseMsg"),
+        success: t("settings.toastPromiseSuccess"),
+        error: t("settings.toastPromiseError"),
+      }
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      <Breadcrumbs />
+
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">
+          {t("settings.title")}
+        </h1>
+        <p className="text-muted-foreground">{t("settings.subtitle")}</p>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Appearance */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Sun className="size-4" />
+              <CardTitle>{t("settings.appearance")}</CardTitle>
+            </div>
+            <CardDescription>{t("settings.appearanceDesc")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <Label>{t("settings.theme")}</Label>
+              <RadioGroup
+                value={theme}
+                onValueChange={(v) => setTheme(v as "light" | "dark" | "system")}
+                className="flex gap-4"
+              >
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="light" id="theme-light" />
+                  <Label htmlFor="theme-light" className="flex items-center gap-1.5">
+                    <Sun className="size-3.5" />
+                    {t("settings.light")}
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="dark" id="theme-dark" />
+                  <Label htmlFor="theme-dark" className="flex items-center gap-1.5">
+                    <Moon className="size-3.5" />
+                    {t("settings.dark")}
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="system" id="theme-system" />
+                  <Label htmlFor="theme-system" className="flex items-center gap-1.5">
+                    <Monitor className="size-3.5" />
+                    {t("settings.system")}
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Language */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Globe className="size-4" />
+              <CardTitle>{t("settings.languageSection")}</CardTitle>
+            </div>
+            <CardDescription>{t("settings.languageDesc")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <LanguageSwitcher />
+          </CardContent>
+        </Card>
+
+        {/* Privacy */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Shield className="size-4" />
+              <CardTitle>{t("settings.privacy")}</CardTitle>
+            </div>
+            <CardDescription>{t("settings.privacyDesc")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label>{t("settings.showCookieBanner")}</Label>
+              <Switch
+                checked={showCookieBanner}
+                onCheckedChange={setShowCookieBanner}
+              />
+            </div>
+            {showCookieBanner && (
+              <div className="rounded-md border p-4">
+                <CookieConsentBanner />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Keyboard Shortcuts */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Keyboard className="size-4" />
+              <CardTitle>{t("settings.keyboardShortcuts")}</CardTitle>
+            </div>
+            <CardDescription>
+              {t("settings.keyboardShortcutsDesc")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" onClick={toggleShortcuts}>
+              {t("settings.showShortcuts")}
+            </Button>
+            <ShortcutCheatSheet
+              open={shortcutsOpen}
+              onOpenChange={toggleShortcuts}
+              shortcuts={DEMO_SHORTCUTS}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Notifications */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Bell className="size-4" />
+              <CardTitle>{t("settings.notifications")}</CardTitle>
+            </div>
+            <CardDescription>{t("settings.notificationsDesc")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => toast.success(t("settings.toastSuccessMsg"))}
+              >
+                {t("settings.toastSuccess")}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => toast.error(t("settings.toastErrorMsg"))}
+              >
+                {t("settings.toastError")}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => toast.warning(t("settings.toastWarningMsg"))}
+              >
+                {t("settings.toastWarning")}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => toast.info(t("settings.toastInfoMsg"))}
+              >
+                {t("settings.toastInfo")}
+              </Button>
+              <Button size="sm" variant="outline" onClick={simulatePromise}>
+                {t("settings.toastPromise")}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* About */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Info className="size-4" />
+              <CardTitle>{t("settings.about")}</CardTitle>
+            </div>
+            <CardDescription>{t("settings.aboutDesc")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm">{t("settings.connectionStatus")}</span>
+              <Badge variant={isOnline ? "default" : "destructive"}>
+                {isOnline ? (
+                  <Wifi className="mr-1 size-3" />
+                ) : (
+                  <WifiOff className="mr-1 size-3" />
+                )}
+                {isOnline ? "Online" : "Offline"}
+              </Badge>
+            </div>
+            <Separator />
+            <div className="flex flex-wrap gap-2">
+              {isInstallable && (
+                <Button size="sm" variant="outline" onClick={install}>
+                  <Download className="mr-2 size-4" />
+                  {t("settings.installApp")}
+                </Button>
+              )}
+              <Button size="sm" variant="outline" onClick={handleShare}>
+                <Share2 className="mr-2 size-4" />
+                {t("settings.shareApp")}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <OfflineBanner />
+    </div>
+  );
+}

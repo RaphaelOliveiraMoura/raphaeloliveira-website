@@ -30,7 +30,14 @@
     "collapseSidebar": "Colapsar barra lateral",
     "openSidebar": "Abrir menú",
     "navigation": "Navegación",
-    "goToDashboard": "Ir al Dashboard"
+    "goToDashboard": "Ir al Dashboard",
+    "data": "Datos",
+    "forms": "Formularios",
+    "examples": "Ejemplos",
+    "goToData": "Ir a Datos",
+    "goToForms": "Ir a Formularios",
+    "goToSettings": "Ir a Configuración",
+    "goToExamples": "Ir a Ejemplos"
   },
   "search": {
     "placeholder": "Buscar...",

@@ -30,7 +30,14 @@
     "collapseSidebar": "Collapse sidebar",
     "openSidebar": "Open menu",
     "navigation": "Navigation",
-    "goToDashboard": "Go to Dashboard"
+    "goToDashboard": "Go to Dashboard",
+    "data": "Data",
+    "forms": "Forms",
+    "examples": "Examples",
+    "goToData": "Go to Data",
+    "goToForms": "Go to Forms",
+    "goToSettings": "Go to Settings",
+    "goToExamples": "Go to Examples"
   },
   "search": {
     "placeholder": "Search...",

@@ -15,7 +15,15 @@ import {
 
 import { useKeyboardShortcut } from "@/hooks";
 
-type CommandLabelKey = "nav.goToDashboard" | "nav.users" | "nav.posts" | "nav.settings";
+type CommandLabelKey =
+  | "nav.goToDashboard"
+  | "nav.users"
+  | "nav.posts"
+  | "nav.settings"
+  | "nav.goToData"
+  | "nav.goToForms"
+  | "nav.goToSettings"
+  | "nav.goToExamples";
 
 interface Command {
   id: string;
@@ -32,6 +40,30 @@ const COMMANDS: Command[] = [
     keywords: ["panel", "home"],
   },
   {
+    id: "data",
+    labelKey: "nav.goToData",
+    href: "/dashboard/data",
+    keywords: ["table", "list", "export"],
+  },
+  {
+    id: "forms",
+    labelKey: "nav.goToForms",
+    href: "/dashboard/forms",
+    keywords: ["input", "validation", "upload"],
+  },
+  {
+    id: "settings",
+    labelKey: "nav.goToSettings",
+    href: "/dashboard/settings",
+    keywords: ["config", "preferences", "theme"],
+  },
+  {
+    id: "examples",
+    labelKey: "nav.goToExamples",
+    href: "/examples",
+    keywords: ["components", "hooks", "demo"],
+  },
+  {
     id: "users",
     labelKey: "nav.users",
     href: "/users",
@@ -42,12 +74,6 @@ const COMMANDS: Command[] = [
     labelKey: "nav.posts",
     href: "/posts",
     keywords: ["blog", "content"],
-  },
-  {
-    id: "settings",
-    labelKey: "nav.settings",
-    href: "/settings",
-    keywords: ["config", "preferences"],
   },
 ];
 

@@ -75,6 +75,12 @@ Indice central de todas as funcionalidades do Core Stack, documentadas seguindo 
 | 22 | [Estrategia de Testes](i-experiencia-desenvolvedor/estrategia-testes.md) | Vitest, Testing Library, Playwright, MSW, factories | 🟢 concluido |
 | 23 | [Pipeline de Entrega](i-experiencia-desenvolvedor/pipeline-entrega.md) | GitHub Actions CI/CD, feature flags, preview deploys | 🟢 concluido |
 
+## J. Paginas de Exemplo
+
+| # | Spec | Descricao | Status |
+|---|------|-----------|--------|
+| 24 | [Paginas de Exemplo](j-paginas-exemplo/paginas-exemplo.md) | Landing page, dashboard, dados, formularios, configuracoes, galeria de componentes, playground de hooks | 🟢 concluido |
+
 ---
 
 ## Resumo por Status
@@ -84,5 +90,5 @@ Indice central de todas as funcionalidades do Core Stack, documentadas seguindo 
 | 🔴 Rascunho | 0 |
 | 🟡 Aprovado | 0 |
 | 🔵 Em desenvolvimento | 1 |
-| 🟢 Concluido | 22 |
-| **Total** | **23** |
+| 🟢 Concluido | 23 |
+| **Total** | **24** |

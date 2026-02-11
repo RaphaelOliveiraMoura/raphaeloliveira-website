@@ -31,6 +31,12 @@ export function MarketingNavbar() {
       >
         {t("nav.docs")}
       </Link>
+      <Link
+        href="/examples"
+        className="text-muted-foreground hover:text-foreground transition-colors"
+      >
+        {t("nav.examples")}
+      </Link>
     </>
   );
 
