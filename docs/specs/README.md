@@ -41,7 +41,7 @@ Indice central de todas as funcionalidades do Core Stack, documentadas seguindo 
 
 | # | Spec | Descricao | Status |
 |---|------|-----------|--------|
-| 11 | [Internacionalizacao](e-infraestrutura/internacionalizacao.md) | next-intl, arquivos de traducao, formatacao locale, pluralizacao | 🔴 rascunho |
+| 11 | [Internacionalizacao](e-infraestrutura/internacionalizacao.md) | next-intl, arquivos de traducao, formatacao locale, pluralizacao | 🔵 em-desenvolvimento |
 | 12 | [SEO](e-infraestrutura/seo.md) | Metadata API, Open Graph, JSON-LD, sitemap, robots.txt | 🔴 rascunho |
 | 13 | [Autenticacao & Autorizacao](e-infraestrutura/autenticacao-autorizacao.md) | Login/logout, tokens, RBAC, componente Can, usePermissions | 🔴 rascunho |
 | 14 | [Seguranca & Configuracao](e-infraestrutura/seguranca-configuracao.md) | XSS, CSRF, CSP, env vars tipadas (t3-env/zod) | 🔴 rascunho |
@@ -81,8 +81,8 @@ Indice central de todas as funcionalidades do Core Stack, documentadas seguindo 
 
 | Status | Quantidade |
 |--------|-----------|
-| 🔴 Rascunho | 23 |
+| 🔴 Rascunho | 22 |
 | 🟡 Aprovado | 0 |
-| 🔵 Em desenvolvimento | 0 |
+| 🔵 Em desenvolvimento | 1 |
 | 🟢 Concluido | 0 |
 | **Total** | **23** |

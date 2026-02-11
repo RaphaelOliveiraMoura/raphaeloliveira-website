@@ -115,12 +115,26 @@ logger.info("Evento importante", { userId });
 
 ## Spec-Driven Development
 
-Antes de implementar qualquer funcionalidade:
+As specs em `docs/specs/` sao a fonte de verdade do projeto. **Toda mudanca no projeto deve manter as specs sincronizadas.**
+
+### Antes de implementar
 
 1. **Consultar a spec** em `docs/specs/` para entender os requisitos
 2. **Seguir o design da API** definido na spec
-3. **Atualizar o status** da spec conforme avanca (`em-desenvolvimento` → `concluido`)
-4. **Verificar criterios de aceite** como checklist antes de finalizar
+3. **Verificar criterios de aceite** como checklist antes de finalizar
+
+### Apos implementar ou alterar qualquer coisa
+
+4. **Validar conformidade** — verificar se a mudanca esta alinhada com as specs existentes
+5. **Atualizar as specs** quando a mudanca impactar:
+   - Estrutura de pastas ou arquivos
+   - APIs, interfaces ou contratos
+   - Regras, convencoes ou padroes do projeto
+   - Status de itens (`pendente` → `em-desenvolvimento` → `concluido`)
+   - Novos componentes, hooks, utilitarios ou funcionalidades
+6. **Criar nova spec** se a mudanca introduz uma feature ou area nao coberta pelas specs atuais (usar `docs/specs/_TEMPLATE.md` como base)
+
+**Regra: nenhuma feature, regra ou mudanca estrutural e considerada finalizada sem que as specs reflitam o estado atual do projeto.**
 
 As specs estao indexadas em `docs/specs/README.md`.
 

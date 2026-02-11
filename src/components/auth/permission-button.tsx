@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useTranslations } from "@/lib/i18n";
 import type { Permission } from "@/types/auth";
 
 interface PermissionButtonProps
@@ -23,14 +24,16 @@ export const PermissionButton = forwardRef<
 >(function PermissionButton(
   {
     permission,
-    deniedTooltip = "You don't have permission for this action",
+    deniedTooltip,
     children,
     ...props
   },
   ref
 ) {
   const { can } = usePermissions();
+  const t = useTranslations("common");
   const hasPermission = can(permission);
+  const tooltipText = deniedTooltip ?? t("permission.denied");
 
   const button = (
     <Button ref={ref} disabled={!hasPermission} {...props}>
@@ -38,13 +41,13 @@ export const PermissionButton = forwardRef<
     </Button>
   );
 
-  if (!hasPermission && deniedTooltip) {
+  if (!hasPermission && tooltipText) {
     return (
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>{button}</TooltipTrigger>
           <TooltipContent>
-            <p>{deniedTooltip}</p>
+            <p>{tooltipText}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

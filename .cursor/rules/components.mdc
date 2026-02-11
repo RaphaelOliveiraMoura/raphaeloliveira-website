@@ -81,6 +81,37 @@ export function Button({ variant = "primary", isLoading, children, ...props }: B
    - Extrair componentes pesados com `dynamic()` para lazy loading
    - Evitar re-renders desnecessarios (elevar estado so quando necessario)
 
+## Server Components vs Client Components
+
+**Regra fundamental:** nao misturar funcoes (callbacks, render props) como children/props de Client Components a partir de Server Components.
+
+1. **`"use client"` obrigatorio** se o componente usa:
+   - Hooks (`useState`, `useEffect`, `useTranslations`, `useRouter`, etc.)
+   - Event handlers (`onClick`, `onChange`, `onSubmit`)
+   - Browser APIs (`window`, `document`, `localStorage`)
+
+2. **Funcoes como children** sao proibidas em Client Components quando o pai e um Server Component. Isso causa o erro: _"Functions are not valid as a child of Client Components"_.
+
+3. **`t.rich()` com callbacks JSX** so pode ser usado em Client Components (com `"use client"`). Em Server Components, use `getTranslations` e `t.rich()` tambem funciona, mas o arquivo DEVE ter sido marcado corretamente.
+
+```tsx
+// ERRADO - Server Component passando funcao como child
+// (sem "use client")
+export default function Page() {
+  return <ClientComponent>{() => <div>Conteudo</div>}</ClientComponent>;
+}
+
+// CERTO - Server Component renderiza JSX estatico
+export default function Page() {
+  return <ClientComponent><div>Conteudo</div></ClientComponent>;
+}
+```
+
+4. **Ao criar um componente novo**, pergunte-se:
+   - Usa hooks ou eventos? → `"use client"`
+   - E puramente de apresentacao com dados estaticos? → Server Component (sem diretiva)
+   - Recebe funcoes como props/children? → Provavelmente precisa de `"use client"`
+
 ## Storybook
 
 Todo componente compartilhado (em `src/components/shared/`) deve ter uma story:

@@ -1,0 +1,13 @@
+{
+  "generic": "Algo salió mal",
+  "genericMessage": "Ocurrió un error inesperado. Inténtalo de nuevo.",
+  "retry": "Intentar de nuevo",
+  "notFound": "Página no encontrada",
+  "notFoundMessage": "La página que buscas no existe o fue movida.",
+  "backHome": "Volver al inicio",
+  "critical": "Ocurrió un error crítico en la aplicación. Intenta recargar la página.",
+  "loadFailed": "No se pudo cargar. Inténtalo de nuevo.",
+  "networkError": "Error de conexión. Verifica tu internet.",
+  "forbidden": "Acceso denegado",
+  "serverError": "Error interno del servidor"
+}

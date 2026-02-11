@@ -28,6 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/lib/i18n";
 
 import { BulkActionBar } from "@/components/shared/bulk-action-bar";
 
@@ -64,7 +65,8 @@ export interface DataTableProps<TData> {
 
 function withSelectionColumn<TData>(
   columns: ColumnDef<TData>[],
-  rowSelection: boolean
+  rowSelection: boolean,
+  t: (key: "table.selectAll" | "table.selectRow") => string
 ): ColumnDef<TData>[] {
   if (!rowSelection) return columns;
   return [
@@ -79,14 +81,14 @@ function withSelectionColumn<TData>(
           onCheckedChange={(value) =>
             table.toggleAllPageRowsSelected(!!value)
           }
-          aria-label="Select all"
+          aria-label={t("table.selectAll")}
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label={t("table.selectRow")}
         />
       ),
       enableSorting: false,
@@ -105,9 +107,10 @@ export function DataTable<TData extends { id?: string }>({
   rowSelection = false,
   toolbar,
   bulkActions = [],
-  emptyMessage = "No data found.",
+  emptyMessage,
   enableSorting = true,
 }: DataTableProps<TData>) {
+  const t = useTranslations("common");
   const manualPagination = !!pagination;
   const pageCount = pagination
     ? Math.ceil(pagination.total / pagination.pageSize) || 1
@@ -116,7 +119,7 @@ export function DataTable<TData extends { id?: string }>({
   // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table manages its own state correctly
   const table = useReactTable({
     data,
-    columns: withSelectionColumn(columns, rowSelection),
+    columns: withSelectionColumn(columns, rowSelection, t),
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: manualPagination ? undefined : getSortedRowModel(),
     getPaginationRowModel: manualPagination ? undefined : getPaginationRowModel(),
@@ -243,7 +246,7 @@ export function DataTable<TData extends { id?: string }>({
                   colSpan={columns.length + (rowSelection ? 1 : 0)}
                   className="h-24 text-center"
                 >
-                  <p className="text-muted-foreground text-sm">{emptyMessage}</p>
+                  <p className="text-muted-foreground text-sm">{emptyMessage ?? t("table.noData")}</p>
                 </TableCell>
               </TableRow>
             ) : (
@@ -269,12 +272,14 @@ export function DataTable<TData extends { id?: string }>({
       {pagination && pagination.total > 0 && (
         <div className="flex items-center justify-between">
           <p className="text-muted-foreground text-sm">
-            Showing {(pagination.page - 1) * pagination.pageSize + 1} to{" "}
-            {Math.min(
-              pagination.page * pagination.pageSize,
-              pagination.total
-            )}{" "}
-            of {pagination.total} results
+            {t("table.showingResults", {
+              from: (pagination.page - 1) * pagination.pageSize + 1,
+              to: Math.min(
+                pagination.page * pagination.pageSize,
+                pagination.total
+              ),
+              total: pagination.total,
+            })}
           </p>
           <Pagination>
             <PaginationContent>

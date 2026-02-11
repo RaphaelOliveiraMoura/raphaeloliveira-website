@@ -1,0 +1,13 @@
+{
+  "generic": "Something went wrong",
+  "genericMessage": "An unexpected error occurred. Please try again.",
+  "retry": "Try again",
+  "notFound": "Page not found",
+  "notFoundMessage": "The page you are looking for does not exist or has been moved.",
+  "backHome": "Back to home",
+  "critical": "A critical error occurred in the application. Try reloading the page.",
+  "loadFailed": "Failed to load. Please try again.",
+  "networkError": "Connection error. Check your internet.",
+  "forbidden": "Access denied",
+  "serverError": "Internal server error"
+}

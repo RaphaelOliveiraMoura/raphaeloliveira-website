@@ -4,6 +4,7 @@ import { useEffect, useState, type RefObject } from "react";
 
 import { cn } from "@/lib/utils";
 import { slugify } from "@/lib/formatters";
+import { useTranslations } from "@/lib/i18n";
 
 interface TocItem {
   id: string;
@@ -21,6 +22,7 @@ export function TableOfContents({
   className,
 }: TableOfContentsProps) {
   const [items, setItems] = useState<TocItem[]>([]);
+  const t = useTranslations("common");
 
   useEffect(() => {
     const container = containerRef.current;
@@ -48,8 +50,8 @@ export function TableOfContents({
   if (items.length === 0) return null;
 
   return (
-    <nav aria-label="Índice" className={cn("space-y-2", className)}>
-      <h2 className="text-sm font-semibold text-foreground">Nesta página</h2>
+    <nav aria-label={t("tableOfContents.label")} className={cn("space-y-2", className)}>
+      <h2 className="text-sm font-semibold text-foreground">{t("tableOfContents.title")}</h2>
       <ul className="space-y-1 text-sm">
         {items.map((item) => (
           <li

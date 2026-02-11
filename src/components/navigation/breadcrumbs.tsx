@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname, useTranslations } from "@/lib/i18n";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,25 +11,25 @@ import {
 } from "@/components/ui/breadcrumb";
 
 const LABELS: Record<string, string> = {
-  dashboard: "Dashboard",
-  users: "Users",
-  posts: "Posts",
-  settings: "Settings",
-  products: "Products",
-  admin: "Admin",
-};
+  dashboard: "nav.dashboard",
+  users: "nav.users",
+  posts: "nav.posts",
+  settings: "nav.settings",
+  products: "nav.products",
+  admin: "nav.admin",
+} as const;
 
-function segmentToLabel(segment: string): string {
-  return LABELS[segment] ?? segment;
-}
+type NavKey = "nav.dashboard" | "nav.users" | "nav.posts" | "nav.settings" | "nav.products" | "nav.admin";
 
 export function Breadcrumbs() {
   const pathname = usePathname();
+  const t = useTranslations("common");
   const segments = pathname.split("/").filter(Boolean);
 
   const crumbs = segments.map((segment, i) => {
     const href = "/" + segments.slice(0, i + 1).join("/");
-    const label = segmentToLabel(segment);
+    const key = LABELS[segment];
+    const label = key ? t(key as NavKey) : segment;
     return { href, label };
   });
 
@@ -39,7 +38,7 @@ export function Breadcrumbs() {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="/">Home</Link>
+            <Link href="/">{t("nav.home")}</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {crumbs.map((c, i) => (

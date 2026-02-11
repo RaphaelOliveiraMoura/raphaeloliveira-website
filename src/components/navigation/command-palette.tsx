@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
+
+import { useRouter, useTranslations } from "@/lib/i18n";
 
 import {
   CommandDialog,
@@ -14,9 +15,11 @@ import {
 
 import { useKeyboardShortcut } from "@/hooks";
 
+type CommandLabelKey = "nav.goToDashboard" | "nav.users" | "nav.posts" | "nav.settings";
+
 interface Command {
   id: string;
-  label: string;
+  labelKey: CommandLabelKey;
   href: string;
   keywords?: string[];
 }
@@ -24,25 +27,25 @@ interface Command {
 const COMMANDS: Command[] = [
   {
     id: "dashboard",
-    label: "Go to Dashboard",
+    labelKey: "nav.goToDashboard",
     href: "/dashboard",
     keywords: ["panel", "home"],
   },
   {
     id: "users",
-    label: "Users",
+    labelKey: "nav.users",
     href: "/users",
     keywords: ["people"],
   },
   {
     id: "posts",
-    label: "Posts",
+    labelKey: "nav.posts",
     href: "/posts",
     keywords: ["blog", "content"],
   },
   {
     id: "settings",
-    label: "Settings",
+    labelKey: "nav.settings",
     href: "/settings",
     keywords: ["config", "preferences"],
   },
@@ -51,6 +54,7 @@ const COMMANDS: Command[] = [
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const t = useTranslations("common");
 
   useKeyboardShortcut(
     "ctrl+k",
@@ -82,20 +86,20 @@ export function CommandPalette() {
     <CommandDialog
       open={open}
       onOpenChange={setOpen}
-      title="Command palette"
-      description="Search for a page to navigate..."
+      title={t("commandPalette.title")}
+      description={t("commandPalette.description")}
     >
-      <CommandInput placeholder="Search..." />
+      <CommandInput placeholder={t("search.placeholder")} />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Navigation">
+        <CommandEmpty>{t("search.noResults")}</CommandEmpty>
+        <CommandGroup heading={t("nav.navigation")}>
           {COMMANDS.map((cmd) => (
             <CommandItem
               key={cmd.id}
-              value={`${cmd.label} ${cmd.keywords?.join(" ") ?? ""}`}
+              value={`${t(cmd.labelKey)} ${cmd.keywords?.join(" ") ?? ""}`}
               onSelect={() => onSelect(cmd)}
             >
-              {cmd.label}
+              {t(cmd.labelKey)}
             </CommandItem>
           ))}
         </CommandGroup>

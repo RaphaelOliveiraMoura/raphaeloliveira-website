@@ -1,0 +1,116 @@
+---
+description: Regras de internacionalizacao - imports centralizados e zero textos hardcoded
+globs:
+alwaysApply: true
+---
+
+# Internacionalizacao (i18n) - Regras
+
+## Import Centralizado
+
+Componentes e pages **nunca** devem importar diretamente de `next-intl` ou `next-intl/*`.
+Toda interacao com i18n deve usar as abstracoes centralizadas em `@/lib/i18n`.
+
+```ts
+// ERRADO - import direto da lib
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+// CERTO - via abstracoes do projeto
+import { useTranslations, Link, useRouter } from "@/lib/i18n";
+```
+
+**Excecoes permitidas:**
+- `src/lib/i18n/` — camada de abstracao (unico local que importa `next-intl`)
+- `src/i18n/` — configuracao do next-intl (`routing.ts`, `request.ts`)
+- `src/app/[locale]/layout.tsx` — setup do `NextIntlClientProvider`
+- `src/types/i18n.ts` — tipagem de mensagens
+- `src/app/not-found.tsx` (global) — usa `next/link` pois nao tem contexto de locale
+
+## Zero Textos Hardcoded
+
+Todo texto visivel ao usuario em componentes `.tsx` **deve** usar `useTranslations` (client) ou `getTranslations` (server). Strings literais em qualquer idioma sao proibidas.
+
+```tsx
+// ERRADO - texto hardcoded
+<h1>Página não encontrada</h1>
+<Button>Tentar novamente</Button>
+<p>An unexpected error occurred</p>
+
+// CERTO - via useTranslations
+const t = useTranslations("errors");
+<h1>{t("notFound")}</h1>
+<Button>{t("retry")}</Button>
+<p>{t("genericMessage")}</p>
+```
+
+**Excecoes permitidas:**
+- `src/app/global-error.tsx` — nao pode usar providers pois substitui o layout inteiro
+- Strings puramente tecnicas (CSS classes, data-testid, aria-roles)
+- Conteudo de placeholder durante desenvolvimento inicial (marcar com `TODO: i18n`)
+
+## Namespaces de Traducao
+
+Arquivos de traducao ficam em `messages/{locale}/`:
+
+| Namespace | Uso |
+|-----------|-----|
+| `common` | Textos genericos (botoes, labels, estados) |
+| `auth` | Autenticacao (login, registro, sessao) |
+| `errors` | Mensagens de erro e estados de falha |
+
+Para adicionar um novo namespace:
+1. Criar o JSON em `messages/{locale}/novo-namespace.json` para todos os locales
+2. Importar em `src/i18n/request.ts` no merge de messages
+3. Atualizar a tipagem em `src/types/i18n.ts`
+
+## Navegacao Locale-Aware
+
+Componentes sob `[locale]` devem usar `Link`, `useRouter` e `usePathname` de `@/lib/i18n`:
+
+```tsx
+import { Link, useRouter, usePathname } from "@/lib/i18n";
+
+// Link preserva o locale automaticamente
+<Link href="/dashboard">Dashboard</Link>
+
+// useRouter.replace com locale para troca de idioma
+router.replace(pathname, { locale: "en" });
+```
+
+## Rich Text (`t.rich`)
+
+Quando o texto traduzido contem elementos interativos (links, negrito, etc.), usar `t.rich()` com **tags XML nas mensagens** (NAO interpolacao `{}`).
+
+```json
+// ERRADO - interpolacao simples; t.rich() tenta renderizar a funcao como child
+"message": "Veja {link} para mais informacoes."
+
+// CERTO - tags XML; t.rich() envolve o conteudo entre as tags com o callback
+"message": "Veja <link>a documentacao</link> para mais informacoes."
+```
+
+```tsx
+// Uso correto de t.rich()
+t.rich("message", {
+  link: (chunks) => <a href="/docs">{chunks}</a>,
+});
+```
+
+**Regras:**
+- `{variavel}` → interpolacao de texto simples (`t("key", { variavel: valor })`)
+- `<tag>conteudo</tag>` → rich text com callback JSX (`t.rich("key", { tag: (chunks) => <El>{chunks}</El> })`)
+- **NUNCA** misturar: nao passe funcoes para variaveis `{}`; isso causa o erro _"Functions are not valid as a child of Client Components"_
+- `t.rich()` com callbacks JSX requer `"use client"` no componente
+
+## Formatacao
+
+Usar os formatadores locale-aware de `@/lib/i18n`:
+
+```tsx
+import { useDateFormatter, useNumberFormatter } from "@/lib/i18n";
+
+const { date, relative } = useDateFormatter();
+const { currency } = useNumberFormatter();
+```

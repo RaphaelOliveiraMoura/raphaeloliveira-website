@@ -15,6 +15,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { useTranslations } from "@/lib/i18n";
+
 export interface ShortcutItem {
   id: string;
   keys: string;
@@ -32,17 +34,19 @@ export function ShortcutCheatSheet({
   onOpenChange,
   shortcuts,
 }: ShortcutCheatSheetProps) {
+  const t = useTranslations("common");
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md" aria-describedby={undefined}>
         <DialogHeader>
-          <DialogTitle>Atalhos de teclado</DialogTitle>
+          <DialogTitle>{t("shortcuts.title")}</DialogTitle>
         </DialogHeader>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Atalho</TableHead>
-              <TableHead>Descrição</TableHead>
+              <TableHead>{t("shortcuts.shortcut")}</TableHead>
+              <TableHead>{t("shortcuts.description")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -9,6 +9,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { useObjectUrl } from "@/hooks/use-object-url";
+import { useTranslations } from "@/lib/i18n";
 
 interface FileUploadProps {
   onUpload: (files: File[]) => void | Promise<void>;
@@ -30,6 +31,7 @@ export function FileUpload({
 }: FileUploadProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [files, setFiles] = useState<File[]>([]);
+  const t = useTranslations("common");
 
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
@@ -66,11 +68,11 @@ export function FileUpload({
             : "border-muted-foreground/25 hover:border-muted-foreground/50"
         )}
       >
-        <input {...getInputProps()} aria-label="Selecionar arquivos" />
+        <input {...getInputProps()} aria-label={t("fileUpload.selectFiles")} />
         <p className="text-muted-foreground text-sm">
           {isDragActive
-            ? "Solte os arquivos aqui..."
-            : "Arraste arquivos ou clique para selecionar"}
+            ? t("fileUpload.dropHere")
+            : t("fileUpload.dragOrClick")}
         </p>
       </div>
       {errorMessage && (
@@ -91,6 +93,7 @@ export function FileUpload({
 
 function FilePreview({ file }: { file: File }) {
   const url = useObjectUrl(file);
+  const t = useTranslations("common");
   const isImage = file.type.startsWith("image/");
 
   return (
@@ -104,7 +107,7 @@ function FilePreview({ file }: { file: File }) {
         />
       ) : (
         <div className="flex h-20 w-20 items-center justify-center rounded border bg-muted">
-          <span className="text-muted-foreground text-xs">PDF</span>
+          <span className="text-muted-foreground text-xs">{t("fileUpload.fileType")}</span>
         </div>
       )}
       <span className="text-muted-foreground max-w-[80px] truncate text-xs">

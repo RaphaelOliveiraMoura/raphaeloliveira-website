@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/lib/i18n";
 import type { ComponentProps } from "react";
 
 type ButtonVariant = NonNullable<
@@ -27,6 +28,8 @@ export function BulkActionBar({
   onClearSelection,
   className,
 }: BulkActionBarProps) {
+  const t = useTranslations("common");
+
   if (selectedCount === 0) return null;
 
   return (
@@ -36,10 +39,10 @@ export function BulkActionBar({
         className
       )}
       role="region"
-      aria-label={`${selectedCount} item(s) selected`}
+      aria-label={t("bulkActions.clearSelection")}
     >
       <span className="text-sm font-medium">
-        {selectedCount} {selectedCount === 1 ? "item" : "items"} selected
+        {t("bulkActions.selected", { count: selectedCount })}
       </span>
       <div className="flex gap-2">
         {actions.map((action) => (
@@ -57,9 +60,9 @@ export function BulkActionBar({
         variant="ghost"
         size="sm"
         onClick={onClearSelection}
-        aria-label="Clear selection"
+        aria-label={t("bulkActions.clearSelection")}
       >
-        Clear
+        {t("bulkActions.clear")}
       </Button>
     </div>
   );

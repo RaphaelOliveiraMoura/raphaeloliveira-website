@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 
-import Link from "next/link";
 import { ChevronsLeft, ChevronsRight, PanelLeft } from "lucide-react";
 
+import { Link, useTranslations } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-breakpoint";
@@ -14,6 +14,7 @@ export function DashboardSidebar() {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const t = useTranslations("common");
 
   const sidebarContent = (
     <aside
@@ -27,7 +28,7 @@ export function DashboardSidebar() {
           variant="ghost"
           size="icon"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          aria-label={isCollapsed ? "Expandir sidebar" : "Colapsar sidebar"}
+          aria-label={isCollapsed ? t("nav.expandSidebar") : t("nav.collapseSidebar")}
         >
           {isCollapsed ? (
             <ChevronsRight className="size-4" />
@@ -36,18 +37,18 @@ export function DashboardSidebar() {
           )}
         </Button>
       </div>
-      <nav className="flex flex-1 flex-col gap-1 p-2" aria-label="Navegação principal">
+      <nav className="flex flex-1 flex-col gap-1 p-2" aria-label={t("nav.primary")}>
         <Link
           href="/dashboard"
           className="rounded-md px-3 py-2 text-sm hover:bg-accent"
         >
-          Dashboard
+          {t("nav.dashboard")}
         </Link>
         <Link
           href="/dashboard/settings"
           className="rounded-md px-3 py-2 text-sm hover:bg-accent"
         >
-          Configurações
+          {t("nav.settings")}
         </Link>
       </nav>
     </aside>
@@ -61,7 +62,7 @@ export function DashboardSidebar() {
             variant="ghost"
             size="icon"
             className="lg:hidden"
-            aria-label="Abrir menu"
+            aria-label={t("nav.openSidebar")}
           >
             <PanelLeft className="size-4" />
           </Button>

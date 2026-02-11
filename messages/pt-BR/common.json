@@ -9,5 +9,99 @@
   "loading": "Carregando...",
   "error": "Erro",
   "success": "Sucesso",
-  "itemsCount": "{count, plural, =0 {Nenhum item} one {# item} other {# itens}}"
+  "itemsCount": "{count, plural, =0 {Nenhum item} one {# item} other {# itens}}",
+  "language": "Idioma",
+  "nav": {
+    "home": "Início",
+    "dashboard": "Dashboard",
+    "users": "Usuários",
+    "posts": "Posts",
+    "settings": "Configurações",
+    "products": "Produtos",
+    "admin": "Admin",
+    "features": "Funcionalidades",
+    "pricing": "Preços",
+    "docs": "Documentação",
+    "documentation": "Documentação",
+    "primary": "Navegação principal",
+    "secondary": "Navegação secundária",
+    "openMenu": "Abrir menu de navegação",
+    "expandSidebar": "Expandir sidebar",
+    "collapseSidebar": "Colapsar sidebar",
+    "openSidebar": "Abrir menu",
+    "navigation": "Navegação",
+    "goToDashboard": "Ir para Dashboard"
+  },
+  "search": {
+    "placeholder": "Buscar...",
+    "noResults": "Nenhum resultado encontrado.",
+    "recentSearches": "Buscas recentes",
+    "globalSearch": "Busca global"
+  },
+  "commandPalette": {
+    "title": "Paleta de comandos",
+    "description": "Busque uma página para navegar..."
+  },
+  "logo": "Logo",
+  "footer": {
+    "product": "Produto",
+    "resources": "Recursos",
+    "tagline": "Template base universal para projetos Next.js",
+    "copyright": "© {year} Core Stack. Todos os direitos reservados."
+  },
+  "accessibility": {
+    "skipToContent": "Pular para o conteúdo principal"
+  },
+  "table": {
+    "selectAll": "Selecionar todos",
+    "selectRow": "Selecionar linha",
+    "noData": "Nenhum dado encontrado.",
+    "showingResults": "Mostrando {from} a {to} de {total} resultados"
+  },
+  "cookies": {
+    "consent": "Usamos cookies para melhorar sua experiência. Cookies essenciais são sempre ativos. Você pode aceitar ou recusar cookies de analytics e marketing.",
+    "label": "Consentimento de cookies",
+    "reject": "Recusar",
+    "acceptAll": "Aceitar todos"
+  },
+  "shortcuts": {
+    "title": "Atalhos de teclado",
+    "shortcut": "Atalho",
+    "description": "Descrição"
+  },
+  "fileUpload": {
+    "selectFiles": "Selecionar arquivos",
+    "dropHere": "Solte os arquivos aqui...",
+    "dragOrClick": "Arraste arquivos ou clique para selecionar",
+    "fileType": "Arquivo"
+  },
+  "offline": {
+    "message": "Você está offline. Algumas funcionalidades podem não estar disponíveis."
+  },
+  "codeBlock": {
+    "copy": "Copiar código",
+    "copied": "Copiado"
+  },
+  "tableOfContents": {
+    "title": "Nesta página",
+    "label": "Índice"
+  },
+  "bulkActions": {
+    "selected": "{count, plural, one {# item selecionado} other {# itens selecionados}}",
+    "clearSelection": "Limpar seleção",
+    "clear": "Limpar"
+  },
+  "permission": {
+    "denied": "Você não tem permissão para esta ação"
+  },
+  "home": {
+    "getStarted": "Para começar, edite o arquivo page.tsx.",
+    "lookingFor": "Procurando um ponto de partida ou mais instruções? Vá para <templates>Templates</templates> ou o centro de <learning>Aprendizado</learning>.",
+    "deployNow": "Deploy Agora",
+    "documentation": "Documentação"
+  },
+  "metadata": {
+    "title": "Core Stack",
+    "description": "Template base universal para projetos Next.js"
+  }
 }

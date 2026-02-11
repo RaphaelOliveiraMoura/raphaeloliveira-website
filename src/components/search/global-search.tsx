@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/lib/i18n";
 
 const RECENT_SEARCHES_KEY = "recent-searches";
 const MAX_RECENT = 5;
@@ -20,6 +21,7 @@ export function GlobalSearch() {
     []
   );
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations("common");
 
   const addRecentSearch = useCallback((search: string) => {
     if (!search.trim()) return;
@@ -53,9 +55,9 @@ export function GlobalSearch() {
           onBlur={() =>
             setTimeout(() => setIsOpen(false), 150)
           }
-          placeholder="Search..."
+          placeholder={t("search.placeholder")}
           className="pl-9"
-          aria-label="Global search"
+          aria-label={t("search.globalSearch")}
           aria-expanded={showRecent}
           aria-haspopup="listbox"
         />
@@ -69,7 +71,7 @@ export function GlobalSearch() {
             className="text-muted-foreground px-3 py-2 text-xs font-medium"
             role="presentation"
           >
-            Recent searches
+            {t("search.recentSearches")}
           </li>
           {(recentSearches ?? []).map((s) => (
             <li key={s} role="option" aria-selected={false}>

@@ -3,9 +3,11 @@
 import { WifiOff } from "lucide-react";
 
 import { useOnlineStatus } from "@/hooks/use-online-status";
+import { useTranslations } from "@/lib/i18n";
 
 export function OfflineBanner() {
   const isOnline = useOnlineStatus();
+  const t = useTranslations("common");
 
   if (isOnline) return null;
 
@@ -17,7 +19,7 @@ export function OfflineBanner() {
     >
       <WifiOff className="h-4 w-4 shrink-0" />
       <span className="text-sm font-medium">
-        Você está offline. Algumas funcionalidades podem não estar disponíveis.
+        {t("offline.message")}
       </span>
     </div>
   );

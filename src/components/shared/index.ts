@@ -21,3 +21,4 @@ export type { ShortcutItem } from "./shortcut-cheat-sheet";
 export { FileUpload } from "./file-upload";
 export { ResponsiveImage } from "./responsive-image";
 export { VirtualList } from "./virtual-list";
+export { LanguageSwitcher } from "./language-switcher";

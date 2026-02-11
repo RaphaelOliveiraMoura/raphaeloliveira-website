@@ -9,5 +9,99 @@
   "loading": "Loading...",
   "error": "Error",
   "success": "Success",
-  "itemsCount": "{count, plural, =0 {No items} one {# item} other {# items}}"
+  "itemsCount": "{count, plural, =0 {No items} one {# item} other {# items}}",
+  "language": "Language",
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "posts": "Posts",
+    "settings": "Settings",
+    "products": "Products",
+    "admin": "Admin",
+    "features": "Features",
+    "pricing": "Pricing",
+    "docs": "Docs",
+    "documentation": "Documentation",
+    "primary": "Primary navigation",
+    "secondary": "Secondary navigation",
+    "openMenu": "Open navigation menu",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar",
+    "openSidebar": "Open menu",
+    "navigation": "Navigation",
+    "goToDashboard": "Go to Dashboard"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "noResults": "No results found.",
+    "recentSearches": "Recent searches",
+    "globalSearch": "Global search"
+  },
+  "commandPalette": {
+    "title": "Command palette",
+    "description": "Search for a page to navigate..."
+  },
+  "logo": "Logo",
+  "footer": {
+    "product": "Product",
+    "resources": "Resources",
+    "tagline": "Universal base template for Next.js projects",
+    "copyright": "© {year} Core Stack. All rights reserved."
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content"
+  },
+  "table": {
+    "selectAll": "Select all",
+    "selectRow": "Select row",
+    "noData": "No data found.",
+    "showingResults": "Showing {from} to {to} of {total} results"
+  },
+  "cookies": {
+    "consent": "We use cookies to improve your experience. Essential cookies are always active. You can accept or decline analytics and marketing cookies.",
+    "label": "Cookie consent",
+    "reject": "Decline",
+    "acceptAll": "Accept all"
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "shortcut": "Shortcut",
+    "description": "Description"
+  },
+  "fileUpload": {
+    "selectFiles": "Select files",
+    "dropHere": "Drop files here...",
+    "dragOrClick": "Drag files or click to select",
+    "fileType": "File"
+  },
+  "offline": {
+    "message": "You are offline. Some features may not be available."
+  },
+  "codeBlock": {
+    "copy": "Copy code",
+    "copied": "Copied"
+  },
+  "tableOfContents": {
+    "title": "On this page",
+    "label": "Table of contents"
+  },
+  "bulkActions": {
+    "selected": "{count, plural, one {# item selected} other {# items selected}}",
+    "clearSelection": "Clear selection",
+    "clear": "Clear"
+  },
+  "permission": {
+    "denied": "You don't have permission for this action"
+  },
+  "home": {
+    "getStarted": "To get started, edit the page.tsx file.",
+    "lookingFor": "Looking for a starting point or more instructions? Head over to <templates>Templates</templates> or the <learning>Learning</learning> center.",
+    "deployNow": "Deploy Now",
+    "documentation": "Documentation"
+  },
+  "metadata": {
+    "title": "Core Stack",
+    "description": "Universal base template for Next.js projects"
+  }
 }
