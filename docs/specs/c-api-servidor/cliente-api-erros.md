@@ -1,6 +1,6 @@
 # API Client & Errors
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -174,7 +174,7 @@ export function setupAuthInterceptors(
 ### React Query setup
 
 ```tsx
-// src/providers/QueryProvider.tsx
+// src/providers/query-provider.tsx
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -209,7 +209,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
 // Exemplo de uso em componente
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/client';
-import { ErrorFallback } from '@/components/shared/ErrorFallback';
+import { ErrorFallback } from '@/components/shared/error-fallback';
 
 function UserList() {
   const { data, error, isLoading, refetch } = useQuery({
@@ -227,7 +227,7 @@ function UserList() {
 ### Error Boundary e normalizacao
 
 ```tsx
-// src/components/shared/ErrorBoundary.tsx
+// src/components/shared/error-boundary.tsx
 'use client';
 
 import { Component, type ReactNode } from 'react';
@@ -302,12 +302,12 @@ src/
 │   └── telemetry/
 │       └── logger.ts          # logger.error, logger.warn, logger.info
 ├── providers/
-│   └── QueryProvider.tsx
+│   └── query-provider.tsx
 ├── components/
 │   └── shared/
-│       ├── ErrorBoundary.tsx
-│       ├── ErrorFallback.tsx  # UI de fallback
-│       └── LoadingFallback.tsx
+│       ├── error-boundary.tsx
+│       ├── error-fallback.tsx  # UI de fallback
+│       └── loading-fallback.tsx
 └── app/
     └── layout.tsx             # QueryProvider + ErrorBoundary global
 ```

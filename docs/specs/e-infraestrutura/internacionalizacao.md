@@ -1,6 +1,6 @@
 # Internacionalizacao
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -127,7 +127,7 @@ export function Header() {
 ### Componente LanguageSwitcher
 
 ```tsx
-// src/components/shared/LanguageSwitcher.tsx
+// src/components/shared/language-switcher.tsx
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
@@ -269,7 +269,7 @@ src/
 │       └── ...
 ├── components/
 │   └── shared/
-│       └── LanguageSwitcher.tsx
+│       └── language-switcher.tsx
 ├── middleware.ts               # next-intl middleware
 ├── types/
 │   └── i18n.ts                 # Key types (opcional)

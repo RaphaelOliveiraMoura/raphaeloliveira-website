@@ -1,6 +1,6 @@
 # Navegacao, URL & Busca
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -36,7 +36,7 @@ Filtros em URL permitem compartilhar e bookmarks de views. Paginação e ordena�
 ### useUrlState
 
 ```ts
-// src/hooks/useUrlState.ts
+// src/hooks/use-url-state.ts
 'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
@@ -72,7 +72,7 @@ export function useUrlState<T extends string>(
 ### useUrlState para multi-select
 
 ```ts
-// src/hooks/useUrlStateMulti.ts
+// src/hooks/use-url-state-multi.ts
 'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
@@ -106,10 +106,10 @@ export function useUrlStateMulti(key: string, separator = ','): [string[], (valu
 ### Paginação e ordenação
 
 ```tsx
-// src/hooks/useUrlPagination.ts
+// src/hooks/use-url-pagination.ts
 'use client';
 
-import { useUrlState } from './useUrlState';
+import { useUrlState } from './use-url-state';
 
 export function useUrlPagination(defaultPageSize = 20) {
   const [page, setPage] = useUrlState('page', '1');
@@ -132,7 +132,7 @@ export function useUrlPagination(defaultPageSize = 20) {
 ### Breadcrumbs automáticos
 
 ```tsx
-// src/components/navigation/Breadcrumbs.tsx
+// src/components/navigation/breadcrumbs.tsx
 'use client';
 
 import Link from 'next/link';
@@ -178,7 +178,7 @@ export function Breadcrumbs() {
 ### Command Palette (Cmd+K)
 
 ```tsx
-// src/components/navigation/CommandPalette.tsx
+// src/components/navigation/command-palette.tsx
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -264,7 +264,7 @@ interface SearchResult {
 ```
 
 ```tsx
-// src/lib/search/useSearchResults.ts
+// src/lib/search/use-search-results.ts
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
@@ -283,10 +283,10 @@ function useSearchResults(query: string) {
 ### Hook useRecentSearches
 
 ```tsx
-// src/hooks/useRecentSearches.ts
+// src/hooks/use-recent-searches.ts
 'use client';
 
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 
 function useRecentSearches(maxItems = 5) {
   const [searches, setSearches] = useLocalStorage<string[]>("recent-searches", [])
@@ -304,14 +304,14 @@ function useRecentSearches(maxItems = 5) {
 ### Barra de busca global
 
 ```tsx
-// src/components/search/GlobalSearch.tsx
+// src/components/search/global-search.tsx
 'use client';
 
 import { useCallback, useState } from 'react';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useRecentSearches } from '@/hooks/useRecentSearches';
-import { useSearchResults } from '@/lib/search/useSearchResults';
-import { SearchResultItem } from '@/components/search/SearchResultItem';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useRecentSearches } from '@/hooks/use-recent-searches';
+import { useSearchResults } from '@/lib/search/use-search-results';
+import { SearchResultItem } from '@/components/search/search-result-item';
 import type { SearchResult } from '@/lib/search/types';
 
 export function GlobalSearch() {
@@ -364,7 +364,7 @@ export function GlobalSearch() {
 ### Highlighting do termo
 
 ```tsx
-// src/components/search/HighlightMatch.tsx
+// src/components/search/highlight-match.tsx
 export function HighlightMatch({ text, query }: { text: string; query: string }) {
   if (!query.trim()) return <>{text}</>;
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -384,8 +384,8 @@ export function HighlightMatch({ text, query }: { text: string; query: string })
 ### Componente SearchResultItem
 
 ```tsx
-// src/components/search/SearchResultItem.tsx
-import { HighlightMatch } from './HighlightMatch';
+// src/components/search/search-result-item.tsx
+import { HighlightMatch } from './highlight-match';
 
 function SearchResultItem({ result, query }: { result: SearchResult; query: string }) {
   return (
@@ -455,24 +455,24 @@ router.push(`${pathname}?page=2&sortBy=name`);
 ```
 src/
 ├── hooks/
-│   ├── useUrlState.ts
-│   ├── useUrlStateMulti.ts
-│   ├── useUrlPagination.ts
-│   ├── useDebounce.ts
-│   ├── useLocalStorage.ts
-│   └── useRecentSearches.ts
+│   ├── use-url-state.ts
+│   ├── use-url-state-multi.ts
+│   ├── use-url-pagination.ts
+│   ├── use-debounce.ts
+│   ├── use-local-storage.ts
+│   └── use-recent-searches.ts
 ├── components/
 │   ├── navigation/
-│   │   ├── Breadcrumbs.tsx
-│   │   └── CommandPalette.tsx
+│   │   ├── breadcrumbs.tsx
+│   │   └── command-palette.tsx
 │   └── search/
-│       ├── GlobalSearch.tsx
-│       ├── HighlightMatch.tsx
-│       └── SearchResultItem.tsx
+│       ├── global-search.tsx
+│       ├── highlight-match.tsx
+│       └── search-result-item.tsx
 ├── lib/
 │   └── search/
 │       ├── types.ts
-│       └── useSearchResults.ts
+│       └── use-search-results.ts
 └── middleware.ts
 ```
 

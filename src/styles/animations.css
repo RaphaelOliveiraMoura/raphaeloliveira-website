@@ -1,0 +1,24 @@
+/* ===========================
+   Tokens de Animacao
+   =========================== */
+
+:root {
+  --animate-duration-fast: 150ms;
+  --animate-duration-normal: 250ms;
+  --animate-duration-slow: 400ms;
+  --animate-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --animate-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --animate-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

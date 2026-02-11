@@ -1,6 +1,6 @@
 # Logging & Telemetria
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `media`
 > **Ultima atualizacao:** 2026-02-11
 

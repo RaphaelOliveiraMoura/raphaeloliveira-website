@@ -1,6 +1,6 @@
 # Acessibilidade
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -35,7 +35,7 @@ Acessibilidade garante que produtos sejam utilizáveis por pessoas com deficienc
 ### Skip Link
 
 ```tsx
-// src/components/shared/SkipLink.tsx
+// src/components/shared/skip-link.tsx
 "use client";
 
 export function SkipLink() {
@@ -118,7 +118,7 @@ toast.error("Erro ao salvar", {
 ### Announcer para Conteudo Dinamico
 
 ```tsx
-// src/components/shared/LiveRegion.tsx
+// src/components/shared/live-region.tsx
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -147,7 +147,7 @@ export function LiveRegion({ message }: { message: string }) {
 ### Formulario Acessivel
 
 ```tsx
-// src/components/forms/AccessibleForm.tsx
+// src/components/forms/accessible-form.tsx
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
@@ -193,7 +193,7 @@ export function EmailField() {
 > **Nota:** O hook `useReducedMotion` e definido e implementado na spec de [Design System](./design-system.md). Esta spec documenta como aplica-lo nos componentes.
 
 ```tsx
-// src/hooks/useReducedMotion.ts - integrado ao Design System
+// src/hooks/use-reduced-motion.ts - integrado ao Design System
 // Em componentes animados:
 const reduced = useReducedMotion();
 <motion.div
@@ -249,15 +249,15 @@ function hexToRgb(hex: string): [number, number, number] {
 src/
 ├── components/
 │   └── shared/
-│       ├── SkipLink.tsx
-│       └── LiveRegion.tsx
+│       ├── skip-link.tsx
+│       └── live-region.tsx
 ├── hooks/
-│   └── useReducedMotion.ts
+│   └── use-reduced-motion.ts
 ├── app/
 │   └── globals.css          # classes sr-only, focus-visible
 └── lib/
     └── a11y/                # (opcional) helpers
-        └── focusTrap.ts
+        └── focus-trap.ts
 ```
 
 ### Classes Tailwind para Acessibilidade

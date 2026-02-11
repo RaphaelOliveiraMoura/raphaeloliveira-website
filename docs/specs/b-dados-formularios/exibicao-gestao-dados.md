@@ -1,6 +1,6 @@
 # Exibição & Gestão de Dados
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Última atualização:** 2026-02-11
 
@@ -88,7 +88,7 @@ function withSelectionColumn<T>(
 ### DataTable base com TanStack Table
 
 ```tsx
-// src/components/shared/DataTable.tsx
+// src/components/shared/data-table.tsx
 import {
   useReactTable,
   getCoreRowModel,
@@ -196,7 +196,7 @@ export function DataTable<TData>({
 ### Filtros compostos
 
 ```tsx
-// src/components/shared/TableFilters.tsx
+// src/components/shared/table-filters.tsx
 interface FilterConfig {
   id: string;
   type: 'text' | 'dateRange' | 'select' | 'multiSelect';
@@ -278,7 +278,7 @@ const editableColumn: ColumnDef<User> = {
 ### Virtualização
 
 ```tsx
-// src/components/shared/VirtualizedDataTable.tsx
+// src/components/shared/virtualized-data-table.tsx
 import { useVirtualizer } from '@tanstack/react-virtual';
 
 export function VirtualizedDataTable<TData>({ data, columns }: DataTableProps<TData>) {
@@ -342,15 +342,15 @@ export async function exportToPdf<T>(data: T[], columns: ColumnConfig<T>[], file
 ### Padrões CRUD e composição com URL State
 
 ```tsx
-// src/components/features/users/UserListPage.tsx
+// src/components/features/users/user-list-page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { DataTable } from '@/components/shared/DataTable';
-import { UserFormModal } from './UserFormModal';
+import { DataTable } from '@/components/shared/data-table';
+import { UserFormModal } from './user-form-modal';
 import { deleteUser, fetchUsers } from '@/lib/api/users';
 
 interface User {
@@ -444,7 +444,7 @@ export function UserListPage() {
 ### Infinite scroll e empty state
 
 ```tsx
-// src/components/shared/InfiniteList.tsx
+// src/components/shared/infinite-list.tsx
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 
@@ -479,25 +479,25 @@ export function InfiniteList<T>({ queryKey, fetchFn, renderItem, emptyMessage }:
 src/
 ├── components/
 │   ├── shared/
-│   │   ├── DataTable.tsx
-│   │   ├── VirtualizedDataTable.tsx
-│   │   ├── TableFilters.tsx
-│   │   ├── BulkActionBar.tsx
-│   │   ├── EditableCell.tsx
-│   │   ├── InfiniteList.tsx
-│   │   ├── EmptyState.tsx
-│   │   └── GridListViewToggle.tsx
+│   │   ├── data-table.tsx
+│   │   ├── virtualized-data-table.tsx
+│   │   ├── table-filters.tsx
+│   │   ├── bulk-action-bar.tsx
+│   │   ├── editable-cell.tsx
+│   │   ├── infinite-list.tsx
+│   │   ├── empty-state.tsx
+│   │   └── grid-list-view-toggle.tsx
 │   └── features/
 │       └── [resource]/
-│           ├── [Resource]ListPage.tsx
-│           ├── [Resource]FormModal.tsx
+│           ├── [resource]-list-page.tsx
+│           ├── [resource]-form-modal.tsx
 │           └── columns.ts
 ├── lib/
 │   └── data/
 │       ├── export.ts
 │       └── types.ts
 └── hooks/
-    └── useDataTableState.ts    # Sync table state with URL
+    └── use-data-table-state.ts    # Sync table state with URL
 ```
 
 ## Dependências

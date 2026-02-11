@@ -1,6 +1,6 @@
 # Server & Real-time
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -68,7 +68,7 @@ export async function createUser(prevState: unknown, formData: FormData) {
 ### Uso em formulario (Client)
 
 ```tsx
-// src/components/UserForm.tsx
+// src/components/user-form.tsx
 'use client';
 
 import { useActionState } from 'react';
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
 ### WebSocket com reconexao
 
 ```ts
-// src/lib/realtime/useWebSocket.ts
+// src/lib/realtime/use-web-socket.ts
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -223,7 +223,7 @@ export function useWebSocket(url: string) {
 ### SSE client hook
 
 ```tsx
-// src/lib/realtime/useSSE.ts
+// src/lib/realtime/use-sse.ts
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -245,7 +245,7 @@ export function useSSE<T>(url: string) {
 ### Polling fallback
 
 ```tsx
-// src/lib/realtime/usePolling.ts
+// src/lib/realtime/use-polling.ts
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
@@ -276,9 +276,9 @@ src/
 ├── middleware.ts
 ├── lib/
 │   └── realtime/
-│       ├── useWebSocket.ts
-│       ├── useSSE.ts
-│       ├── usePolling.ts
+│       ├── use-web-socket.ts
+│       ├── use-sse.ts
+│       ├── use-polling.ts
 │       └── index.ts
 └── docs/
     └── specs/

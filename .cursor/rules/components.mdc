@@ -19,13 +19,13 @@ Componentes compostos (que combinam varios primitivos) ficam em `src/components/
 
 ```
 src/components/shared/
-├── DataTable/
-│   ├── DataTable.tsx
-│   ├── DataTableFilters.tsx
-│   ├── DataTablePagination.tsx
+├── data-table/
+│   ├── data-table.tsx
+│   ├── data-table-filters.tsx
+│   ├── data-table-pagination.tsx
 │   └── index.ts
-├── SearchBar/
-│   ├── SearchBar.tsx
+├── search-bar/
+│   ├── search-bar.tsx
 │   └── index.ts
 └── ...
 ```
@@ -86,9 +86,9 @@ export function Button({ variant = "primary", isLoading, children, ...props }: B
 Todo componente compartilhado (em `src/components/shared/`) deve ter uma story:
 
 ```tsx
-// ComponentName.stories.tsx
+// component-name.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react"
-import { ComponentName } from "./ComponentName"
+import { ComponentName } from "./component-name"
 
 const meta: Meta<typeof ComponentName> = {
   title: "Shared/ComponentName",
@@ -109,6 +109,6 @@ export const Default: Story = {
 Cada pasta de componente deve ter um `index.ts`:
 
 ```ts
-export { Button } from "./Button"
-export type { ButtonProps } from "./Button"
+export { Button } from "./button"
+export type { ButtonProps } from "./button"
 ```

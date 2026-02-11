@@ -1,6 +1,6 @@
 # Hooks & Utilitarios
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -47,7 +47,7 @@ Projetos Next.js frequentemente precisam de hooks reutilizáveis para UX (deboun
 
 ```tsx
 // useDebounce - atrasa atualização do valor
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/hooks/use-debounce';
 
 function SearchInput() {
   const [query, setQuery] = useState('');
@@ -61,7 +61,7 @@ function SearchInput() {
 }
 
 // useThrottle - limita frequência de execução
-import { useThrottle } from '@/hooks/useThrottle';
+import { useThrottle } from '@/hooks/use-throttle';
 
 function ScrollLogger() {
   const handleScroll = useThrottle(() => {
@@ -72,7 +72,7 @@ function ScrollLogger() {
 }
 
 // useMediaQuery - breakpoint responsive
-import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 function ResponsiveNav() {
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -80,7 +80,7 @@ function ResponsiveNav() {
 }
 
 // useLocalStorage - persistência tipada com SSR safety
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 
 function ThemeToggle() {
   const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'light');
@@ -88,7 +88,7 @@ function ThemeToggle() {
 }
 
 // useClipboard
-import { useClipboard } from '@/hooks/useClipboard';
+import { useClipboard } from '@/hooks/use-clipboard';
 
 function CopyButton({ text }: { text: string }) {
   const { copy, copied } = useClipboard();
@@ -100,7 +100,7 @@ function CopyButton({ text }: { text: string }) {
 }
 
 // useOnClickOutside - fechar modal/dropdown
-import { useOnClickOutside } from '@/hooks/useOnClickOutside';
+import { useOnClickOutside } from '@/hooks/use-on-click-outside';
 
 function Dropdown() {
   const ref = useRef<HTMLDivElement>(null);
@@ -110,7 +110,7 @@ function Dropdown() {
 }
 
 // useIntersectionObserver - lazy load, infinite scroll
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 
 function LazyImage({ src }: { src: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -119,7 +119,7 @@ function LazyImage({ src }: { src: string }) {
 }
 
 // useKeyboardShortcut
-import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut';
+import { useKeyboardShortcut } from '@/hooks/use-keyboard-shortcut';
 
 function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -128,7 +128,7 @@ function CommandPalette() {
 }
 
 // useToggle - retorna [value, toggle, setTrue, setFalse]
-import { useToggle } from '@/hooks/useToggle';
+import { useToggle } from '@/hooks/use-toggle';
 
 function Accordion() {
   const [isOpen, toggle, setTrue, setFalse] = useToggle(false)

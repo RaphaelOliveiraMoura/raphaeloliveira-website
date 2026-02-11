@@ -1,6 +1,6 @@
 # Autenticacao & Autorizacao
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -99,7 +99,7 @@ export async function getSession(): Promise<User | null> {
 ### useAuth Hook
 
 ```tsx
-// src/hooks/useAuth.ts
+// src/hooks/use-auth.ts
 'use client';
 
 import type { User } from '@/types/auth';
@@ -126,11 +126,11 @@ export function useAuth(): AuthState {
 ### usePermissions Hook
 
 ```ts
-// src/hooks/usePermissions.ts
+// src/hooks/use-permissions.ts
 'use client';
 
 import { useMemo } from 'react';
-import { useAuth } from './useAuth';
+import { useAuth } from './use-auth';
 import { ROLE_PERMISSIONS, type Permission } from '@/types/auth';
 
 export function usePermissions() {
@@ -153,10 +153,10 @@ export function usePermissions() {
 ### Componente Can
 
 ```tsx
-// src/components/auth/Can.tsx
+// src/components/auth/can.tsx
 'use client';
 
-import { usePermissions } from '@/hooks/usePermissions';
+import { usePermissions } from '@/hooks/use-permissions';
 import type { Permission } from '@/types/auth';
 
 interface CanProps {
@@ -184,11 +184,11 @@ export function Can({ permission, mode = 'any', fallback = null, children }: Can
 ### Botao com permissao e tooltip
 
 ```tsx
-// src/components/auth/PermissionButton.tsx
+// src/components/auth/permission-button.tsx
 'use client';
 
 import { forwardRef } from 'react';
-import { usePermissions } from '@/hooks/usePermissions';
+import { usePermissions } from '@/hooks/use-permissions';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -240,8 +240,8 @@ export const PermissionButton = forwardRef<
 ### Menu condicional por role
 
 ```tsx
-// src/components/layouts/Sidebar.tsx - exemplo de uso
-import { Can } from '@/components/auth/Can';
+// src/components/layouts/sidebar.tsx - exemplo de uso
+import { Can } from '@/components/auth/can';
 
 export function Sidebar() {
   return (
@@ -294,12 +294,12 @@ export function middleware(request: NextRequest) {
 ### Redirect por permissao insuficiente
 
 ```tsx
-// src/components/auth/RequirePermission.tsx
+// src/components/auth/require-permission.tsx
 'use client';
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { usePermissions } from '@/hooks/usePermissions';
+import { usePermissions } from '@/hooks/use-permissions';
 import type { Permission } from '@/types/auth';
 
 interface RequirePermissionProps {
@@ -337,7 +337,7 @@ export function RequirePermission({
 ### AuthProvider
 
 ```tsx
-// src/providers/AuthProvider.tsx
+// src/providers/auth-provider.tsx
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -409,16 +409,16 @@ src/
 │       ├── token.ts            # token storage/refresh (server-side)
 │       └── index.ts
 ├── hooks/
-│   ├── useAuth.ts
-│   └── usePermissions.ts
+│   ├── use-auth.ts
+│   └── use-permissions.ts
 ├── components/
 │   └── auth/
-│       ├── Can.tsx
-│       ├── PermissionButton.tsx
-│       ├── RequirePermission.tsx
+│       ├── can.tsx
+│       ├── permission-button.tsx
+│       ├── require-permission.tsx
 │       └── index.ts
 ├── providers/
-│   └── AuthProvider.tsx
+│   └── auth-provider.tsx
 ├── app/
 │   ├── login/
 │   │   └── page.tsx

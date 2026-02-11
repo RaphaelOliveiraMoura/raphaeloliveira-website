@@ -1,0 +1,127 @@
+---
+description: Regras para uso de hooks customizados no core-stack
+globs:
+  - src/hooks/**
+  - src/components/**/*.tsx
+  - src/app/**/*.tsx
+---
+
+# Hooks - Regras
+
+## Hooks Centralizados
+
+O projeto possui hooks reutilizaveis em `src/hooks/`. Sempre verificar se ja existe um hook para o caso de uso antes de implementar logica inline.
+
+## Import
+
+Importar hooks via barrel file quando possivel:
+
+```ts
+import { useDebounce, useToggle, useLocalStorage } from "@/hooks";
+```
+
+## Quando Usar Cada Hook
+
+### Estado booleano: `useToggle`
+
+Preferir `useToggle` ao inves de `useState(false)` + toggle manual:
+
+```ts
+// Ruim
+const [open, setOpen] = useState(false);
+const toggle = () => setOpen((o) => !o);
+
+// Bom
+const [open, toggle] = useToggle(false);
+```
+
+**Excecao**: quando o estado precisa ser setado explicitamente (`setOpen(true)` ou `setOpen(false)`) alem de toggle, manter `useState`.
+
+### Debounce: `useDebounce`
+
+Preferir `useDebounce` ao inves de implementacoes ad-hoc com `setTimeout`:
+
+```ts
+const debouncedSearch = useDebounce(searchTerm, 300);
+```
+
+### Click fora: `useOnClickOutside`
+
+Preferir `useOnClickOutside` ao inves de `onBlur` + `setTimeout` para fechar dropdowns/menus:
+
+```ts
+useOnClickOutside(ref, () => setOpen(false));
+```
+
+### Storage: `useLocalStorage` / `useSessionStorage`
+
+Nunca acessar `localStorage` ou `sessionStorage` diretamente em componentes. Usar os hooks centralizados:
+
+```ts
+const [value, setValue] = useLocalStorage("key", defaultValue);
+```
+
+### Acessibilidade: `useReducedMotion`
+
+Usar `useReducedMotion` para respeitar preferencias de acessibilidade em animacoes:
+
+```ts
+const prefersReducedMotion = useReducedMotion();
+```
+
+### Responsividade: `useIsMobile` / `useBreakpoint`
+
+Usar hooks de breakpoint para logica responsiva (nao apenas media queries CSS):
+
+```ts
+import { useIsMobile } from "@/hooks";
+const isMobile = useIsMobile();
+```
+
+### Permissoes: `usePermissions`
+
+Usar `usePermissions` para verificar permissoes do usuario (requer `AuthProvider`):
+
+```ts
+const { hasPermission, hasAllPermissions, hasAnyPermission } = usePermissions();
+```
+
+## Hooks Disponiveis
+
+| Hook | Descricao |
+|------|-----------|
+| `useDebounce` | Debounce de valores |
+| `useThrottle` | Throttle de valores |
+| `useToggle` | Estado booleano com toggle |
+| `usePrevious` | Valor anterior de um estado |
+| `useLocalStorage` | Persistencia em localStorage |
+| `useSessionStorage` | Persistencia em sessionStorage |
+| `useMediaQuery` | Media query reativa |
+| `useBreakpoint` | Breakpoint atual (xs/sm/md/lg/xl/2xl) |
+| `useIsMobile` | Verifica se e mobile (<768px) |
+| `useIsTablet` | Verifica se e tablet (768-1024px) |
+| `useIsDesktop` | Verifica se e desktop (>1024px) |
+| `useWindowSize` | Dimensoes da janela |
+| `useScrollPosition` | Posicao de scroll |
+| `useOnClickOutside` | Detecta click fora de um elemento |
+| `useEventListener` | Adiciona event listener de forma segura |
+| `useKeyboardShortcut` | Atalhos de teclado |
+| `useClipboard` | Copiar para clipboard |
+| `useOnlineStatus` | Detecta status online/offline |
+| `useReducedMotion` | Preferencia de animacao reduzida |
+| `useIntersectionObserver` | Observar visibilidade de elementos |
+| `useObjectUrl` | Criar/revogar Object URLs |
+| `usePermissions` | Verificar permissoes (requer AuthProvider) |
+| `useFeatureFlag` | Verificar feature flags |
+| `useCookieConsent` | Gerenciar consentimento de cookies |
+| `useUrlState` | Estado sincronizado com URL params |
+| `useUrlPagination` | Paginacao sincronizada com URL |
+| `usePWAInstall` | Prompt de instalacao PWA |
+| `useShare` | Web Share API |
+
+## Criando Novos Hooks
+
+1. Criar em `src/hooks/` com nome `use-nome-do-hook.ts`
+2. Exportar como funcao nomeada: `export function useNomeDoHook()`
+3. Adicionar no barrel file `src/hooks/index.ts`
+4. Se for hook de uso geral, adicionar nesta tabela

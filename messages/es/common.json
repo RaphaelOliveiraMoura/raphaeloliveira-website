@@ -1,0 +1,13 @@
+{
+  "welcome": "Bienvenido",
+  "signIn": "Iniciar sesión",
+  "signOut": "Cerrar sesión",
+  "save": "Guardar",
+  "cancel": "Cancelar",
+  "delete": "Eliminar",
+  "confirm": "Confirmar",
+  "loading": "Cargando...",
+  "error": "Error",
+  "success": "Éxito",
+  "itemsCount": "{count, plural, =0 {Ningún elemento} one {# elemento} other {# elementos}}"
+}

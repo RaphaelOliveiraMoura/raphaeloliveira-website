@@ -1,6 +1,6 @@
 # Design System
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -103,7 +103,7 @@ Projetos derivados do Core Stack precisam de uma base visual consistente e exten
 ### Framer Motion - Page Transitions
 
 ```tsx
-// src/components/layouts/PageTransition.tsx
+// src/components/layouts/page-transition.tsx
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion"
@@ -138,7 +138,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 ### Framer Motion - Reduced Motion
 
 ```tsx
-// src/hooks/useReducedMotion.ts
+// src/hooks/use-reduced-motion.ts
 "use client";
 
 import { useEffect, useState } from "react";
@@ -180,12 +180,12 @@ src/
 │   ├── typography.css        # Classes de tipografia (opcional)
 │   └── animations.css        # Tokens de animacao + reduced-motion
 ├── hooks/
-│   └── useReducedMotion.ts
+│   └── use-reduced-motion.ts
 ├── components/
 │   └── layouts/
-│       └── PageTransition.tsx
+│       └── page-transition.tsx
 └── providers/
-    └── ThemeProvider.tsx     # Toggle dark/light por classe
+    └── theme-provider.tsx     # Toggle dark/light por classe
 ```
 
 ## Dependencias
@@ -204,7 +204,7 @@ src/
 
 ## Notas de Implementacao
 
-- O hook `useReducedMotion` definido nesta spec deve ser implementado em `src/hooks/useReducedMotion.ts` e exportado via barrel file. Outras specs (Acessibilidade, Animacoes) devem referenciar este hook, nao reimplementa-lo.
+- O hook `useReducedMotion` definido nesta spec deve ser implementado em `src/hooks/use-reduced-motion.ts` e exportado via barrel file. Outras specs (Acessibilidade, Animacoes) devem referenciar este hook, nao reimplementa-lo.
 
 ## Criterios de Aceite
 

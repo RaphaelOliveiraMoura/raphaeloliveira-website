@@ -1,0 +1,91 @@
+---
+description: Regras para tratamento de erros no core-stack
+globs:
+  - src/**/*.tsx
+  - src/**/*.ts
+---
+
+# Error Handling - Regras
+
+## Componentes de Erro
+
+### `ErrorState` (componente principal)
+
+Usar `ErrorState` de `@/components/shared` como componente padrao para exibir erros em paginas ou secoes:
+
+```tsx
+import { ErrorState } from "@/components/shared";
+
+<ErrorState
+  title="Erro ao carregar dados"
+  message="Tente novamente mais tarde."
+  error={error}
+  onRetry={refetch}
+/>
+```
+
+Props:
+- `title?` - titulo do erro (padrao: "Algo deu errado")
+- `message?` - mensagem descritiva
+- `error?` - objeto de erro (extrai `error.message` automaticamente)
+- `onRetry?` - callback para tentar novamente
+
+### `ErrorBoundary` (wrapper de captura)
+
+Usar `ErrorBoundary` de `@/components/shared` como wrapper para capturar erros de renderizacao. Ele usa `ErrorState` como fallback padrao:
+
+```tsx
+import { ErrorBoundary } from "@/components/shared";
+
+<ErrorBoundary>
+  <ComponenteQuePodeFalhar />
+</ErrorBoundary>
+
+// Com fallback customizado
+<ErrorBoundary fallback={<MeuFallback />}>
+  <ComponenteQuePodeFalhar />
+</ErrorBoundary>
+```
+
+### `ErrorFallback` (compatibilidade)
+
+`ErrorFallback` e um wrapper fino sobre `ErrorState` mantido para compatibilidade. Em codigo novo, preferir `ErrorState` diretamente.
+
+## Erros em Nivel de Rota (Next.js)
+
+- `error.tsx` - captura erros dentro do root layout
+- `global-error.tsx` - captura erros fora do root layout (nao usa componentes internos pois podem estar indisponiveis)
+- `not-found.tsx` - pagina 404
+
+## Logging de Erros
+
+Sempre usar `logger.error()` para registrar erros. **Nunca** usar `console.error` diretamente:
+
+```ts
+import { logger } from "@/lib/telemetry/logger";
+
+logger.error("Descricao do erro", error, { contexto: "adicional" });
+```
+
+## Erros de API
+
+Usar `normalizeApiError` de `@/lib/api` para normalizar erros de chamadas HTTP:
+
+```ts
+import { normalizeApiError } from "@/lib/api";
+
+try {
+  const data = await apiClient.get("/endpoint");
+} catch (err) {
+  const apiError = normalizeApiError(err);
+  logger.error("Erro na API", apiError);
+}
+```
+
+## Boas Praticas
+
+1. Sempre exibir feedback visual ao usuario quando ocorre um erro
+2. Sempre oferecer opcao de "Tentar novamente" quando possivel
+3. Logar erros com contexto suficiente para debug
+4. Nao expor detalhes tecnicos ao usuario em producao
+5. Usar `ErrorBoundary` em torno de secoes que podem falhar independentemente

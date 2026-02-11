@@ -1,6 +1,6 @@
 # Formatadores & Date/Time
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Última atualização:** 2026-02-11
 

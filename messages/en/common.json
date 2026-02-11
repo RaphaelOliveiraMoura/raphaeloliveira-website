@@ -1,0 +1,13 @@
+{
+  "welcome": "Welcome",
+  "signIn": "Sign In",
+  "signOut": "Sign Out",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "confirm": "Confirm",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "itemsCount": "{count, plural, =0 {No items} one {# item} other {# items}}"
+}

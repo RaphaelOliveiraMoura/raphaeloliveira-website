@@ -1,6 +1,6 @@
 # Layouts & Responsividade
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -35,7 +35,7 @@ Projetos Next.js variam entre landing pages, dashboards e apps autenticadas. Cad
 ### useMediaQuery e useBreakpoint
 
 ```tsx
-// src/hooks/useMediaQuery.ts
+// src/hooks/use-media-query.ts
 "use client";
 
 import { useEffect, useState } from "react";
@@ -56,7 +56,7 @@ export function useMediaQuery(query: string): boolean {
 ```
 
 ```tsx
-// src/hooks/useBreakpoint.ts
+// src/hooks/use-breakpoint.ts
 "use client";
 
 type Breakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
@@ -95,8 +95,8 @@ export function useIsDesktop(): boolean {
 
 ```tsx
 // src/app/(dashboard)/layout.tsx
-import { DashboardSidebar } from "@/components/layouts/DashboardSidebar";
-import { DashboardNavbar } from "@/components/layouts/DashboardNavbar";
+import { DashboardSidebar } from "@/components/layouts/dashboard-sidebar";
+import { DashboardNavbar } from "@/components/layouts/dashboard-navbar";
 
 export default function DashboardLayout({
   children,
@@ -116,10 +116,10 @@ export default function DashboardLayout({
 ```
 
 ```tsx
-// src/components/layouts/DashboardSidebar.tsx
+// src/components/layouts/dashboard-sidebar.tsx
 "use client";
 
-import { useIsMobile } from "@/hooks/useBreakpoint";
+import { useIsMobile } from "@/hooks/use-breakpoint";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { PanelLeft, ChevronsLeft, ChevronsRight } from "lucide-react";
@@ -204,8 +204,8 @@ export default function AuthLayout({
 
 ```tsx
 // src/app/(marketing)/layout.tsx
-import { MarketingNavbar } from "@/components/layouts/MarketingNavbar";
-import { MarketingFooter } from "@/components/layouts/MarketingFooter";
+import { MarketingNavbar } from "@/components/layouts/marketing-navbar";
+import { MarketingFooter } from "@/components/layouts/marketing-footer";
 
 export default function MarketingLayout({
   children,
@@ -225,10 +225,10 @@ export default function MarketingLayout({
 ### Navbar com Menu Hamburguer
 
 ```tsx
-// src/components/layouts/MarketingNavbar.tsx
+// src/components/layouts/marketing-navbar.tsx
 "use client";
 
-import { useIsMobile } from "@/hooks/useBreakpoint";
+import { useIsMobile } from "@/hooks/use-breakpoint";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
@@ -279,7 +279,7 @@ export function MarketingNavbar() {
 ### Container Query (opcional)
 
 ```tsx
-// src/components/shared/ProductCard.tsx
+// src/components/shared/product-card.tsx
 "use client";
 
 import { useRef } from "react";
@@ -318,14 +318,14 @@ src/
 │       └── ...
 ├── components/
 │   └── layouts/
-│       ├── DashboardSidebar.tsx
-│       ├── DashboardNavbar.tsx
-│       ├── MarketingNavbar.tsx
-│       ├── MarketingFooter.tsx
-│       └── AuthCard.tsx
+│       ├── dashboard-sidebar.tsx
+│       ├── dashboard-navbar.tsx
+│       ├── marketing-navbar.tsx
+│       ├── marketing-footer.tsx
+│       └── auth-card.tsx
 └── hooks/
-    ├── useMediaQuery.ts
-    └── useBreakpoint.ts
+    ├── use-media-query.ts
+    └── use-breakpoint.ts
 ```
 
 ## Dependencias

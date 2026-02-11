@@ -1,6 +1,6 @@
 # Feedback & Orientacao ao Usuario
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -103,7 +103,7 @@ function handleDelete(itemId: string) {
 ### Empty State
 
 ```tsx
-// src/components/shared/EmptyState.tsx
+// src/components/shared/empty-state.tsx
 import { Button } from "@/components/ui/button";
 
 interface EmptyStateProps {
@@ -134,7 +134,7 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
 ### Skeleton Loaders
 
 ```tsx
-// src/components/shared/SkeletonPresets.tsx
+// src/components/shared/skeleton-presets.tsx
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function SkeletonText({ lines = 3 }: { lines?: number }) {
@@ -172,7 +172,7 @@ export function SkeletonTable({ rows = 5 }: { rows?: number }) {
 ### Error State com Retry
 
 ```tsx
-// src/components/shared/ErrorState.tsx
+// src/components/shared/error-state.tsx
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -205,7 +205,7 @@ export function ErrorState({
 ### Confirmacao Dialog
 
 ```tsx
-// src/components/shared/ConfirmDialog.tsx
+// src/components/shared/confirm-dialog.tsx
 "use client";
 
 import {
@@ -267,7 +267,7 @@ export function ConfirmDialog({
 ### Button Loading State
 
 ```tsx
-// src/components/shared/LoadingButton.tsx
+// src/components/shared/loading-button.tsx
 import { Button } from "@/components/ui/button";
 import { Loader2, Check } from "lucide-react";
 
@@ -290,7 +290,7 @@ export function LoadingButton({ loading, success, children, disabled, ...props }
 ### Centro de Notificacoes
 
 ```tsx
-// src/components/shared/NotificationCenter.tsx
+// src/components/shared/notification-center.tsx
 import { useState } from "react";
 
 interface Notification {
@@ -341,14 +341,14 @@ interface TourConfig {
 src/
 ├── components/
 │   └── shared/
-│       ├── EmptyState.tsx
-│       ├── ErrorState.tsx
-│       ├── SkeletonPresets.tsx
-│       ├── ConfirmDialog.tsx
-│       ├── LoadingButton.tsx
-│       ├── NotificationCenter.tsx
-│       ├── Tour.tsx
-│       └── OfflineBanner.tsx
+│       ├── empty-state.tsx
+│       ├── error-state.tsx
+│       ├── skeleton-presets.tsx
+│       ├── confirm-dialog.tsx
+│       ├── loading-button.tsx
+│       ├── notification-center.tsx
+│       ├── tour.tsx
+│       └── offline-banner.tsx
 ├── app/
 │   ├── not-found.tsx              # 404 customizado
 │   └── error.tsx                  # Error boundary 500
@@ -356,9 +356,9 @@ src/
 │   └── feedback/
 │       ├── toast.ts
 │       ├── onboarding.ts
-│       └── useNotifications.ts
+│       └── use-notifications.ts
 └── hooks/
-    └── useOnlineStatus.ts
+    └── use-online-status.ts
 ```
 
 ## Dependencias

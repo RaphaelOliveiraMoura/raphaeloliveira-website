@@ -1,6 +1,6 @@
 # Componentes & Storybook
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -54,7 +54,7 @@ src/components/ui/
 ### Exemplo de Story - Button
 
 ```tsx
-// stories/Basic/Button.stories.tsx
+// stories/Basic/button.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "@/components/ui/button";
 
@@ -111,7 +111,7 @@ export const Variants: Story = {
 ### Exemplo de Story - Dialog (Overlay)
 
 ```tsx
-// stories/Overlay/Dialog.stories.tsx
+// stories/Overlay/dialog.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   Dialog,
@@ -224,37 +224,37 @@ core-stack/
 │   └── manager.ts          # (opcional) tema customizado
 ├── stories/
 │   ├── Basic/
-│   │   ├── Button.stories.tsx
-│   │   ├── Input.stories.tsx
-│   │   ├── Label.stories.tsx
-│   │   ├── Badge.stories.tsx
-│   │   └── Separator.stories.tsx
+│   │   ├── button.stories.tsx
+│   │   ├── input.stories.tsx
+│   │   ├── label.stories.tsx
+│   │   ├── badge.stories.tsx
+│   │   └── separator.stories.tsx
 │   ├── Form/
-│   │   ├── Select.stories.tsx
-│   │   ├── Checkbox.stories.tsx
-│   │   ├── Switch.stories.tsx
-│   │   ├── Calendar.stories.tsx
+│   │   ├── select.stories.tsx
+│   │   ├── checkbox.stories.tsx
+│   │   ├── switch.stories.tsx
+│   │   ├── calendar.stories.tsx
 │   │   └── ...
 │   ├── Feedback/
-│   │   ├── Toast.stories.tsx
-│   │   ├── Alert.stories.tsx
-│   │   └── Skeleton.stories.tsx
+│   │   ├── toast.stories.tsx
+│   │   ├── alert.stories.tsx
+│   │   └── skeleton.stories.tsx
 │   ├── Overlay/
-│   │   ├── Dialog.stories.tsx
-│   │   ├── Sheet.stories.tsx
-│   │   └── Popover.stories.tsx
+│   │   ├── dialog.stories.tsx
+│   │   ├── sheet.stories.tsx
+│   │   └── popover.stories.tsx
 │   ├── Navigation/
-│   │   ├── Tabs.stories.tsx
-│   │   ├── Accordion.stories.tsx
-│   │   └── Breadcrumb.stories.tsx
+│   │   ├── tabs.stories.tsx
+│   │   ├── accordion.stories.tsx
+│   │   └── breadcrumb.stories.tsx
 │   ├── Data/
-│   │   ├── Table.stories.tsx
-│   │   ├── Card.stories.tsx
-│   │   └── Pagination.stories.tsx
+│   │   ├── table.stories.tsx
+│   │   ├── card.stories.tsx
+│   │   └── pagination.stories.tsx
 │   └── Layout/
-│       ├── ScrollArea.stories.tsx
-│       ├── AspectRatio.stories.tsx
-│       └── Collapsible.stories.tsx
+│       ├── scroll-area.stories.tsx
+│       ├── aspect-ratio.stories.tsx
+│       └── collapsible.stories.tsx
 ├── src/
 │   └── components/
 │       └── ui/

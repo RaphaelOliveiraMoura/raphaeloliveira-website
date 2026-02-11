@@ -58,16 +58,20 @@ src/
 
 ## Convencoes de Nomenclatura
 
-- **Arquivos de componentes:** PascalCase (`Button.tsx`, `UserCard.tsx`)
-- **Arquivos de utilitarios/hooks:** camelCase (`useDebounce.ts`, `formatCurrency.ts`)
+- **Todos os arquivos:** kebab-case (`button.tsx`, `user-card.tsx`, `use-debounce.ts`, `format-currency.ts`)
 - **Pastas:** kebab-case (`feature-flags/`, `date-time/`)
 - **Tipos/Interfaces:** PascalCase com prefixo descritivo (`UserProfile`, `ApiResponse<T>`)
 - **Constantes:** UPPER_SNAKE_CASE (`MAX_RETRY_COUNT`, `API_BASE_URL`)
 - **Enums:** PascalCase (`UserRole`, `HttpStatus`)
+- **Funcoes/Variaveis:** camelCase (`useDebounce`, `formatCurrency`)
+- **Componentes (nome da funcao):** PascalCase (`Button`, `UserCard`)
 
 ## Imports
 
 - Sempre usar path alias `@/` que mapeia para `./src/`
+- **Excecao**: barrel files (`index.ts`) e testes co-localizados (`*.test.ts`) podem usar `./` para imports do mesmo diretorio
+- Separar cada grupo de imports com uma linha em branco
+- Preferir importar via barrel file quando disponivel (ex: `@/hooks` em vez de `@/hooks/use-debounce`)
 - Ordem de imports:
   1. React/Next.js
   2. Bibliotecas externas
@@ -83,6 +87,31 @@ src/
 - Preferir `interface` para objetos, `type` para unions/intersections
 - Exportar tipos junto com suas implementacoes
 - Generics quando ha reuso de logica com tipos diferentes
+
+## Ambiente (Client/Server)
+
+Para verificar se o codigo esta sendo executado no cliente ou servidor, **sempre** usar os utilitarios centralizados:
+
+```ts
+import { isClient, isServer } from "@/lib/utils/environment";
+
+// Usar em guards de SSR
+if (!isClient()) return null;
+if (isServer()) return defaultValue;
+```
+
+**Nunca** usar `typeof window !== "undefined"` diretamente no codigo. Sempre importar de `@/lib/utils/environment`.
+
+## Logging
+
+Usar o logger centralizado (`@/lib/telemetry/logger`) em vez de `console.*` diretamente:
+
+```ts
+import { logger } from "@/lib/telemetry/logger";
+
+logger.error("Mensagem de erro", error);
+logger.info("Evento importante", { userId });
+```
 
 ## Spec-Driven Development
 
@@ -101,6 +130,10 @@ As specs estao indexadas em `docs/specs/README.md`.
 - Componentes: export nomeado (`export function Button()`)
 - Hooks: export nomeado (`export function useDebounce()`)
 - Tipos: export nomeado junto com implementacao
+- **Default exports**: permitidos **apenas** quando exigido pelo framework:
+  - Next.js App Router: pages, layouts, `error.tsx`, `not-found.tsx`, `global-error.tsx`, `loading.tsx`, `robots.ts`, `sitemap.ts`
+  - Libs externas: `next-intl` (`getRequestConfig`), etc.
+  - Em todos os outros casos, usar **export nomeado**
 
 ## Commits
 

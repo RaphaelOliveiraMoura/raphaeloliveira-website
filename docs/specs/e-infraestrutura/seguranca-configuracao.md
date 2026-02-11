@@ -1,6 +1,6 @@
 # Seguranca & Configuracao
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Ultima atualizacao:** 2026-02-11
 
@@ -234,7 +234,7 @@ export async function validateCsrfToken(token: string): Promise<boolean> {
 ### Rate Limiting no Client
 
 ```ts
-// src/lib/security/rateLimit.ts
+// src/lib/security/rate-limit.ts
 import { toast } from "sonner"
 
 export function createClientRateLimiter(maxRequests: number, windowMs: number) {
@@ -266,7 +266,7 @@ async function handleLogin() {
 
 ```tsx
 // Hook useThrottle para acoes genericas
-// src/hooks/useThrottle.ts
+// src/hooks/use-throttle.ts
 import { useRef, useCallback } from "react"
 
 export function useThrottle<T extends (...args: unknown[]) => unknown>(
@@ -298,10 +298,10 @@ src/
 │       ├── sanitize.ts         # sanitizeHtml
 │       ├── headers.ts          # getSecurityHeaders
 │       ├── csrf.ts             # generate/validate CSRF token
-│       ├── rateLimit.ts       # client rate limiter
+│       ├── rate-limit.ts       # client rate limiter
 │       └── index.ts
 ├── hooks/
-│   └── useThrottle.ts
+│   └── use-throttle.ts
 ├── middleware.ts               # aplica security headers
 .env.example                    # template
 ```

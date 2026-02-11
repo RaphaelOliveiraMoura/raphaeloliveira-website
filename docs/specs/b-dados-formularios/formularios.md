@@ -1,6 +1,6 @@
 # Formulários
 
-> **Status:** `rascunho`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
 > **Última atualização:** 2026-02-11
 
@@ -81,7 +81,7 @@ const schema = z.object({
 ### Form wrapper e uso com shadcn/ui
 
 ```tsx
-// src/components/shared/Form.tsx
+// src/components/shared/form.tsx
 import { useForm, FormProvider, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
@@ -185,10 +185,10 @@ export function applyMask(value: string, type: keyof typeof masks): string {
   return masks[type](digits);
 }
 
-// src/components/shared/MaskedInput.tsx
+// src/components/shared/masked-input.tsx
 // Input com mask + paste support integrado com react-hook-form via Controller
 import { Controller, useFormContext } from 'react-hook-form';
-import { Input } from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 import { applyMask, type masks } from '@/lib/masks';
 
 interface MaskedInputProps extends Omit<React.ComponentProps<typeof Input>, 'value' | 'onChange'> {
@@ -226,7 +226,7 @@ export function MaskedInput({ name, mask, ...props }: MaskedInputProps) {
 ### Wizard multi-step
 
 ```tsx
-// src/components/shared/FormWizard.tsx
+// src/components/shared/form-wizard.tsx
 import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { z } from 'zod';
@@ -303,9 +303,9 @@ src/
 │       └── currency.ts
 ├── components/
 │   └── shared/
-│       ├── Form.tsx               # Wrapper RHF + Zod
-│       ├── FormWizard.tsx         # Wizard multi-step
-│       ├── MaskedInput.tsx        # Input com máscara + paste (usa Controller)
+│       ├── form.tsx               # Wrapper RHF + Zod
+│       ├── form-wizard.tsx        # Wizard multi-step
+│       ├── masked-input.tsx       # Input com máscara + paste (usa Controller)
 │       └── index.ts
 └── config/
     └── i18n/
