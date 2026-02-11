@@ -29,6 +29,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+debug-storybook.log
+
+# storybook
+/storybook-static
 
 # env files (can opt-in for committing if needed)
 .env*

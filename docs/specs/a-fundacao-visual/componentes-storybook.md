@@ -158,33 +158,22 @@ export const Default: Story = {
 ```ts
 // .storybook/main.ts
 import type { StorybookConfig } from "@storybook/nextjs";
-import path from "path";
 
 const config: StorybookConfig = {
-  stories: ["../stories/**/*.mdx", "../stories/**/*.stories.@(js|jsx|ts|tsx)"],
-  addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-a11y",
-  ],
+  stories: ["../stories/**/*.stories.@(js|jsx|ts|tsx)"],
+  addons: ["@storybook/addon-a11y"],
   framework: {
     name: "@storybook/nextjs",
     options: {},
   },
   staticDirs: ["../public"],
-  webpackFinal: async (config) => {
-    if (config.resolve) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        "@": path.resolve(__dirname, "../src"),
-      };
-    }
-    return config;
-  },
+  tags: ["autodocs"],
 };
 
 export default config;
 ```
+
+> **Nota:** Storybook 10 inclui essentials (controls, actions, viewport, etc.) built-in. O `@storybook/nextjs` resolve automaticamente os path aliases do `tsconfig.json`.
 
 ### Ordenacao de Categorias no Sidebar
 
@@ -195,6 +184,12 @@ import "../src/app/globals.css";
 
 const preview: Preview = {
   parameters: {
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
     options: {
       storySort: {
         order: [
@@ -205,9 +200,11 @@ const preview: Preview = {
           "Navigation",
           "Data",
           "Layout",
+          "Shared",
         ],
       },
     },
+    layout: "centered",
   },
 };
 
@@ -220,12 +217,12 @@ export default preview;
 core-stack/
 ├── .storybook/
 │   ├── main.ts
-│   ├── preview.ts
-│   └── manager.ts          # (opcional) tema customizado
+│   └── preview.ts
 ├── stories/
 │   ├── Basic/
 │   │   ├── button.stories.tsx
 │   │   ├── input.stories.tsx
+│   │   ├── textarea.stories.tsx
 │   │   ├── label.stories.tsx
 │   │   ├── badge.stories.tsx
 │   │   └── separator.stories.tsx
@@ -233,16 +230,18 @@ core-stack/
 │   │   ├── select.stories.tsx
 │   │   ├── checkbox.stories.tsx
 │   │   ├── switch.stories.tsx
-│   │   ├── calendar.stories.tsx
-│   │   └── ...
+│   │   ├── slider.stories.tsx
+│   │   └── radio-group.stories.tsx
 │   ├── Feedback/
-│   │   ├── toast.stories.tsx
 │   │   ├── alert.stories.tsx
-│   │   └── skeleton.stories.tsx
+│   │   ├── skeleton.stories.tsx
+│   │   └── progress.stories.tsx
 │   ├── Overlay/
 │   │   ├── dialog.stories.tsx
 │   │   ├── sheet.stories.tsx
-│   │   └── popover.stories.tsx
+│   │   ├── popover.stories.tsx
+│   │   ├── tooltip.stories.tsx
+│   │   └── dropdown-menu.stories.tsx
 │   ├── Navigation/
 │   │   ├── tabs.stories.tsx
 │   │   ├── accordion.stories.tsx
@@ -250,11 +249,16 @@ core-stack/
 │   ├── Data/
 │   │   ├── table.stories.tsx
 │   │   ├── card.stories.tsx
+│   │   ├── avatar.stories.tsx
 │   │   └── pagination.stories.tsx
-│   └── Layout/
-│       ├── scroll-area.stories.tsx
-│       ├── aspect-ratio.stories.tsx
-│       └── collapsible.stories.tsx
+│   ├── Layout/
+│   │   ├── scroll-area.stories.tsx
+│   │   ├── aspect-ratio.stories.tsx
+│   │   └── collapsible.stories.tsx
+│   └── Shared/
+│       ├── loading-button.stories.tsx
+│       ├── empty-state.stories.tsx
+│       └── skeleton-presets.stories.tsx
 ├── src/
 │   └── components/
 │       └── ui/
@@ -268,10 +272,10 @@ core-stack/
 
 ### Bibliotecas Externas
 
-- `@storybook/nextjs` - Storybook para Next.js
-- `@storybook/addon-essentials` - controles, actions, viewport
+- `storybook` (v10) - core do Storybook (inclui essentials: controls, actions, viewport)
+- `@storybook/nextjs` - framework Next.js para Storybook
 - `@storybook/addon-a11y` - verificacao de acessibilidade
-- `@storybook/addon-links` - links entre stories
+- `@storybook/react` - bindings React
 - `@radix-ui/*` - componentes base (via shadcn)
 - `class-variance-authority` (cva) - variantes de componentes
 - `tailwind-merge` - merge de classes Tailwind
@@ -289,13 +293,13 @@ core-stack/
 
 ## Criterios de Aceite
 
-- [ ] 30 componentes (conforme listados no RF01) shadcn/ui instalados e exportados
-- [ ] Storybook inicia com `npm run storybook` sem erros
-- [ ] Tailwind v4 aplicado corretamente nas stories
-- [ ] Stories organizadas em Basic, Form, Feedback, Overlay, Navigation, Data, Layout
-- [ ] Autodocs configurado e exibindo props
-- [ ] Addon a11y instalado e funcional
-- [ ] Pelo menos um story de exemplo por categoria
+- [x] 30 componentes (conforme listados no RF01) shadcn/ui instalados e exportados
+- [x] Storybook inicia com `npm run storybook` sem erros
+- [x] Tailwind v4 aplicado corretamente nas stories
+- [x] Stories organizadas em Basic, Form, Feedback, Overlay, Navigation, Data, Layout, Shared
+- [x] Autodocs configurado e exibindo props
+- [x] Addon a11y instalado e funcional
+- [x] Pelo menos um story de exemplo por categoria
 - [ ] Visual regression testing configurado via Playwright screenshots (Chromatic como alternativa opcional)
 - [ ] README com instrucoes de adicao de novos componentes
 
