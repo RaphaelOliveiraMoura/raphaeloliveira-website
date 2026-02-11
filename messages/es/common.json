@@ -73,7 +73,9 @@
     "selectFiles": "Seleccionar archivos",
     "dropHere": "Suelta los archivos aquí...",
     "dragOrClick": "Arrastra archivos o haz clic para seleccionar",
-    "fileType": "Archivo"
+    "fileType": "Archivo",
+    "maxSizeExceeded": "El archivo excede el tamaño máximo de {maxMb}MB",
+    "invalidType": "Tipo de archivo no permitido: {type}"
   },
   "offline": {
     "message": "Estás sin conexión. Algunas funcionalidades pueden no estar disponibles."
@@ -103,5 +105,16 @@
   "metadata": {
     "title": "Core Stack",
     "description": "Plantilla base universal para proyectos Next.js"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcomeBack": "Bienvenido de nuevo, {name}!",
+    "overview": "Resumen",
+    "totalUsers": "Usuarios totales",
+    "totalPosts": "Posts totales",
+    "activeNow": "Activos ahora",
+    "revenue": "Ingresos",
+    "recentActivity": "Actividad reciente",
+    "noActivity": "Sin actividad reciente."
   }
 }

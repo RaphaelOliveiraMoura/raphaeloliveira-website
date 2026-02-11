@@ -163,7 +163,8 @@ npm run dev          # Servidor de desenvolvimento
 npm run build        # Build de producao
 npm run lint         # ESLint
 npm run storybook    # Storybook dev server
-npm run test         # Rodar testes
-npm run test:watch   # Testes em modo watch
-npm run test:e2e     # Testes end-to-end
+npm run test         # Vitest em modo watch
+npm run test:run     # Execucao unica
+npm run test:coverage # Testes com cobertura
+npm run test:e2e     # Testes end-to-end (Playwright)
 ```

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type RefObject } from "react";
+import { useSyncExternalStore, type RefObject } from "react";
 
 import { cn } from "@/lib/utils";
 import { slugify } from "@/lib/formatters";
@@ -17,35 +17,55 @@ interface TableOfContentsProps {
   className?: string;
 }
 
+const EMPTY_ITEMS: TocItem[] = [];
+const tocCache = new WeakMap<HTMLElement, { key: string; items: TocItem[] }>();
+
+function getTocSnapshot(container: HTMLElement | null): TocItem[] {
+  if (!container) return EMPTY_ITEMS;
+
+  const headings = container.querySelectorAll<HTMLHeadingElement>("h2, h3");
+
+  let key = "";
+  headings.forEach((el) => {
+    key += `${el.tagName}|${el.id || el.textContent};`;
+  });
+
+  const cached = tocCache.get(container);
+  if (cached && cached.key === key) return cached.items;
+
+  const tocItems: TocItem[] = [];
+  headings.forEach((el) => {
+    const id = el.id || slugify(el.textContent ?? "") || "";
+    if (!el.id) el.id = id;
+    tocItems.push({
+      id,
+      text: el.textContent ?? "",
+      level: el.tagName === "H2" ? 2 : 3,
+    });
+  });
+
+  tocCache.set(container, { key, items: tocItems });
+  return tocItems;
+}
+
 export function TableOfContents({
   containerRef,
   className,
 }: TableOfContentsProps) {
-  const [items, setItems] = useState<TocItem[]>([]);
   const t = useTranslations("common");
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+  const items = useSyncExternalStore(
+    (onStoreChange) => {
+      const container = containerRef.current;
+      if (!container) return () => {};
 
-    const headings = container.querySelectorAll<HTMLHeadingElement>(
-      "h2, h3"
-    );
-
-    const tocItems: TocItem[] = [];
-    headings.forEach((el) => {
-      const id = el.id || slugify(el.textContent ?? "") || "";
-      if (!el.id) el.id = id;
-      tocItems.push({
-        id,
-        text: el.textContent ?? "",
-        level: el.tagName === "H2" ? 2 : 3,
-      });
-    });
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Items are derived from DOM headings; reading the DOM requires an effect
-    setItems(tocItems);
-  }, [containerRef]);
+      const observer = new MutationObserver(onStoreChange);
+      observer.observe(container, { childList: true, subtree: true });
+      return () => observer.disconnect();
+    },
+    () => getTocSnapshot(containerRef.current),
+    () => EMPTY_ITEMS
+  );
 
   if (items.length === 0) return null;
 

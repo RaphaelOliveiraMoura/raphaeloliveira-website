@@ -17,14 +17,16 @@ describe("validateFile", () => {
     const file = createFile("big.png", 5 * 1024 * 1024, "image/png");
     const result = validateFile(file, { maxSize: 2 * 1024 * 1024 });
     expect(result.valid).toBe(false);
-    expect(result.error).toContain("tamanho máximo");
+    expect(result.errorKey).toBe("fileUpload.maxSizeExceeded");
+    expect(result.errorParams?.maxMb).toBe("2.0");
   });
 
   it("validates allowed file types", () => {
     const file = createFile("doc.pdf", 1024, "application/pdf");
     const result = validateFile(file, { allowedTypes: ["image/png", "image/jpeg"] });
     expect(result.valid).toBe(false);
-    expect(result.error).toContain("não permitido");
+    expect(result.errorKey).toBe("fileUpload.invalidType");
+    expect(result.errorParams?.type).toBe("application/pdf");
   });
 
   it("accepts valid file type", () => {

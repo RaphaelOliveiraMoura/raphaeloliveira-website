@@ -73,7 +73,9 @@
     "selectFiles": "Select files",
     "dropHere": "Drop files here...",
     "dragOrClick": "Drag files or click to select",
-    "fileType": "File"
+    "fileType": "File",
+    "maxSizeExceeded": "File exceeds the maximum size of {maxMb}MB",
+    "invalidType": "File type not allowed: {type}"
   },
   "offline": {
     "message": "You are offline. Some features may not be available."
@@ -103,5 +105,16 @@
   "metadata": {
     "title": "Core Stack",
     "description": "Universal base template for Next.js projects"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcomeBack": "Welcome back, {name}!",
+    "overview": "Overview",
+    "totalUsers": "Total Users",
+    "totalPosts": "Total Posts",
+    "activeNow": "Active Now",
+    "revenue": "Revenue",
+    "recentActivity": "Recent Activity",
+    "noActivity": "No recent activity."
   }
 }
