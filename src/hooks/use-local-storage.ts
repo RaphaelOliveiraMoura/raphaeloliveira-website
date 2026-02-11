@@ -10,7 +10,7 @@ function dispatchStorageEvent(key: string) {
 
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, (value: T | ((prev: T) => T)) => void, () => void] {
   const subscribe = useCallback(
     (callback: () => void) => {
@@ -27,7 +27,7 @@ export function useLocalStorage<T>(
         window.removeEventListener(LOCAL_STORAGE_EVENT, handleCustom);
       };
     },
-    [key]
+    [key],
   );
 
   const getSnapshot = useCallback(() => {
@@ -46,9 +46,7 @@ export function useLocalStorage<T>(
       try {
         const currentRaw = window.localStorage.getItem(key);
         const current: T =
-          currentRaw !== null
-            ? (JSON.parse(currentRaw) as T)
-            : initialValue;
+          currentRaw !== null ? (JSON.parse(currentRaw) as T) : initialValue;
         const newValue = value instanceof Function ? value(current) : value;
         window.localStorage.setItem(key, JSON.stringify(newValue));
         dispatchStorageEvent(key);
@@ -56,7 +54,7 @@ export function useLocalStorage<T>(
         // localStorage indisponivel (quota, SSR)
       }
     },
-    [key, initialValue]
+    [key, initialValue],
   );
 
   const removeValue = useCallback(() => {

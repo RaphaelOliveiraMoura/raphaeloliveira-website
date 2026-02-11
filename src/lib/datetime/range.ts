@@ -1,10 +1,10 @@
-import { parseISO, format, parse, type Locale } from "date-fns";
+import { format, type Locale, parse, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export function formatDateRange(
   start: Date | string,
   end: Date | string,
-  options?: { locale?: Locale }
+  options?: { locale?: Locale },
 ): string {
   const locale = options?.locale ?? ptBR;
   const s = typeof start === "string" ? parseISO(start) : start;

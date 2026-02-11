@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Mail, Loader2, ChevronRight, Plus } from "lucide-react";
+import { ChevronRight, Loader2, Mail, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -17,12 +17,28 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "destructive", "outline", "secondary", "ghost", "link"],
+      options: [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link",
+      ],
       description: "Variante visual do botao",
     },
     size: {
       control: "select",
-      options: ["default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"],
+      options: [
+        "default",
+        "xs",
+        "sm",
+        "lg",
+        "icon",
+        "icon-xs",
+        "icon-sm",
+        "icon-lg",
+      ],
       description: "Tamanho do botao",
     },
     disabled: {
@@ -98,10 +114,18 @@ export const IconOnly: Story = {
   name: "Apenas Icone",
   render: () => (
     <div className="flex flex-wrap items-center gap-4">
-      <Button size="icon-xs"><Plus /></Button>
-      <Button size="icon-sm"><Plus /></Button>
-      <Button size="icon"><Plus /></Button>
-      <Button size="icon-lg"><Plus /></Button>
+      <Button size="icon-xs">
+        <Plus />
+      </Button>
+      <Button size="icon-sm">
+        <Plus />
+      </Button>
+      <Button size="icon">
+        <Plus />
+      </Button>
+      <Button size="icon-lg">
+        <Plus />
+      </Button>
     </div>
   ),
 };
@@ -121,11 +145,21 @@ export const Disabled: Story = {
   render: () => (
     <div className="flex flex-wrap items-center gap-4">
       <Button disabled>Default</Button>
-      <Button variant="destructive" disabled>Destructive</Button>
-      <Button variant="outline" disabled>Outline</Button>
-      <Button variant="secondary" disabled>Secondary</Button>
-      <Button variant="ghost" disabled>Ghost</Button>
-      <Button variant="link" disabled>Link</Button>
+      <Button variant="destructive" disabled>
+        Destructive
+      </Button>
+      <Button variant="outline" disabled>
+        Outline
+      </Button>
+      <Button variant="secondary" disabled>
+        Secondary
+      </Button>
+      <Button variant="ghost" disabled>
+        Ghost
+      </Button>
+      <Button variant="link" disabled>
+        Link
+      </Button>
     </div>
   ),
 };

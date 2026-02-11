@@ -1,7 +1,7 @@
 export function meetsContrastRatio(
   foreground: string,
   background: string,
-  level: "AA" | "AAA" = "AA"
+  level: "AA" | "AAA" = "AA",
 ): boolean {
   const ratio = getContrastRatio(foreground, background);
   const threshold = level === "AAA" ? 7 : 4.5;

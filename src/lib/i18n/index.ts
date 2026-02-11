@@ -1,9 +1,14 @@
-export { Link, redirect, usePathname, useRouter } from "./navigation";
 export { useDateFormatter, useNumberFormatter } from "./formatters";
+export { Link, redirect, usePathname, useRouter } from "./navigation";
 
 /**
  * Re-exports de next-intl para uso em componentes.
  * Componentes NUNCA devem importar diretamente de "next-intl".
  */
-export { useLocale, useTranslations, useMessages, useFormatter } from "next-intl";
-export { getTranslations, getLocale, getMessages } from "next-intl/server";
+export {
+  useFormatter,
+  useLocale,
+  useMessages,
+  useTranslations,
+} from "next-intl";
+export { getLocale, getMessages, getTranslations } from "next-intl/server";

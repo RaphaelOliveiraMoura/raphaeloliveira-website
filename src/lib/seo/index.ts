@@ -1,10 +1,10 @@
-export { generateMetadata } from "./metadata";
 export {
-  buildOrganizationJsonLd,
+  type ArticleSchema,
+  type BreadcrumbItem,
+  type BreadcrumbListSchema,
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
+  buildOrganizationJsonLd,
   type OrganizationSchema,
-  type ArticleSchema,
-  type BreadcrumbListSchema,
-  type BreadcrumbItem,
 } from "./json-ld";
+export { generateMetadata } from "./metadata";

@@ -1,14 +1,15 @@
 import {
+  ArrowRight,
   Blocks,
   Code2,
+  FileText,
   Globe,
   Lock,
-  FileText,
   Search,
-  ArrowRight,
 } from "lucide-react";
 
-import { getTranslations, Link } from "@/lib/i18n";
+import { JsonLd } from "@/components/shared";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,9 +17,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { JsonLd } from "@/components/shared";
+
+import { getTranslations, Link } from "@/lib/i18n";
 import { buildOrganizationJsonLd } from "@/lib/seo";
 
 const FEATURES = [
@@ -43,7 +44,7 @@ export default async function LandingPage() {
   const jsonLd = buildOrganizationJsonLd(
     "Core Stack",
     "https://core-stack.dev",
-    "https://core-stack.dev/logo.png"
+    "https://core-stack.dev/logo.png",
   );
 
   return (
@@ -63,15 +64,17 @@ export default async function LandingPage() {
         </p>
         <div className="flex flex-col gap-4 sm:flex-row">
           <Button size="lg" asChild>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {t("landing.hero.cta")}
               <ArrowRight className="ml-2 size-4" />
             </a>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <Link href="/examples">
-              {t("landing.hero.secondary")}
-            </Link>
+            <Link href="/examples">{t("landing.hero.secondary")}</Link>
           </Button>
         </div>
       </section>
@@ -138,7 +141,11 @@ export default async function LandingPage() {
           {t("landing.cta.subtitle")}
         </p>
         <Button size="lg" asChild>
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {t("landing.cta.button")}
             <ArrowRight className="ml-2 size-4" />
           </a>

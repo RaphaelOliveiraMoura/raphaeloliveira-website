@@ -45,7 +45,7 @@ export const cookies = {
       const trimmedKey = key?.trim();
       if (trimmedKey) {
         result[decodeURIComponent(trimmedKey)] = decodeURIComponent(
-          rest.join("=").trim()
+          rest.join("=").trim(),
         );
       }
     });

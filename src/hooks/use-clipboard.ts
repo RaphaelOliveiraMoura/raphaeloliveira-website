@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseClipboardReturn {
   copy: (text: string) => Promise<void>;
@@ -30,12 +30,12 @@ export function useClipboard(resetDelay = 2000): UseClipboardReturn {
         timeoutRef.current = setTimeout(() => setCopied(false), resetDelay);
       } catch (err) {
         setError(
-          err instanceof Error ? err : new Error("Failed to copy to clipboard")
+          err instanceof Error ? err : new Error("Failed to copy to clipboard"),
         );
         setCopied(false);
       }
     },
-    [resetDelay]
+    [resetDelay],
   );
 
   return { copy, copied, error };

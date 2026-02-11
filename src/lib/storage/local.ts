@@ -37,7 +37,7 @@ export function createTypedLocalStorage<
     setWithExpiry<K extends keyof TMap & string>(
       key: K,
       value: TMap[K],
-      ttlMs: number
+      ttlMs: number,
     ): void {
       if (!isClient()) return;
       const item: StorageItem<TMap[K]> = {

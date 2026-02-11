@@ -41,7 +41,7 @@ function fuzzyScore(query: string, text: string): number {
   // Match por palavras
   const queryWords = normalizedQuery.split(/\s+/);
   const matchedWords = queryWords.filter((word) =>
-    normalizedText.includes(word)
+    normalizedText.includes(word),
   );
 
   if (matchedWords.length > 0) {
@@ -52,7 +52,11 @@ function fuzzyScore(query: string, text: string): number {
   let queryIndex = 0;
   let matchCount = 0;
 
-  for (let i = 0; i < normalizedText.length && queryIndex < normalizedQuery.length; i++) {
+  for (
+    let i = 0;
+    i < normalizedText.length && queryIndex < normalizedQuery.length;
+    i++
+  ) {
     if (normalizedText[i] === normalizedQuery[queryIndex]) {
       matchCount++;
       queryIndex++;
@@ -73,7 +77,7 @@ function fuzzyScore(query: string, text: string): number {
 export function fuzzySearch(
   items: SearchableItem[],
   query: string,
-  options: FuzzySearchOptions = {}
+  options: FuzzySearchOptions = {},
 ): SearchResult[] {
   const {
     keys = ["title", "description"],

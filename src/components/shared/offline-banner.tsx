@@ -2,8 +2,8 @@
 
 import { WifiOff } from "lucide-react";
 
-import { useOnlineStatus } from "@/hooks/use-online-status";
 import { useTranslations } from "@/lib/i18n";
+import { useOnlineStatus } from "@/hooks/use-online-status";
 
 export function OfflineBanner() {
   const isOnline = useOnlineStatus();
@@ -18,9 +18,7 @@ export function OfflineBanner() {
       aria-live="assertive"
     >
       <WifiOff className="h-4 w-4 shrink-0" />
-      <span className="text-sm font-medium">
-        {t("offline.message")}
-      </span>
+      <span className="text-sm font-medium">{t("offline.message")}</span>
     </div>
   );
 }

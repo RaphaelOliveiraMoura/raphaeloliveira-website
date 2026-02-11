@@ -11,17 +11,14 @@ export async function POST(request: NextRequest) {
   const refreshToken = request.cookies.get("refresh-token")?.value;
 
   if (!refreshToken) {
-    return NextResponse.json(
-      { error: "No refresh token" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "No refresh token" }, { status: 401 });
   }
 
   // Mock: valida o refresh token
   if (refreshToken !== "mock-refresh-token") {
     return NextResponse.json(
       { error: "Invalid refresh token" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 

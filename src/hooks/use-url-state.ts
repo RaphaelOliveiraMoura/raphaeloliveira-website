@@ -1,17 +1,16 @@
 "use client";
 
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function useUrlState<T extends string>(
   key: string,
-  defaultValue?: T
+  defaultValue?: T,
 ): [T, (value: T | undefined) => void] {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const value =
-    (searchParams.get(key) as T) ?? (defaultValue ?? ("" as T));
+  const value = (searchParams.get(key) as T) ?? defaultValue ?? ("" as T);
 
   const setValue = useCallback(
     (newValue: T | undefined) => {
@@ -24,7 +23,7 @@ export function useUrlState<T extends string>(
       const query = params.toString();
       router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
     },
-    [key, router, pathname, searchParams]
+    [key, router, pathname, searchParams],
   );
 
   return [value, setValue];

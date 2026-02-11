@@ -2,19 +2,20 @@
 
 import { useRef, useState } from "react";
 import ReactCrop, { type Crop, type PixelCrop } from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
 
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 
 import { cn } from "@/lib/utils";
+
+import "react-image-crop/dist/ReactCrop.css";
 
 interface ImageCropUploadProps {
   onCropped: (blob: Blob) => void;
@@ -27,7 +28,7 @@ interface ImageCropUploadProps {
 
 function getCroppedBlob(
   image: HTMLImageElement,
-  crop: PixelCrop
+  crop: PixelCrop,
 ): Promise<Blob> {
   const canvas = document.createElement("canvas");
   const scaleX = image.naturalWidth / image.width;
@@ -48,7 +49,7 @@ function getCroppedBlob(
     0,
     0,
     canvas.width,
-    canvas.height
+    canvas.height,
   );
 
   return new Promise((resolve, reject) => {
@@ -58,7 +59,7 @@ function getCroppedBlob(
         else reject(new Error("Canvas toBlob failed"));
       },
       "image/jpeg",
-      0.9
+      0.9,
     );
   });
 }
@@ -142,7 +143,10 @@ export function ImageCropUpload({
         {label}
       </Button>
 
-      <Dialog open={dialogOpen} onOpenChange={(open) => !open && handleCancel()}>
+      <Dialog
+        open={dialogOpen}
+        onOpenChange={(open) => !open && handleCancel()}
+      >
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Crop image</DialogTitle>

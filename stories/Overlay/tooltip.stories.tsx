@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Plus } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof Tooltip> = {
   title: "Overlay/Tooltip",
@@ -53,7 +53,9 @@ export const Positions: Story = {
     <div className="flex items-center gap-8">
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="sm">Top</Button>
+          <Button variant="outline" size="sm">
+            Top
+          </Button>
         </TooltipTrigger>
         <TooltipContent side="top">
           <p>Top tooltip</p>
@@ -61,7 +63,9 @@ export const Positions: Story = {
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="sm">Right</Button>
+          <Button variant="outline" size="sm">
+            Right
+          </Button>
         </TooltipTrigger>
         <TooltipContent side="right">
           <p>Right tooltip</p>
@@ -69,7 +73,9 @@ export const Positions: Story = {
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="sm">Bottom</Button>
+          <Button variant="outline" size="sm">
+            Bottom
+          </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom">
           <p>Bottom tooltip</p>
@@ -77,7 +83,9 @@ export const Positions: Story = {
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="sm">Left</Button>
+          <Button variant="outline" size="sm">
+            Left
+          </Button>
         </TooltipTrigger>
         <TooltipContent side="left">
           <p>Left tooltip</p>

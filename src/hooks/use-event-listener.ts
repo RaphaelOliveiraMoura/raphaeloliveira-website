@@ -7,7 +7,7 @@ type EventTarget = Window | Document | HTMLElement | null;
 export function useEventListener<K extends keyof WindowEventMap>(
   eventName: K,
   handler: (event: WindowEventMap[K]) => void,
-  element?: EventTarget
+  element?: EventTarget,
 ): void {
   const savedHandler = useRef(handler);
 

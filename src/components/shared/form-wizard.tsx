@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import {
-  useForm,
-  FormProvider,
   type DefaultValues,
   type FieldValues,
-  type Resolver,
+  FormProvider,
   type Path,
+  type Resolver,
+  useForm,
 } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { $ZodType } from "zod/v4/core";
 
@@ -101,7 +102,7 @@ export function FormWizard<TValues extends FieldValues>({
               key={s.id}
               className={cn(
                 "h-1 flex-1 rounded-full transition-colors",
-                index <= currentStep ? "bg-primary" : "bg-muted"
+                index <= currentStep ? "bg-primary" : "bg-muted",
               )}
               aria-current={index === currentStep ? "step" : undefined}
             />

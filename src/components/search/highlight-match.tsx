@@ -13,7 +13,7 @@ export function HighlightMatch({ text, query }: HighlightMatchProps) {
   return (
     <>
       {parts.map((part, i) =>
-        i % 2 === 1 ? <mark key={i}>{part}</mark> : part
+        i % 2 === 1 ? <mark key={i}>{part}</mark> : part,
       )}
     </>
   );

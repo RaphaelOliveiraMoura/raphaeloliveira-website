@@ -13,10 +13,10 @@ export interface ApiError {
 }
 
 export type RequestInterceptor = (
-  config: RequestInit & { url: string }
+  config: RequestInit & { url: string },
 ) => RequestInit & { url: string };
 
 export type ResponseInterceptor = <T>(
   response: Response,
-  data: T
+  data: T,
 ) => T | Promise<T>;

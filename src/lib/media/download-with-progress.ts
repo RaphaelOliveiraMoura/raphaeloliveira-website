@@ -1,7 +1,7 @@
 export async function downloadWithProgress(
   url: string,
   filename: string,
-  onProgress?: (percent: number) => void
+  onProgress?: (percent: number) => void,
 ): Promise<void> {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Download failed: ${response.status}`);

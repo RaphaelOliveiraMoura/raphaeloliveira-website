@@ -1,15 +1,11 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import {
-  useDropzone,
-  type Accept,
-  type FileRejection,
-} from "react-dropzone";
+import { type Accept, type FileRejection, useDropzone } from "react-dropzone";
 
+import { useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useObjectUrl } from "@/hooks/use-object-url";
-import { useTranslations } from "@/lib/i18n";
 
 interface FileUploadProps {
   onUpload: (files: File[]) => void | Promise<void>;
@@ -38,7 +34,7 @@ export function FileUpload({
       setErrorMessage(null);
       if (rejectedFiles.length > 0) {
         const messages = rejectedFiles.flatMap((r) =>
-          r.errors.map((e) => e.message)
+          r.errors.map((e) => e.message),
         );
         setErrorMessage(messages.join("; "));
       }
@@ -47,7 +43,7 @@ export function FileUpload({
         void Promise.resolve(onUpload(acceptedFiles));
       }
     },
-    [onUpload]
+    [onUpload],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -65,7 +61,7 @@ export function FileUpload({
           "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 text-center transition-colors",
           isDragActive
             ? "border-primary bg-primary/5"
-            : "border-muted-foreground/25 hover:border-muted-foreground/50"
+            : "border-muted-foreground/25 hover:border-muted-foreground/50",
         )}
       >
         <input {...getInputProps()} aria-label={t("fileUpload.selectFiles")} />
@@ -107,7 +103,9 @@ function FilePreview({ file }: { file: File }) {
         />
       ) : (
         <div className="flex h-20 w-20 items-center justify-center rounded border bg-muted">
-          <span className="text-muted-foreground text-xs">{t("fileUpload.fileType")}</span>
+          <span className="text-muted-foreground text-xs">
+            {t("fileUpload.fileType")}
+          </span>
         </div>
       )}
       <span className="text-muted-foreground max-w-[80px] truncate text-xs">

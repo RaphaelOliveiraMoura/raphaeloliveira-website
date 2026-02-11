@@ -2,8 +2,6 @@
 
 import { useCallback, useState } from "react";
 
-import { useRouter, useTranslations } from "@/lib/i18n";
-
 import {
   CommandDialog,
   CommandEmpty,
@@ -13,6 +11,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
+import { useRouter, useTranslations } from "@/lib/i18n";
 import { useKeyboardShortcut } from "@/hooks";
 
 type CommandLabelKey =
@@ -88,7 +87,7 @@ export function CommandPalette() {
       e.preventDefault();
       setOpen((o) => !o);
     }, []),
-    true
+    true,
   );
 
   useKeyboardShortcut(
@@ -97,7 +96,7 @@ export function CommandPalette() {
       e.preventDefault();
       setOpen((o) => !o);
     }, []),
-    true
+    true,
   );
 
   const onSelect = useCallback(
@@ -105,7 +104,7 @@ export function CommandPalette() {
       router.push(cmd.href);
       setOpen(false);
     },
-    [router]
+    [router],
   );
 
   return (

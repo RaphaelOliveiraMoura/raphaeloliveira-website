@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -69,13 +69,21 @@ export const WithForm: Story = {
             <Label htmlFor="name" className="text-right">
               Name
             </Label>
-            <Input id="name" defaultValue="Pedro Duarte" className="col-span-3" />
+            <Input
+              id="name"
+              defaultValue="Pedro Duarte"
+              className="col-span-3"
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
               Username
             </Label>
-            <Input id="username" defaultValue="@peduarte" className="col-span-3" />
+            <Input
+              id="username"
+              defaultValue="@peduarte"
+              className="col-span-3"
+            />
           </div>
         </div>
         <DialogFooter>
@@ -103,9 +111,9 @@ export const WithCloseButton: Story = {
         <div className="max-h-[300px] overflow-y-auto text-sm text-muted-foreground">
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            euismod, nisi vel consectetur interdum, nisl nunc egestas nisi, vitae
-            aliquam nisl nunc sit amet nisl. Nullam euismod, nisi vel consectetur
-            interdum.
+            euismod, nisi vel consectetur interdum, nisl nunc egestas nisi,
+            vitae aliquam nisl nunc sit amet nisl. Nullam euismod, nisi vel
+            consectetur interdum.
           </p>
         </div>
         <DialogFooter showCloseButton>

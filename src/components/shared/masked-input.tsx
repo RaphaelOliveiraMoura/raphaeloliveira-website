@@ -1,14 +1,15 @@
 "use client";
 
 import { Controller, useFormContext } from "react-hook-form";
+
 import { Input } from "@/components/ui/input";
+
 import { applyMask, type MaskType } from "@/lib/masks";
 
-interface MaskedInputProps
-  extends Omit<
-    React.ComponentProps<typeof Input>,
-    "value" | "onChange" | "onPaste"
-  > {
+interface MaskedInputProps extends Omit<
+  React.ComponentProps<typeof Input>,
+  "value" | "onChange" | "onPaste"
+> {
   name: string;
   mask: MaskType;
 }

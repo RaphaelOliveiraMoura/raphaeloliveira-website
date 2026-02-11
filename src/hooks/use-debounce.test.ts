@@ -1,4 +1,5 @@
-import { renderHook, act } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
+
 import { useDebounce } from "./use-debounce";
 
 describe("useDebounce", () => {
@@ -18,7 +19,7 @@ describe("useDebounce", () => {
   it("updates debounced value after delay", () => {
     const { result, rerender } = renderHook(
       ({ value, delay }) => useDebounce(value, delay),
-      { initialProps: { value: "a", delay: 300 } }
+      { initialProps: { value: "a", delay: 300 } },
     );
 
     rerender({ value: "b", delay: 300 });
@@ -33,7 +34,7 @@ describe("useDebounce", () => {
   it("resets timer on rapid changes", () => {
     const { result, rerender } = renderHook(
       ({ value, delay }) => useDebounce(value, delay),
-      { initialProps: { value: "a", delay: 300 } }
+      { initialProps: { value: "a", delay: 300 } },
     );
 
     rerender({ value: "b", delay: 300 });

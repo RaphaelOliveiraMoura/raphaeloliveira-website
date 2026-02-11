@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import {
-  SkeletonText,
   SkeletonCard,
   SkeletonTable,
+  SkeletonText,
 } from "@/components/shared/skeleton-presets";
 
 const meta: Meta = {

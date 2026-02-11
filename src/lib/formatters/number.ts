@@ -1,6 +1,6 @@
 export function abbreviateNumber(
   value: number,
-  options?: { locale?: string; decimals?: number }
+  options?: { locale?: string; decimals?: number },
 ): string {
   const formatter = new Intl.NumberFormat(options?.locale ?? "pt-BR", {
     notation: "compact",

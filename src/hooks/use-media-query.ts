@@ -9,12 +9,12 @@ export function useMediaQuery(query: string): boolean {
       mq.addEventListener("change", callback);
       return () => mq.removeEventListener("change", callback);
     },
-    [query]
+    [query],
   );
 
   const getSnapshot = useCallback(
     () => window.matchMedia(query).matches,
-    [query]
+    [query],
   );
 
   return useSyncExternalStore(subscribe, getSnapshot, () => false);

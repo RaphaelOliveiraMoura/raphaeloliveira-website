@@ -1,4 +1,5 @@
 import ReactMarkdown from "react-markdown";
+
 import remarkGfm from "remark-gfm";
 
 interface MarkdownContentProps {
@@ -6,10 +7,7 @@ interface MarkdownContentProps {
   className?: string;
 }
 
-export function MarkdownContent({
-  content,
-  className,
-}: MarkdownContentProps) {
+export function MarkdownContent({ content, className }: MarkdownContentProps) {
   return (
     <div
       className={

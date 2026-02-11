@@ -13,7 +13,7 @@ interface ValidationResult {
 
 export function validateFile(
   file: File,
-  options: FileValidation = {}
+  options: FileValidation = {},
 ): ValidationResult {
   if (options.maxSize && file.size > options.maxSize) {
     const maxMb = (options.maxSize / (1024 * 1024)).toFixed(1);

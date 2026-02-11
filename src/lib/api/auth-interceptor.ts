@@ -3,7 +3,7 @@ import type { createApiClient } from "./client";
 export function setupAuthInterceptors(
   client: ReturnType<typeof createApiClient>,
   getToken: () => string | null,
-  refreshToken: () => Promise<string | null>
+  refreshToken: () => Promise<string | null>,
 ) {
   client.addRequestInterceptor((config) => {
     const token = getToken();

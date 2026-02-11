@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
+
+import { type Permission, ROLE_PERMISSIONS } from "@/types/auth";
+
 import { useAuth } from "@/providers/auth-provider";
-import { ROLE_PERMISSIONS, type Permission } from "@/types/auth";
 
 export function usePermissions() {
   const { user } = useAuth();

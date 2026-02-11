@@ -23,8 +23,7 @@ export function ErrorState({
 
   const displayTitle = title ?? t("generic");
   const displayMessage =
-    message ??
-    (error instanceof Error ? error.message : t("loadFailed"));
+    message ?? (error instanceof Error ? error.message : t("loadFailed"));
 
   return (
     <div

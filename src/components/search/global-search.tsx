@@ -5,10 +5,11 @@ import { useCallback, useState } from "react";
 import { SearchIcon } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+
+import { useTranslations } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { cn } from "@/lib/utils";
-import { useTranslations } from "@/lib/i18n";
 
 const RECENT_SEARCHES_KEY = "recent-searches";
 const MAX_RECENT = 5;
@@ -18,19 +19,22 @@ export function GlobalSearch() {
   const debouncedQuery = useDebounce(query, 300);
   const [recentSearches, setRecentSearches] = useLocalStorage<string[]>(
     RECENT_SEARCHES_KEY,
-    []
+    [],
   );
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("common");
 
-  const addRecentSearch = useCallback((search: string) => {
-    if (!search.trim()) return;
-    setRecentSearches((prev) => {
-      const list = prev ?? [];
-      const filtered = list.filter((s) => s !== search);
-      return [search, ...filtered].slice(0, MAX_RECENT);
-    });
-  }, [setRecentSearches]);
+  const addRecentSearch = useCallback(
+    (search: string) => {
+      if (!search.trim()) return;
+      setRecentSearches((prev) => {
+        const list = prev ?? [];
+        const filtered = list.filter((s) => s !== search);
+        return [search, ...filtered].slice(0, MAX_RECENT);
+      });
+    },
+    [setRecentSearches],
+  );
 
   const handleSelectRecent = useCallback(
     (search: string) => {
@@ -38,10 +42,11 @@ export function GlobalSearch() {
       addRecentSearch(search);
       setIsOpen(false);
     },
-    [addRecentSearch]
+    [addRecentSearch],
   );
 
-  const showRecent = isOpen && !debouncedQuery && (recentSearches ?? []).length > 0;
+  const showRecent =
+    isOpen && !debouncedQuery && (recentSearches ?? []).length > 0;
 
   return (
     <div className="relative w-full max-w-sm">
@@ -52,9 +57,7 @@ export function GlobalSearch() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
-          onBlur={() =>
-            setTimeout(() => setIsOpen(false), 150)
-          }
+          onBlur={() => setTimeout(() => setIsOpen(false), 150)}
           placeholder={t("search.placeholder")}
           className="pl-9"
           aria-label={t("search.globalSearch")}
@@ -78,7 +81,7 @@ export function GlobalSearch() {
               <button
                 type="button"
                 className={cn(
-                  "hover:bg-accent flex w-full px-3 py-2 text-left text-sm"
+                  "hover:bg-accent flex w-full px-3 py-2 text-left text-sm",
                 )}
                 onClick={() => handleSelectRecent(s)}
               >

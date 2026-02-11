@@ -1,10 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const meta: Meta<typeof Tabs> = {
   title: "Navigation/Tabs",
@@ -54,9 +60,7 @@ export const Default: Story = {
         <Card>
           <CardHeader>
             <CardTitle>Password</CardTitle>
-            <CardDescription>
-              Change your password here.
-            </CardDescription>
+            <CardDescription>Change your password here.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="space-y-1">
@@ -84,13 +88,19 @@ export const LineVariant: Story = {
         <TabsTrigger value="reports">Reports</TabsTrigger>
       </TabsList>
       <TabsContent value="overview" className="pt-4">
-        <p className="text-sm text-muted-foreground">Overview content goes here.</p>
+        <p className="text-sm text-muted-foreground">
+          Overview content goes here.
+        </p>
       </TabsContent>
       <TabsContent value="analytics" className="pt-4">
-        <p className="text-sm text-muted-foreground">Analytics content goes here.</p>
+        <p className="text-sm text-muted-foreground">
+          Analytics content goes here.
+        </p>
       </TabsContent>
       <TabsContent value="reports" className="pt-4">
-        <p className="text-sm text-muted-foreground">Reports content goes here.</p>
+        <p className="text-sm text-muted-foreground">
+          Reports content goes here.
+        </p>
       </TabsContent>
     </Tabs>
   ),
@@ -134,7 +144,9 @@ export const Vertical: Story = {
         <Card>
           <CardHeader>
             <CardTitle>Notifications</CardTitle>
-            <CardDescription>Configure notification preferences.</CardDescription>
+            <CardDescription>
+              Configure notification preferences.
+            </CardDescription>
           </CardHeader>
         </Card>
       </TabsContent>

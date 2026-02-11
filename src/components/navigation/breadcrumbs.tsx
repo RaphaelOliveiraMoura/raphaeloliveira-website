@@ -1,6 +1,5 @@
 "use client";
 
-import { Link, usePathname, useTranslations } from "@/lib/i18n";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,6 +8,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+
+import { Link, usePathname, useTranslations } from "@/lib/i18n";
 
 const LABELS: Record<string, string> = {
   dashboard: "nav.dashboard",
@@ -19,7 +20,13 @@ const LABELS: Record<string, string> = {
   admin: "nav.admin",
 } as const;
 
-type NavKey = "nav.dashboard" | "nav.users" | "nav.posts" | "nav.settings" | "nav.products" | "nav.admin";
+type NavKey =
+  | "nav.dashboard"
+  | "nav.users"
+  | "nav.posts"
+  | "nav.settings"
+  | "nav.products"
+  | "nav.admin";
 
 export function Breadcrumbs() {
   const pathname = usePathname();

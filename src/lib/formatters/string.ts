@@ -1,7 +1,7 @@
 export function truncate(
   str: string,
   maxLength: number,
-  suffix = "..."
+  suffix = "...",
 ): string {
   if (str.length <= maxLength) return str;
   return str.slice(0, maxLength - suffix.length) + suffix;
@@ -23,7 +23,7 @@ export function slugify(str: string): string {
 export function pluralize(
   count: number,
   singular: string,
-  plural?: string
+  plural?: string,
 ): string {
   return count === 1 ? singular : (plural ?? singular + "s");
 }

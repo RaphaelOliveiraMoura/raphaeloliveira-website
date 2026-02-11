@@ -1,18 +1,17 @@
 "use client";
 
 import {
-  type QueryKey,
   type QueryFunction,
+  type QueryKey,
   useQuery,
   type UseQueryOptions,
   type UseQueryResult,
 } from "@tanstack/react-query";
 
-interface UsePollingOptions<TData, TError = Error>
-  extends Omit<
-    UseQueryOptions<TData, TError>,
-    "queryKey" | "queryFn" | "refetchInterval"
-  > {
+interface UsePollingOptions<TData, TError = Error> extends Omit<
+  UseQueryOptions<TData, TError>,
+  "queryKey" | "queryFn" | "refetchInterval"
+> {
   queryKey: QueryKey;
   queryFn: QueryFunction<TData>;
   interval: number;

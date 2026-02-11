@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+
 import type { User } from "@/types/auth";
 
 interface AuthContextValue {
@@ -44,7 +45,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         credentials: "include",
       });
       if (!res.ok) return null;
-      const data = (await res.json()) as { token?: string; accessToken?: string };
+      const data = (await res.json()) as {
+        token?: string;
+        accessToken?: string;
+      };
       const token = data.token ?? data.accessToken ?? null;
       if (token) accessTokenRef.current = token;
       return token;
@@ -92,26 +96,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [refreshAccessToken]);
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      const res = await fetch(AUTH_LOGIN_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) throw new Error("Login failed");
-      const data = (await res.json()) as {
-        user: User;
-        token?: string;
-        accessToken?: string;
-      };
-      const token = data.token ?? data.accessToken ?? null;
-      if (token) accessTokenRef.current = token;
-      setUser(data.user);
-    },
-    []
-  );
+  const login = useCallback(async (email: string, password: string) => {
+    const res = await fetch(AUTH_LOGIN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email, password }),
+    });
+    if (!res.ok) throw new Error("Login failed");
+    const data = (await res.json()) as {
+      user: User;
+      token?: string;
+      accessToken?: string;
+    };
+    const token = data.token ?? data.accessToken ?? null;
+    if (token) accessTokenRef.current = token;
+    setUser(data.user);
+  }, []);
 
   const logout = useCallback(async () => {
     try {
@@ -135,7 +136,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser: setUserState,
   };
 
-  return (
-    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

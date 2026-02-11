@@ -18,9 +18,9 @@ export const toast = {
     sonnerToast.warning(message, options),
   info: (message: string, options?: ToastOptions) =>
     sonnerToast.info(message, options),
-  promise: <T,>(
+  promise: <T>(
     promise: Promise<T>,
-    messages: { loading: string; success: string; error: string }
+    messages: { loading: string; success: string; error: string },
   ) => sonnerToast.promise(promise, messages),
 };
 

@@ -1,4 +1,5 @@
 import { renderHook } from "@testing-library/react";
+
 import { usePrevious } from "./use-previous";
 
 describe("usePrevious", () => {
@@ -8,10 +9,9 @@ describe("usePrevious", () => {
   });
 
   it("returns previous value after update", () => {
-    const { result, rerender } = renderHook(
-      ({ value }) => usePrevious(value),
-      { initialProps: { value: 0 } }
-    );
+    const { result, rerender } = renderHook(({ value }) => usePrevious(value), {
+      initialProps: { value: 0 },
+    });
 
     rerender({ value: 1 });
     expect(result.current).toBe(0);

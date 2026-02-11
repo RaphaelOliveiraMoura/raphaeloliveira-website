@@ -1,7 +1,4 @@
-export function createClientRateLimiter(
-  maxRequests: number,
-  windowMs: number
-) {
+export function createClientRateLimiter(maxRequests: number, windowMs: number) {
   const requests: number[] = [];
 
   return function canProceed(): boolean {

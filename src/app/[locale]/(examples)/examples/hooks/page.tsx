@@ -2,35 +2,31 @@
 
 import { useRef, useState } from "react";
 
-import { useTranslations } from "@/lib/i18n";
-import {
-  useDebounce,
-  useToggle,
-  usePrevious,
-  useClipboard,
-  useWindowSize,
-  useBreakpoint,
-  useIsMobile,
-  useIsTablet,
-  useIsDesktop,
-  useScrollPosition,
-  useOnlineStatus,
-  useReducedMotion,
-  useOnClickOutside,
-  useKeyboardShortcut,
-  useLocalStorage,
-  useSessionStorage,
-  useIntersectionObserver,
-} from "@/hooks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+
+import { useTranslations } from "@/lib/i18n";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  useBreakpoint,
+  useClipboard,
+  useDebounce,
+  useIntersectionObserver,
+  useIsDesktop,
+  useIsMobile,
+  useIsTablet,
+  useKeyboardShortcut,
+  useLocalStorage,
+  useOnClickOutside,
+  useOnlineStatus,
+  usePrevious,
+  useReducedMotion,
+  useScrollPosition,
+  useSessionStorage,
+  useToggle,
+  useWindowSize,
+} from "@/hooks";
 
 const NAV_SECTIONS = [
   "viewport",
@@ -71,7 +67,13 @@ function HookCard({
   );
 }
 
-function ValueDisplay({ label, value }: { label: string; value: React.ReactNode }) {
+function ValueDisplay({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
   return (
     <div className="flex items-center justify-between rounded-md border px-3 py-2">
       <span className="text-sm text-muted-foreground">{label}</span>
@@ -171,7 +173,10 @@ function KeyboardShortcutDemo() {
     <HookCard name="useKeyboardShortcut">
       <div className="space-y-3">
         <p className="text-sm text-muted-foreground">
-          {t("hooks.pressShortcut")}: <kbd className="rounded border bg-muted px-1.5 py-0.5 text-xs">Ctrl+Shift+H</kbd>
+          {t("hooks.pressShortcut")}:{" "}
+          <kbd className="rounded border bg-muted px-1.5 py-0.5 text-xs">
+            Ctrl+Shift+H
+          </kbd>
         </p>
         <ValueDisplay
           label="Triggered"
@@ -198,14 +203,21 @@ function LocalStorageDemo() {
           placeholder="Stored in localStorage"
         />
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={() => setValue("Reset!")}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setValue("Reset!")}
+          >
             Reset
           </Button>
           <Button size="sm" variant="outline" onClick={removeValue}>
             Remove
           </Button>
         </div>
-        <ValueDisplay label="localStorage['demo-key']" value={value ?? "null"} />
+        <ValueDisplay
+          label="localStorage['demo-key']"
+          value={value ?? "null"}
+        />
       </div>
     </HookCard>
   );
@@ -222,7 +234,10 @@ function SessionStorageDemo() {
           onChange={(e) => setValue(e.target.value)}
           placeholder="Stored in sessionStorage"
         />
-        <ValueDisplay label="sessionStorage['demo-session']" value={value ?? "null"} />
+        <ValueDisplay
+          label="sessionStorage['demo-session']"
+          value={value ?? "null"}
+        />
       </div>
     </HookCard>
   );
@@ -304,7 +319,10 @@ function PreviousDemo() {
           Increment ({count})
         </Button>
         <ValueDisplay label={t("hooks.currentValue")} value={count} />
-        <ValueDisplay label={t("hooks.previousValue")} value={previous ?? "—"} />
+        <ValueDisplay
+          label={t("hooks.previousValue")}
+          value={previous ?? "—"}
+        />
       </div>
     </HookCard>
   );
@@ -353,7 +371,10 @@ export default function HooksPlaygroundPage() {
 
           <HookCard name="useWindowSize / useBreakpoint">
             <div className="space-y-3">
-              <ValueDisplay label="Window size" value={`${width} x ${height}`} />
+              <ValueDisplay
+                label="Window size"
+                value={`${width} x ${height}`}
+              />
               <ValueDisplay
                 label="Breakpoint"
                 value={<Badge variant="secondary">{breakpoint}</Badge>}
@@ -361,7 +382,9 @@ export default function HooksPlaygroundPage() {
               <div className="flex gap-2">
                 <Badge variant={isMobile ? "default" : "outline"}>Mobile</Badge>
                 <Badge variant={isTablet ? "default" : "outline"}>Tablet</Badge>
-                <Badge variant={isDesktop ? "default" : "outline"}>Desktop</Badge>
+                <Badge variant={isDesktop ? "default" : "outline"}>
+                  Desktop
+                </Badge>
               </div>
               <p className="text-xs text-muted-foreground">
                 {t("hooks.resizeWindow")}
@@ -420,7 +443,9 @@ export default function HooksPlaygroundPage() {
               <ValueDisplay
                 label="prefers-reduced-motion"
                 value={
-                  <Badge variant={prefersReducedMotion ? "default" : "secondary"}>
+                  <Badge
+                    variant={prefersReducedMotion ? "default" : "secondary"}
+                  >
                     {prefersReducedMotion
                       ? t("hooks.reducedMotion")
                       : t("hooks.normalMotion")}

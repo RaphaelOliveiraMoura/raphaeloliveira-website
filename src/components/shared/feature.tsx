@@ -1,6 +1,7 @@
 "use client";
 
 import { useFeatureFlag } from "@/hooks/use-feature-flag";
+
 import type { FeatureFlagName } from "@/config/feature-flags";
 
 interface FeatureProps {

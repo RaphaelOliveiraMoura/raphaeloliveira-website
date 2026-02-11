@@ -5,14 +5,12 @@ import { useCallback, useSyncExternalStore } from "react";
 const SESSION_STORAGE_EVENT = "core-stack-session-storage";
 
 function dispatchSessionEvent(key: string) {
-  window.dispatchEvent(
-    new CustomEvent(SESSION_STORAGE_EVENT, { detail: key })
-  );
+  window.dispatchEvent(new CustomEvent(SESSION_STORAGE_EVENT, { detail: key }));
 }
 
 export function useSessionStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, (value: T | ((prev: T) => T)) => void, () => void] {
   const subscribe = useCallback(
     (callback: () => void) => {
@@ -24,7 +22,7 @@ export function useSessionStorage<T>(
         window.removeEventListener(SESSION_STORAGE_EVENT, handleCustom);
       };
     },
-    [key]
+    [key],
   );
 
   const getSnapshot = useCallback(() => {
@@ -43,9 +41,7 @@ export function useSessionStorage<T>(
       try {
         const currentRaw = window.sessionStorage.getItem(key);
         const current: T =
-          currentRaw !== null
-            ? (JSON.parse(currentRaw) as T)
-            : initialValue;
+          currentRaw !== null ? (JSON.parse(currentRaw) as T) : initialValue;
         const newValue = value instanceof Function ? value(current) : value;
         window.sessionStorage.setItem(key, JSON.stringify(newValue));
         dispatchSessionEvent(key);
@@ -53,7 +49,7 @@ export function useSessionStorage<T>(
         // sessionStorage indisponivel
       }
     },
-    [key, initialValue]
+    [key, initialValue],
   );
 
   const removeValue = useCallback(() => {

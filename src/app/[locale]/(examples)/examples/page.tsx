@@ -1,13 +1,12 @@
 import {
   Blocks,
   Code2,
-  LayoutDashboard,
   Database,
   FileText,
+  LayoutDashboard,
   Settings,
 } from "lucide-react";
 
-import { getTranslations } from "@/lib/i18n";
 import {
   Card,
   CardDescription,
@@ -15,8 +14,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import { getTranslations } from "@/lib/i18n";
+
 const EXAMPLES = [
-  { key: "componentsGallery" as const, icon: Blocks, href: "/examples/components" },
+  {
+    key: "componentsGallery" as const,
+    icon: Blocks,
+    href: "/examples/components",
+  },
   { key: "hooksPlayground" as const, icon: Code2, href: "/examples/hooks" },
   { key: "dashboard" as const, icon: LayoutDashboard, href: "/dashboard" },
   { key: "dataManagement" as const, icon: Database, href: "/dashboard/data" },

@@ -10,8 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { useLocale, useTranslations, useRouter, usePathname } from "@/lib/i18n";
-import { locales, localeNames, type Locale } from "@/config/i18n";
+import { useLocale, usePathname, useRouter, useTranslations } from "@/lib/i18n";
+
+import { type Locale, localeNames, locales } from "@/config/i18n";
 
 export function LanguageSwitcher() {
   const locale = useLocale() as Locale;

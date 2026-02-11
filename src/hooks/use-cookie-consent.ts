@@ -81,7 +81,7 @@ export function useCookieConsent(): UseCookieConsentReturn {
     (partial: Partial<CookieConsent>) => {
       saveConsent({ ...consent, ...partial, essential: true });
     },
-    [consent, saveConsent]
+    [consent, saveConsent],
   );
 
   return { consent, shouldShow, accept, decline, updateConsent };

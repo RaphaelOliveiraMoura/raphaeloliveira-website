@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Check, AlertCircle, Clock } from "lucide-react";
+import { AlertCircle, Check, Clock } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 
@@ -17,7 +17,14 @@ const meta: Meta<typeof Badge> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "secondary", "destructive", "outline", "ghost", "link"],
+      options: [
+        "default",
+        "secondary",
+        "destructive",
+        "outline",
+        "ghost",
+        "link",
+      ],
       description: "Variante visual do badge",
     },
   },
@@ -52,9 +59,15 @@ export const WithIcon: Story = {
   name: "Com Icone",
   render: () => (
     <div className="flex flex-wrap items-center gap-3">
-      <Badge variant="default"><Check /> Approved</Badge>
-      <Badge variant="destructive"><AlertCircle /> Error</Badge>
-      <Badge variant="secondary"><Clock /> Pending</Badge>
+      <Badge variant="default">
+        <Check /> Approved
+      </Badge>
+      <Badge variant="destructive">
+        <AlertCircle /> Error
+      </Badge>
+      <Badge variant="secondary">
+        <Clock /> Pending
+      </Badge>
     </div>
   ),
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Component, type ReactNode, type ErrorInfo } from "react";
+import { Component, type ErrorInfo, type ReactNode } from "react";
 
 import { ErrorState } from "@/components/shared/error-state";
 

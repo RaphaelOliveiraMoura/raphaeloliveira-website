@@ -1,37 +1,32 @@
 "use client";
 
 import { useState } from "react";
+
 import {
-  Sun,
-  Moon,
-  Monitor,
-  Globe,
-  Shield,
-  Keyboard,
   Bell,
+  Download,
+  Globe,
   Info,
+  Keyboard,
+  Monitor,
+  Moon,
+  Share2,
+  Shield,
+  Sun,
   Wifi,
   WifiOff,
-  Share2,
-  Download,
 } from "lucide-react";
 
-import { useTranslations } from "@/lib/i18n";
-import { toast } from "@/lib/feedback";
+import { Breadcrumbs } from "@/components/navigation";
 import {
-  useOnlineStatus,
-  useToggle,
-  useKeyboardShortcut,
-  usePWAInstall,
-  useShare,
-} from "@/hooks";
-import { useTheme } from "@/providers/theme-provider";
+  CookieConsentBanner,
+  LanguageSwitcher,
+  OfflineBanner,
+  ShortcutCheatSheet,
+  type ShortcutItem,
+} from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
 import {
   Card,
   CardContent,
@@ -39,14 +34,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+
+import { toast } from "@/lib/feedback";
+import { useTranslations } from "@/lib/i18n";
 import {
-  LanguageSwitcher,
-  CookieConsentBanner,
-  ShortcutCheatSheet,
-  OfflineBanner,
-  type ShortcutItem,
-} from "@/components/shared";
-import { Breadcrumbs } from "@/components/navigation";
+  useKeyboardShortcut,
+  useOnlineStatus,
+  usePWAInstall,
+  useShare,
+  useToggle,
+} from "@/hooks";
+
+import { useTheme } from "@/providers/theme-provider";
 
 const DEMO_SHORTCUTS: ShortcutItem[] = [
   { id: "search", keys: "Ctrl+K", description: "Open command palette" },
@@ -89,7 +92,7 @@ export default function SettingsPage() {
         loading: t("settings.toastPromiseMsg"),
         success: t("settings.toastPromiseSuccess"),
         error: t("settings.toastPromiseError"),
-      }
+      },
     );
   };
 
@@ -119,26 +122,37 @@ export default function SettingsPage() {
               <Label>{t("settings.theme")}</Label>
               <RadioGroup
                 value={theme}
-                onValueChange={(v) => setTheme(v as "light" | "dark" | "system")}
+                onValueChange={(v) =>
+                  setTheme(v as "light" | "dark" | "system")
+                }
                 className="flex gap-4"
               >
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="light" id="theme-light" />
-                  <Label htmlFor="theme-light" className="flex items-center gap-1.5">
+                  <Label
+                    htmlFor="theme-light"
+                    className="flex items-center gap-1.5"
+                  >
                     <Sun className="size-3.5" />
                     {t("settings.light")}
                   </Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="dark" id="theme-dark" />
-                  <Label htmlFor="theme-dark" className="flex items-center gap-1.5">
+                  <Label
+                    htmlFor="theme-dark"
+                    className="flex items-center gap-1.5"
+                  >
                     <Moon className="size-3.5" />
                     {t("settings.dark")}
                   </Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="system" id="theme-system" />
-                  <Label htmlFor="theme-system" className="flex items-center gap-1.5">
+                  <Label
+                    htmlFor="theme-system"
+                    className="flex items-center gap-1.5"
+                  >
                     <Monitor className="size-3.5" />
                     {t("settings.system")}
                   </Label>

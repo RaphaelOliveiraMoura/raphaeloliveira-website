@@ -1,30 +1,31 @@
 "use client";
 
 import { useState } from "react";
+
 import {
-  DndContext,
   closestCorners,
+  DndContext,
+  type DragEndEvent,
+  type DragOverEvent,
+  DragOverlay,
+  type DragStartEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  type DragEndEvent,
-  type DragOverEvent,
-  type DragStartEvent,
-  DragOverlay,
 } from "@dnd-kit/core";
 import {
+  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-  arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVerticalIcon } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { cn } from "@/lib/utils";
@@ -47,13 +48,9 @@ interface KanbanBoardProps {
     itemId: string,
     fromColumn: string,
     toColumn: string,
-    newIndex: number
+    newIndex: number,
   ) => void;
-  onReorderItem?: (
-    columnId: string,
-    itemId: string,
-    newIndex: number
-  ) => void;
+  onReorderItem?: (columnId: string, itemId: string, newIndex: number) => void;
   className?: string;
 }
 
@@ -71,7 +68,7 @@ export function KanbanBoard({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const findColumnByItemId = (itemId: string): KanbanColumn | undefined => {
@@ -96,7 +93,8 @@ export function KanbanBoard({
     const overColumn =
       findColumnByItemId(overId) ?? columns.find((col) => col.id === overId);
 
-    if (!activeColumn || !overColumn || activeColumn.id === overColumn.id) return;
+    if (!activeColumn || !overColumn || activeColumn.id === overColumn.id)
+      return;
 
     const overIndex = overColumn.items.findIndex((i) => i.id === overId);
     const newIndex = overIndex >= 0 ? overIndex : overColumn.items.length;
@@ -141,12 +139,7 @@ export function KanbanBoard({
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div
-        className={cn(
-          "flex gap-4 overflow-x-auto pb-4",
-          className
-        )}
-      >
+      <div className={cn("flex gap-4 overflow-x-auto pb-4", className)}>
         {columns.map((column) => (
           <KanbanColumnComponent key={column.id} column={column} />
         ))}
@@ -172,10 +165,7 @@ function KanbanColumnComponent({ column }: { column: KanbanColumn }) {
         id={column.id}
       >
         <ScrollArea className="flex-1 px-2 pb-2">
-          <div
-            className="min-h-[100px] space-y-2"
-            data-column-id={column.id}
-          >
+          <div className="min-h-[100px] space-y-2" data-column-id={column.id}>
             {column.items.map((item) => (
               <KanbanCard key={item.id} item={item} />
             ))}
@@ -207,7 +197,7 @@ function KanbanCard({ item }: { item: KanbanItem }) {
       style={style}
       className={cn(
         "cursor-default transition-shadow",
-        isDragging && "z-50 opacity-50 shadow-lg"
+        isDragging && "z-50 opacity-50 shadow-lg",
       )}
     >
       <CardHeader className="flex-row items-start gap-2 p-3">
@@ -251,4 +241,4 @@ function KanbanCardOverlay({ item }: { item: KanbanItem }) {
   );
 }
 
-export type { KanbanItem, KanbanColumn };
+export type { KanbanColumn, KanbanItem };

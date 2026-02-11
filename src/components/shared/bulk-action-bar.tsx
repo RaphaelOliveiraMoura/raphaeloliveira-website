@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useTranslations } from "@/lib/i18n";
 import type { ComponentProps } from "react";
 
-type ButtonVariant = NonNullable<
-  ComponentProps<typeof Button>["variant"]
->;
+import { Button } from "@/components/ui/button";
+
+import { useTranslations } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
+
+type ButtonVariant = NonNullable<ComponentProps<typeof Button>["variant"]>;
 
 export interface BulkAction {
   label: string;
@@ -36,7 +36,7 @@ export function BulkActionBar({
     <div
       className={cn(
         "flex items-center gap-3 rounded-lg border bg-muted/50 px-4 py-2",
-        className
+        className,
       )}
       role="region"
       aria-label={t("bulkActions.clearSelection")}

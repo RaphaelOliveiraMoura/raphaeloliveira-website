@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { driver, type DriveStep, type Config } from "driver.js";
-import "driver.js/dist/driver.css";
+
+import { type Config, driver, type DriveStep } from "driver.js";
 
 import { isClient } from "@/lib/utils/environment";
+
+import "driver.js/dist/driver.css";
 
 interface TourStep {
   target: string;
@@ -50,11 +52,7 @@ function mapSteps(steps: TourStep[]): DriveStep[] {
   }));
 }
 
-export function Tour({
-  config,
-  autoStart = true,
-  showOnce = true,
-}: TourProps) {
+export function Tour({ config, autoStart = true, showOnce = true }: TourProps) {
   const startedRef = useRef(false);
 
   useEffect(() => {
@@ -95,4 +93,4 @@ export function resetTour(tourId: string) {
   localStorage.removeItem(getStorageKey(tourId));
 }
 
-export type { TourStep, TourConfig };
+export type { TourConfig, TourStep };

@@ -1,9 +1,9 @@
 export {
+  cepSchema,
+  cnpjSchema,
+  cpfSchema,
+  currencySchema,
+  dateSchema,
   emailSchema,
   phoneBrSchema,
-  cpfSchema,
-  cnpjSchema,
-  cepSchema,
-  dateSchema,
-  currencySchema,
 } from "./schemas";

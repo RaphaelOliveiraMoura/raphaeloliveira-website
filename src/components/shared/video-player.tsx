@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MaximizeIcon, PauseIcon, PlayIcon, Volume2Icon, VolumeXIcon } from "lucide-react";
+
+import {
+  MaximizeIcon,
+  PauseIcon,
+  PlayIcon,
+  Volume2Icon,
+  VolumeXIcon,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -105,7 +112,10 @@ export function VideoPlayer({ src, poster, className }: VideoPlayerProps) {
   return (
     <div
       ref={containerRef}
-      className={cn("group relative overflow-hidden rounded-lg bg-black", className)}
+      className={cn(
+        "group relative overflow-hidden rounded-lg bg-black",
+        className,
+      )}
       tabIndex={0}
       role="region"
       aria-label="Video player"
@@ -124,7 +134,7 @@ export function VideoPlayer({ src, poster, className }: VideoPlayerProps) {
       <div
         className={cn(
           "absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-gradient-to-t from-black/80 to-transparent p-4 pt-8 transition-opacity duration-300",
-          showControls ? "opacity-100" : "opacity-0"
+          showControls ? "opacity-100" : "opacity-0",
         )}
       >
         <Slider

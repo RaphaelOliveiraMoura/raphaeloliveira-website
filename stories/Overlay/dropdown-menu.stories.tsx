@@ -16,6 +16,7 @@ import {
   Users,
 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +30,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof DropdownMenu> = {
   title: "Overlay/DropdownMenu",
@@ -142,7 +142,9 @@ export const Simple: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">Actions</Button>
+        <Button variant="outline" size="sm">
+          Actions
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>Edit</DropdownMenuItem>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { reportWebVitals } from "@/lib/telemetry/web-vitals";
 
 export function WebVitalsReporter() {

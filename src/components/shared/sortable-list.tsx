@@ -1,20 +1,20 @@
 "use client";
 
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  type DragEndEvent,
 } from "@dnd-kit/core";
 import {
+  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-  arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVerticalIcon } from "lucide-react";
@@ -46,7 +46,7 @@ export function SortableList<T extends SortableItem>({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -111,7 +111,7 @@ function SortableItemWrapper({
       style={style}
       className={cn(
         "flex items-center gap-2 rounded-lg border bg-background p-3 transition-shadow",
-        isDragging && "z-50 shadow-lg opacity-90"
+        isDragging && "z-50 shadow-lg opacity-90",
       )}
       role="option"
       aria-selected={isDragging}

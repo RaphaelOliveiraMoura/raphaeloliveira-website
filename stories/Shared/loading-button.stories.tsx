@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Save, Trash2, Send } from "lucide-react";
+import { Save, Send, Trash2 } from "lucide-react";
 
 import { LoadingButton } from "@/components/shared/loading-button";
 
@@ -64,12 +64,8 @@ export const AllStates: Story = {
         <Save className="mr-1 h-4 w-4" />
         Idle
       </LoadingButton>
-      <LoadingButton loading>
-        Saving...
-      </LoadingButton>
-      <LoadingButton success>
-        Saved!
-      </LoadingButton>
+      <LoadingButton loading>Saving...</LoadingButton>
+      <LoadingButton success>Saved!</LoadingButton>
     </div>
   ),
 };

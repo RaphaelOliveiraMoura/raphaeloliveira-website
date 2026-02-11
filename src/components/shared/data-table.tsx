@@ -4,12 +4,13 @@ import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
-  getSortedRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowUpDownIcon } from "lucide-react";
 
+import { BulkActionBar } from "@/components/shared/bulk-action-bar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Pagination,
@@ -27,15 +28,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
-import { useTranslations } from "@/lib/i18n";
 
-import { BulkActionBar } from "@/components/shared/bulk-action-bar";
+import { useTranslations } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 export interface DataTableBulkAction<TData> {
   label: string;
   onClick: (selectedRows: TData[]) => void;
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
 }
 
 export interface DataTableSortState {
@@ -66,7 +72,7 @@ export interface DataTableProps<TData> {
 function withSelectionColumn<TData>(
   columns: ColumnDef<TData>[],
   rowSelection: boolean,
-  t: (key: "table.selectAll" | "table.selectRow") => string
+  t: (key: "table.selectAll" | "table.selectRow") => string,
 ): ColumnDef<TData>[] {
   if (!rowSelection) return columns;
   return [
@@ -78,9 +84,7 @@ function withSelectionColumn<TData>(
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
-          onCheckedChange={(value) =>
-            table.toggleAllPageRowsSelected(!!value)
-          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label={t("table.selectAll")}
         />
       ),
@@ -122,7 +126,9 @@ export function DataTable<TData extends { id?: string }>({
     columns: withSelectionColumn(columns, rowSelection, t),
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: manualPagination ? undefined : getSortedRowModel(),
-    getPaginationRowModel: manualPagination ? undefined : getPaginationRowModel(),
+    getPaginationRowModel: manualPagination
+      ? undefined
+      : getPaginationRowModel(),
     manualPagination,
     manualSorting: !!onSortChange,
     pageCount: manualPagination ? pageCount : undefined,
@@ -171,7 +177,9 @@ export function DataTable<TData extends { id?: string }>({
     : 0;
 
   const handleBulkAction = (action: DataTableBulkAction<TData>) => {
-    const selectedRows = table.getSelectedRowModel().rows.map((r) => r.original);
+    const selectedRows = table
+      .getSelectedRowModel()
+      .rows.map((r) => r.original);
     action.onClick(selectedRows);
   };
 
@@ -204,9 +212,7 @@ export function DataTable<TData extends { id?: string }>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   const canSort =
-                    enableSorting &&
-                    header.column.getCanSort() &&
-                    onSortChange;
+                    enableSorting && header.column.getCanSort() && onSortChange;
                   return (
                     <TableHead
                       key={header.id}
@@ -222,13 +228,13 @@ export function DataTable<TData extends { id?: string }>({
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                         {canSort && (
                           <ArrowUpDownIcon
                             className={cn(
                               "size-4 opacity-50",
-                              header.column.getIsSorted() && "opacity-100"
+                              header.column.getIsSorted() && "opacity-100",
                             )}
                           />
                         )}
@@ -246,7 +252,9 @@ export function DataTable<TData extends { id?: string }>({
                   colSpan={columns.length + (rowSelection ? 1 : 0)}
                   className="h-24 text-center"
                 >
-                  <p className="text-muted-foreground text-sm">{emptyMessage ?? t("table.noData")}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {emptyMessage ?? t("table.noData")}
+                  </p>
                 </TableCell>
               </TableRow>
             ) : (
@@ -259,7 +267,7 @@ export function DataTable<TData extends { id?: string }>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -276,7 +284,7 @@ export function DataTable<TData extends { id?: string }>({
               from: (pagination.page - 1) * pagination.pageSize + 1,
               to: Math.min(
                 pagination.page * pagination.pageSize,
-                pagination.total
+                pagination.total,
               ),
               total: pagination.total,
             })}

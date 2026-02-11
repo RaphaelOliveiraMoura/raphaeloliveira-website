@@ -4,11 +4,12 @@ import { useState } from "react";
 
 import { ChevronsLeft, ChevronsRight, PanelLeft } from "lucide-react";
 
-import { Link, useTranslations } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useIsMobile } from "@/hooks/use-breakpoint";
+
+import { Link, useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-breakpoint";
 
 export function DashboardSidebar() {
   const isMobile = useIsMobile();
@@ -20,7 +21,7 @@ export function DashboardSidebar() {
     <aside
       className={cn(
         "flex h-full flex-col border-r bg-background transition-all",
-        isCollapsed ? "w-16" : "w-64"
+        isCollapsed ? "w-16" : "w-64",
       )}
     >
       <div className="flex items-center justify-end p-2">
@@ -28,7 +29,9 @@ export function DashboardSidebar() {
           variant="ghost"
           size="icon"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          aria-label={isCollapsed ? t("nav.expandSidebar") : t("nav.collapseSidebar")}
+          aria-label={
+            isCollapsed ? t("nav.expandSidebar") : t("nav.collapseSidebar")
+          }
         >
           {isCollapsed ? (
             <ChevronsRight className="size-4" />
@@ -37,7 +40,10 @@ export function DashboardSidebar() {
           )}
         </Button>
       </div>
-      <nav className="flex flex-1 flex-col gap-1 p-2" aria-label={t("nav.primary")}>
+      <nav
+        className="flex flex-1 flex-col gap-1 p-2"
+        aria-label={t("nav.primary")}
+      >
         <Link
           href="/dashboard"
           className="rounded-md px-3 py-2 text-sm hover:bg-accent"
@@ -96,7 +102,7 @@ export function DashboardSidebar() {
     <div
       className={cn(
         "hidden shrink-0 border-r transition-all lg:block",
-        isCollapsed ? "w-16" : "w-64"
+        isCollapsed ? "w-16" : "w-64",
       )}
     >
       {sidebarContent}

@@ -8,10 +8,7 @@ export const emailSchema = z
 /** Aceita telefone fixo (10 dígitos): (99) 9999-9999 e celular (11 dígitos): (99) 99999-9999 */
 export const phoneBrSchema = z
   .string()
-  .regex(
-    /^\(\d{2}\)\s?\d{4,5}-\d{4}$/,
-    "validation.phone.invalid"
-  );
+  .regex(/^\(\d{2}\)\s?\d{4,5}-\d{4}$/, "validation.phone.invalid");
 
 export const cpfSchema = z
   .string()

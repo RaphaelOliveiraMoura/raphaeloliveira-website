@@ -15,7 +15,6 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-     
     console.error("Global error:", error);
   }, [error]);
 
@@ -33,9 +32,7 @@ export default function GlobalError({
           fontFamily: "system-ui, sans-serif",
         }}
       >
-        <h1 style={{ fontSize: "1.5rem", fontWeight: 600 }}>
-          Algo deu errado
-        </h1>
+        <h1 style={{ fontSize: "1.5rem", fontWeight: 600 }}>Algo deu errado</h1>
         <p
           style={{
             maxWidth: "24rem",

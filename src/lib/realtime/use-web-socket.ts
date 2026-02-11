@@ -25,7 +25,7 @@ export function useWebSocket(url: string, options: UseWebSocketOptions = {}) {
   const wsRef = useRef<WebSocket | null>(null);
   const retryCountRef = useRef(0);
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null
+    null,
   );
   const connectRef = useRef<() => void>(() => {});
 
@@ -56,7 +56,7 @@ export function useWebSocket(url: string, options: UseWebSocketOptions = {}) {
         if (retryCountRef.current < maxRetries) {
           const delay = Math.min(
             retryDelay * 2 ** retryCountRef.current,
-            30000
+            30000,
           );
           retryCountRef.current += 1;
           reconnectTimeoutRef.current = setTimeout(() => {
@@ -83,14 +83,11 @@ export function useWebSocket(url: string, options: UseWebSocketOptions = {}) {
     };
   }, [url, maxRetries, retryDelay, onOpen, onClose, onError]);
 
-  const sendMessage = useCallback(
-    (data: string | ArrayBufferLike | Blob) => {
-      if (wsRef.current?.readyState === WebSocket.OPEN) {
-        wsRef.current.send(data);
-      }
-    },
-    []
-  );
+  const sendMessage = useCallback((data: string | ArrayBufferLike | Blob) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(data);
+    }
+  }, []);
 
   const reconnect = useCallback(() => {
     retryCountRef.current = 0;

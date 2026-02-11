@@ -1,10 +1,10 @@
 "use client";
 
-import { useSyncExternalStore, type RefObject } from "react";
+import { type RefObject, useSyncExternalStore } from "react";
 
-import { cn } from "@/lib/utils";
 import { slugify } from "@/lib/formatters";
 import { useTranslations } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 interface TocItem {
   id: string;
@@ -64,14 +64,19 @@ export function TableOfContents({
       return () => observer.disconnect();
     },
     () => getTocSnapshot(containerRef.current),
-    () => EMPTY_ITEMS
+    () => EMPTY_ITEMS,
   );
 
   if (items.length === 0) return null;
 
   return (
-    <nav aria-label={t("tableOfContents.label")} className={cn("space-y-2", className)}>
-      <h2 className="text-sm font-semibold text-foreground">{t("tableOfContents.title")}</h2>
+    <nav
+      aria-label={t("tableOfContents.label")}
+      className={cn("space-y-2", className)}
+    >
+      <h2 className="text-sm font-semibold text-foreground">
+        {t("tableOfContents.title")}
+      </h2>
       <ul className="space-y-1 text-sm">
         {items.map((item) => (
           <li

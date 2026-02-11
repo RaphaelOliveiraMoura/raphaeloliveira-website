@@ -2,24 +2,18 @@
 
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+
 import { z } from "zod";
 
-import { useTranslations } from "@/lib/i18n";
-import { toast } from "@/lib/feedback";
-import { emailSchema, cpfSchema, phoneBrSchema, cepSchema } from "@/lib/validation";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
+import { Can, PermissionButton } from "@/components/auth";
+import { Breadcrumbs } from "@/components/navigation";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  FileUpload,
+  Form,
+  LoadingButton,
+  MaskedInput,
+} from "@/components/shared";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -35,14 +29,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
-  Form,
-  MaskedInput,
-  LoadingButton,
-  FileUpload,
-} from "@/components/shared";
-import { Can, PermissionButton } from "@/components/auth";
-import { Breadcrumbs } from "@/components/navigation";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+
+import { toast } from "@/lib/feedback";
+import { useTranslations } from "@/lib/i18n";
+import {
+  cepSchema,
+  cpfSchema,
+  emailSchema,
+  phoneBrSchema,
+} from "@/lib/validation";
 
 const contactFormSchema = z.object({
   fullName: z.string().min(3, "Min 3 characters"),
@@ -338,17 +345,11 @@ export default function FormsPage() {
                   {t("forms.admin")} Action
                 </PermissionButton>
 
-                <PermissionButton
-                  permission="posts:create"
-                  variant="outline"
-                >
+                <PermissionButton permission="posts:create" variant="outline">
                   {t("forms.editor")} Action
                 </PermissionButton>
 
-                <PermissionButton
-                  permission="posts:read"
-                  variant="secondary"
-                >
+                <PermissionButton permission="posts:read" variant="secondary">
                   {t("forms.viewer")} Action
                 </PermissionButton>
               </div>

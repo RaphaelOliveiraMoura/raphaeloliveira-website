@@ -11,19 +11,13 @@ export async function GET(request: NextRequest) {
   const authorization = request.headers.get("Authorization");
 
   if (!authorization?.startsWith("Bearer ")) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const token = authorization.slice(7);
 
   if (!token || token === "invalid") {
-    return NextResponse.json(
-      { error: "Invalid token" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
   // Mock: retorna um usuario baseado no token

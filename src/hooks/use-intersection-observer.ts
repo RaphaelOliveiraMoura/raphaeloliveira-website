@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type RefObject } from "react";
+import { type RefObject, useEffect, useState } from "react";
 
 interface UseIntersectionObserverReturn {
   isIntersecting: boolean;
@@ -9,7 +9,7 @@ interface UseIntersectionObserverReturn {
 
 export function useIntersectionObserver(
   ref: RefObject<Element | null>,
-  options?: IntersectionObserverInit
+  options?: IntersectionObserverInit,
 ): UseIntersectionObserverReturn {
   const [entry, setEntry] = useState<IntersectionObserverEntry | null>(null);
 
@@ -21,9 +21,12 @@ export function useIntersectionObserver(
     const element = ref.current;
     if (!element) return;
 
-    const observer = new IntersectionObserver(([observerEntry]) => {
-      setEntry(observerEntry ?? null);
-    }, { threshold, root, rootMargin });
+    const observer = new IntersectionObserver(
+      ([observerEntry]) => {
+        setEntry(observerEntry ?? null);
+      },
+      { threshold, root, rootMargin },
+    );
 
     observer.observe(element);
     return () => observer.disconnect();

@@ -11,7 +11,7 @@ export interface OrganizationSchema {
 export function buildOrganizationJsonLd(
   name: string,
   url: string,
-  logo: string
+  logo: string,
 ): OrganizationSchema {
   return {
     "@context": "https://schema.org",
@@ -44,7 +44,9 @@ export function buildArticleJsonLd(article: {
     "@type": "Article",
     headline: article.title,
     description: article.description,
-    url: article.url.startsWith("http") ? article.url : `${SITE_URL}${article.url}`,
+    url: article.url.startsWith("http")
+      ? article.url
+      : `${SITE_URL}${article.url}`,
     datePublished: article.datePublished,
     author: { "@type": "Person", name: article.author },
   };
@@ -64,7 +66,7 @@ export interface BreadcrumbListSchema {
 }
 
 export function buildBreadcrumbJsonLd(
-  items: Array<{ name: string; url: string }>
+  items: Array<{ name: string; url: string }>,
 ): BreadcrumbListSchema {
   return {
     "@context": "https://schema.org",

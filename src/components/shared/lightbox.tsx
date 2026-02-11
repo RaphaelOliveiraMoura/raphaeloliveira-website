@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronLeftIcon, ChevronRightIcon, ZoomInIcon, ZoomOutIcon } from "lucide-react";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import { cn } from "@/lib/utils";
 
@@ -151,7 +153,7 @@ export function Lightbox({
             src={currentImage?.src}
             alt={currentImage?.alt ?? ""}
             className={cn(
-              "max-h-[70vh] max-w-full object-contain transition-transform duration-200"
+              "max-h-[70vh] max-w-full object-contain transition-transform duration-200",
             )}
             style={{ transform: `scale(${zoom})` }}
             draggable={false}

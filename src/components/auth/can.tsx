@@ -1,6 +1,7 @@
 "use client";
 
 import { usePermissions } from "@/hooks/use-permissions";
+
 import type { Permission } from "@/types/auth";
 
 interface CanProps {

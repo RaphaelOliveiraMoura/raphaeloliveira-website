@@ -1,5 +1,5 @@
+export { type BrazilianAddress, formatAddress } from "./address";
 export { formatCurrency } from "./currency";
+export { formatCep, formatCnpj, formatCpf } from "./document";
 export { abbreviateNumber } from "./number";
-export { formatCpf, formatCnpj, formatCep } from "./document";
-export { truncate, capitalize, slugify, pluralize } from "./string";
-export { formatAddress, type BrazilianAddress } from "./address";
+export { capitalize, pluralize, slugify, truncate } from "./string";

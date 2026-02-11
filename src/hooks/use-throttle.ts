@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useCallback, useRef } from "react";
 
 export function useThrottle<T extends (...args: never[]) => unknown>(
   fn: T,
-  delayMs: number
+  delayMs: number,
 ): T {
   const lastCall = useRef(0);
 
@@ -16,6 +16,6 @@ export function useThrottle<T extends (...args: never[]) => unknown>(
         return fn(...args);
       }
     },
-    [fn, delayMs]
+    [fn, delayMs],
   ) as T;
 }

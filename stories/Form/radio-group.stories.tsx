@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const meta: Meta<typeof RadioGroup> = {
   title: "Form/RadioGroup",
@@ -66,7 +66,11 @@ export const PlanSelection: Story = {
         </div>
       </div>
       <div className="flex items-start space-x-3 rounded-lg border p-4">
-        <RadioGroupItem value="enterprise" id="plan-enterprise" className="mt-0.5" />
+        <RadioGroupItem
+          value="enterprise"
+          id="plan-enterprise"
+          className="mt-0.5"
+        />
         <div className="grid gap-1">
           <Label htmlFor="plan-enterprise" className="font-medium">
             Enterprise — Custom

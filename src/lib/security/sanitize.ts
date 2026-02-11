@@ -32,10 +32,7 @@ const DEFAULT_ALLOWED_ATTRS: Record<string, string[]> = {
   a: ["href", "title", "target", "rel"],
 };
 
-export function sanitizeHtml(
-  dirty: string,
-  options?: SanitizeOptions
-): string {
+export function sanitizeHtml(dirty: string, options?: SanitizeOptions): string {
   const allowedTags = options?.allowedTags ?? DEFAULT_ALLOWED_TAGS;
   const allowedAttributes = options?.allowedAttributes ?? DEFAULT_ALLOWED_ATTRS;
 

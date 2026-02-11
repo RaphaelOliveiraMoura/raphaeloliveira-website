@@ -2,9 +2,10 @@
 
 import { Menu } from "lucide-react";
 
-import { Link, useTranslations } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
+import { Link, useTranslations } from "@/lib/i18n";
 import { useIsMobile } from "@/hooks/use-breakpoint";
 
 export function MarketingNavbar() {
@@ -58,7 +59,10 @@ export function MarketingNavbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
-              <nav className="flex flex-col gap-4 pt-8" aria-label={t("nav.primary")}>
+              <nav
+                className="flex flex-col gap-4 pt-8"
+                aria-label={t("nav.primary")}
+              >
                 {navLinks}
               </nav>
             </SheetContent>

@@ -11,7 +11,9 @@ export function DashboardNavbar() {
         {t("logo")}
       </Link>
       <nav className="flex items-center gap-4" aria-label={t("nav.secondary")}>
-        <span className="text-sm text-muted-foreground">{t("nav.navigation")}</span>
+        <span className="text-sm text-muted-foreground">
+          {t("nav.navigation")}
+        </span>
       </nav>
     </header>
   );

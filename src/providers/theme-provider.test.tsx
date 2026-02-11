@@ -1,6 +1,8 @@
-import { renderHook, act } from "@testing-library/react";
-import { ThemeProvider, useTheme } from "./theme-provider";
 import type { ReactNode } from "react";
+
+import { act, renderHook } from "@testing-library/react";
+
+import { ThemeProvider, useTheme } from "./theme-provider";
 
 function createWrapper(defaultTheme?: "light" | "dark" | "system") {
   return function Wrapper({ children }: { children: ReactNode }) {

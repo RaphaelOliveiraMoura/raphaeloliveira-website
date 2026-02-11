@@ -1,12 +1,13 @@
 import createMiddleware from "next-intl/middleware";
 
-import { routing } from "@/i18n/routing";
 import { getSecurityHeaders } from "@/lib/security/headers";
+
+import { routing } from "@/i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(
-  request: Parameters<typeof intlMiddleware>[0]
+  request: Parameters<typeof intlMiddleware>[0],
 ) {
   const response = intlMiddleware(request);
 

@@ -1,33 +1,34 @@
 "use client";
 
 import { useState } from "react";
+
 import {
   BellIcon,
   CheckCheckIcon,
-  InfoIcon,
   CircleCheckIcon,
-  TriangleAlertIcon,
   CircleXIcon,
+  InfoIcon,
   Trash2Icon,
+  TriangleAlertIcon,
   XIcon,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetDescription,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { cn } from "@/lib/utils";
 import {
-  useNotifications,
   type Notification,
   type NotificationCategory,
+  useNotifications,
 } from "@/hooks/use-notifications";
 
 const CATEGORY_CONFIG: Record<
@@ -40,7 +41,10 @@ const CATEGORY_CONFIG: Record<
   error: { icon: CircleXIcon, className: "text-red-500" },
 };
 
-const CATEGORY_FILTERS: Array<{ value: NotificationCategory | "all"; label: string }> = [
+const CATEGORY_FILTERS: Array<{
+  value: NotificationCategory | "all";
+  label: string;
+}> = [
   { value: "all", label: "All" },
   { value: "info", label: "Info" },
   { value: "success", label: "Success" },
@@ -182,14 +186,14 @@ function NotificationItem({
 
   const formattedDate = new Date(notification.createdAt).toLocaleDateString(
     undefined,
-    { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }
+    { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" },
   );
 
   return (
     <div
       className={cn(
         "group relative flex gap-3 rounded-lg border p-3 transition-colors",
-        !notification.read && "bg-accent/50"
+        !notification.read && "bg-accent/50",
       )}
       role="article"
     >

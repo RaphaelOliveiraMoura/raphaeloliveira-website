@@ -19,7 +19,8 @@ export const masks = {
     if (d.length <= 2) return d;
     if (d.length <= 5) return d.replace(/(\d{2})(\d+)/, "$1.$2");
     if (d.length <= 8) return d.replace(/(\d{2})(\d{3})(\d+)/, "$1.$2.$3");
-    if (d.length <= 12) return d.replace(/(\d{2})(\d{3})(\d{3})(\d+)/, "$1.$2.$3/$4");
+    if (d.length <= 12)
+      return d.replace(/(\d{2})(\d{3})(\d{3})(\d+)/, "$1.$2.$3/$4");
     return d.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, "$1.$2.$3/$4-$5");
   },
   cep: (value: string) => {
@@ -64,8 +65,6 @@ export type MaskType = keyof typeof masks;
  * Remove caracteres não numéricos antes de aplicar.
  */
 export function applyMask(value: string, type: MaskType): string {
-  const digits = value
-    .replace(/\D/g, "")
-    .slice(0, maxDigits[type] ?? 20);
+  const digits = value.replace(/\D/g, "").slice(0, maxDigits[type] ?? 20);
   return masks[type](digits);
 }

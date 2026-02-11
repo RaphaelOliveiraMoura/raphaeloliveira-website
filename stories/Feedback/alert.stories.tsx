@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { AlertCircle, Info, CheckCircle2, Terminal } from "lucide-react";
+import { AlertCircle, CheckCircle2, Info, Terminal } from "lucide-react";
 
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const meta: Meta<typeof Alert> = {
   title: "Feedback/Alert",
@@ -84,9 +84,7 @@ export const WithoutIcon: Story = {
   render: () => (
     <Alert className="w-full max-w-lg">
       <AlertTitle>Note</AlertTitle>
-      <AlertDescription>
-        This alert does not include an icon.
-      </AlertDescription>
+      <AlertDescription>This alert does not include an icon.</AlertDescription>
     </Alert>
   ),
 };

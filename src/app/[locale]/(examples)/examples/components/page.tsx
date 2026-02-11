@@ -1,10 +1,15 @@
 "use client";
 
 import { useState } from "react";
+
 import {
+  AlertTriangle,
   Bell,
+  CheckCircle,
+  ChevronsUpDown,
   Copy,
   Home,
+  Info,
   Mail,
   MoreHorizontal,
   Plus,
@@ -12,58 +17,119 @@ import {
   Settings,
   Trash2,
   User,
-  AlertTriangle,
-  CheckCircle,
-  Info,
-  ChevronsUpDown,
 } from "lucide-react";
 
-import { useTranslations } from "@/lib/i18n";
-import { toast } from "@/lib/feedback";
-import { useToggle, useNotifications as useNotificationsHook } from "@/hooks";
-
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { CodeBlock, MarkdownContent } from "@/components/content";
+import {
+  EmptyState,
+  ImageCropUpload,
+  KanbanBoard,
+  type KanbanColumn as KanbanColumnType,
+  Lightbox,
+  LoadingButton,
+  NotificationCenter,
+  SortableList,
+  VideoPlayer,
+} from "@/components/shared";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-
-import { CodeBlock, MarkdownContent } from "@/components/content";
 import {
-  EmptyState,
-  LoadingButton,
-  Lightbox,
-  VideoPlayer,
-  NotificationCenter,
-  ImageCropUpload,
-  SortableList,
-  KanbanBoard,
-  type KanbanColumn as KanbanColumnType,
-} from "@/components/shared";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import { toast } from "@/lib/feedback";
+import { useTranslations } from "@/lib/i18n";
+import { useNotifications as useNotificationsHook, useToggle } from "@/hooks";
 
 const NAV_SECTIONS = [
   "basic",
@@ -109,9 +175,18 @@ function ComponentCard({
 }
 
 const SAMPLE_IMAGES = [
-  { src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800", alt: "Landscape 1" },
-  { src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800", alt: "Landscape 2" },
-  { src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800", alt: "Landscape 3" },
+  {
+    src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800",
+    alt: "Landscape 1",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800",
+    alt: "Landscape 2",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800",
+    alt: "Landscape 3",
+  },
 ];
 
 const INITIAL_SORTABLE_ITEMS = [
@@ -127,22 +202,38 @@ const INITIAL_KANBAN_COLUMNS: KanbanColumnType[] = [
     id: "todo",
     title: "To Do",
     items: [
-      { id: "k1", title: "Research competitor features", description: "Analyze top 5 competitors" },
-      { id: "k2", title: "Create wireframes", description: "Low-fi mockups for new flow" },
+      {
+        id: "k1",
+        title: "Research competitor features",
+        description: "Analyze top 5 competitors",
+      },
+      {
+        id: "k2",
+        title: "Create wireframes",
+        description: "Low-fi mockups for new flow",
+      },
     ],
   },
   {
     id: "progress",
     title: "In Progress",
     items: [
-      { id: "k3", title: "Implement auth flow", description: "Login, register, reset password" },
+      {
+        id: "k3",
+        title: "Implement auth flow",
+        description: "Login, register, reset password",
+      },
     ],
   },
   {
     id: "done",
     title: "Done",
     items: [
-      { id: "k4", title: "Setup CI/CD", description: "GitHub Actions pipeline" },
+      {
+        id: "k4",
+        title: "Setup CI/CD",
+        description: "GitHub Actions pipeline",
+      },
     ],
   },
 ];
@@ -203,7 +294,9 @@ export default function ComponentsGalleryPage() {
                 <Button size="sm">Small</Button>
                 <Button size="default">Default</Button>
                 <Button size="lg">Large</Button>
-                <Button size="icon"><Plus className="size-4" /></Button>
+                <Button size="icon">
+                  <Plus className="size-4" />
+                </Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button disabled>Disabled</Button>
@@ -365,7 +458,9 @@ export default function ComponentsGalleryPage() {
                 <CardDescription>Card description text</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Card content goes here.</p>
+                <p className="text-sm text-muted-foreground">
+                  Card content goes here.
+                </p>
               </CardContent>
               <CardFooter>
                 <Button size="sm">Action</Button>
@@ -389,7 +484,9 @@ export default function ComponentsGalleryPage() {
                   <PaginationPrevious href="#" />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#" isActive>1</PaginationLink>
+                  <PaginationLink href="#" isActive>
+                    1
+                  </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink href="#">2</PaginationLink>
@@ -418,7 +515,9 @@ export default function ComponentsGalleryPage() {
 
         {/* === NAVIGATION === */}
         <section className="space-y-6">
-          <SectionTitle id="navigation">{t("components.navigation")}</SectionTitle>
+          <SectionTitle id="navigation">
+            {t("components.navigation")}
+          </SectionTitle>
 
           <ComponentCard title="Accordion">
             <Accordion type="single" collapsible>
@@ -505,7 +604,9 @@ export default function ComponentsGalleryPage() {
                     This is a dialog description explaining the action.
                   </DialogDescription>
                 </DialogHeader>
-                <p className="text-sm text-muted-foreground">Dialog content here.</p>
+                <p className="text-sm text-muted-foreground">
+                  Dialog content here.
+                </p>
                 <DialogFooter>
                   <Button variant="outline">Cancel</Button>
                   <Button>Confirm</Button>
@@ -570,7 +671,9 @@ export default function ComponentsGalleryPage() {
                     <SheetDescription>Sheet description.</SheetDescription>
                   </SheetHeader>
                   <div className="py-4">
-                    <p className="text-sm text-muted-foreground">Sheet content here.</p>
+                    <p className="text-sm text-muted-foreground">
+                      Sheet content here.
+                    </p>
                   </div>
                 </SheetContent>
               </Sheet>
@@ -633,7 +736,10 @@ export default function ComponentsGalleryPage() {
           </ComponentCard>
 
           <ComponentCard title="Collapsible">
-            <Collapsible open={isCollapsibleOpen} onOpenChange={toggleCollapsible}>
+            <Collapsible
+              open={isCollapsibleOpen}
+              onOpenChange={toggleCollapsible}
+            >
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">3 items</span>
                 <CollapsibleTrigger asChild>
@@ -646,8 +752,12 @@ export default function ComponentsGalleryPage() {
                 Item 1 (always visible)
               </div>
               <CollapsibleContent className="mt-1 space-y-1">
-                <div className="rounded-md border px-4 py-2 text-sm">Item 2</div>
-                <div className="rounded-md border px-4 py-2 text-sm">Item 3</div>
+                <div className="rounded-md border px-4 py-2 text-sm">
+                  Item 2
+                </div>
+                <div className="rounded-md border px-4 py-2 text-sm">
+                  Item 3
+                </div>
               </CollapsibleContent>
             </Collapsible>
           </ComponentCard>
@@ -685,7 +795,9 @@ export default function ComponentsGalleryPage() {
               <Alert>
                 <Info className="size-4" />
                 <AlertTitle>Info</AlertTitle>
-                <AlertDescription>This is an informational alert.</AlertDescription>
+                <AlertDescription>
+                  This is an informational alert.
+                </AlertDescription>
               </Alert>
               <Alert variant="destructive">
                 <AlertTriangle className="size-4" />
@@ -851,7 +963,9 @@ This is a **bold** text and this is *italic*.
                   const sourceCol = updated.find((c) => c.id === fromCol);
                   const targetCol = updated.find((c) => c.id === toCol);
                   if (!sourceCol || !targetCol) return prev;
-                  const itemIdx = sourceCol.items.findIndex((i) => i.id === itemId);
+                  const itemIdx = sourceCol.items.findIndex(
+                    (i) => i.id === itemId,
+                  );
                   if (itemIdx === -1) return prev;
                   const [item] = sourceCol.items.splice(itemIdx, 1);
                   if (item) targetCol.items.splice(newIndex, 0, item);

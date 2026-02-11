@@ -1,12 +1,12 @@
 "use client";
 
-import { Copy, Check } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import { useClipboard } from "@/hooks";
-import { cn } from "@/lib/utils";
 import { useTranslations } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
+import { useClipboard } from "@/hooks";
 
 interface CodeBlockProps {
   code: string;
@@ -22,7 +22,7 @@ export function CodeBlock({ code, language, className }: CodeBlockProps) {
     <div
       className={cn(
         "relative rounded-lg border bg-muted/50 font-mono text-sm",
-        className
+        className,
       )}
     >
       {language && (

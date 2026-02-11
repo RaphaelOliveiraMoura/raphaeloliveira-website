@@ -1,8 +1,8 @@
 import {
-  featureFlags,
+  type Environment,
   type FeatureFlagConfig,
   type FeatureFlagName,
-  type Environment,
+  featureFlags,
 } from "@/config/feature-flags";
 
 function getCurrentEnvironment(): Environment {

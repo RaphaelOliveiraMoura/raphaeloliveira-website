@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { FileX, Search, Inbox, Plus } from "lucide-react";
+import { FileX, Inbox, Plus, Search } from "lucide-react";
 import { fn } from "storybook/test";
 
 import { EmptyState } from "@/components/shared/empty-state";
@@ -38,7 +38,8 @@ export const NoResults: Story = {
   args: {
     icon: <Search className="h-10 w-10" />,
     title: "No results found",
-    description: "Try adjusting your search or filters to find what you're looking for.",
+    description:
+      "Try adjusting your search or filters to find what you're looking for.",
   },
 };
 

@@ -1,24 +1,28 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import type { ColumnDef } from "@tanstack/react-table";
-import {
-  Download,
-  MoreHorizontal,
-  Search,
-  Eye,
-  Pencil,
-} from "lucide-react";
+import { useMemo, useState } from "react";
 
-import { useTranslations } from "@/lib/i18n";
-import { useDebounce } from "@/hooks";
-import { formatCpf } from "@/lib/formatters";
-import { formatDate } from "@/lib/datetime";
-import { exportToCsv, exportToJson } from "@/lib/data";
-import { toast } from "@/lib/feedback";
-import { MOCK_USERS, type MockUser } from "@/lib/utils/mock-data";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Download, Eye, MoreHorizontal, Pencil, Search } from "lucide-react";
+
+import { Breadcrumbs } from "@/components/navigation";
+import { HighlightMatch } from "@/components/search";
+import { ConfirmDialog, DataTable, VirtualList } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -27,23 +31,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { DataTable, ConfirmDialog, VirtualList } from "@/components/shared";
-import { HighlightMatch } from "@/components/search";
-import { Breadcrumbs } from "@/components/navigation";
+
+import { exportToCsv, exportToJson } from "@/lib/data";
+import { formatDate } from "@/lib/datetime";
+import { toast } from "@/lib/feedback";
+import { formatCpf } from "@/lib/formatters";
+import { useTranslations } from "@/lib/i18n";
+import { MOCK_USERS, type MockUser } from "@/lib/utils/mock-data";
+import { useDebounce } from "@/hooks";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   active: "default",
@@ -99,17 +95,13 @@ export default function DataPage() {
       accessorKey: "cpf",
       header: t("data.cpf"),
       cell: ({ row }) => (
-        <span className="font-mono text-sm">
-          {formatCpf(row.original.cpf)}
-        </span>
+        <span className="font-mono text-sm">{formatCpf(row.original.cpf)}</span>
       ),
     },
     {
       accessorKey: "role",
       header: t("data.role"),
-      cell: ({ row }) => (
-        <Badge variant="secondary">{row.original.role}</Badge>
-      ),
+      cell: ({ row }) => <Badge variant="secondary">{row.original.role}</Badge>,
     },
     {
       accessorKey: "status",
@@ -169,7 +161,7 @@ export default function DataPage() {
         cpf: formatCpf(u.cpf),
         createdAt: formatDate(u.createdAt, "short"),
       })),
-      "users.csv"
+      "users.csv",
     );
     toast.success(t("data.exported"));
   };
@@ -185,9 +177,7 @@ export default function DataPage() {
   };
 
   const handleConfirmDelete = () => {
-    toast.success(
-      t("data.deleted", { count: pendingDeleteCount })
-    );
+    toast.success(t("data.deleted", { count: pendingDeleteCount }));
     setDeleteDialogOpen(false);
   };
 

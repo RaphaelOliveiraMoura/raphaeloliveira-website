@@ -26,7 +26,7 @@ export function createApiClient(baseUrl: string) {
 
   async function request<T>(
     url: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<ApiResponse<T>> {
     let config: RequestInit & { url: string } = {
       ...options,
@@ -100,6 +100,4 @@ export function createApiClient(baseUrl: string) {
   };
 }
 
-export const apiClient = createApiClient(
-  process.env.NEXT_PUBLIC_API_URL ?? ""
-);
+export const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL ?? "");

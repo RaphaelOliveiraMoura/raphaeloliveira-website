@@ -6,12 +6,12 @@ export function useUrlPagination(defaultPageSize = 20) {
   const [page, setPage] = useUrlState<string>("page", "1");
   const [pageSize, setPageSize] = useUrlState<string>(
     "pageSize",
-    String(defaultPageSize)
+    String(defaultPageSize),
   );
   const [sortBy, setSortBy] = useUrlState<string>("sortBy");
   const [sortOrder, setSortOrder] = useUrlState<"asc" | "desc">(
     "sortOrder",
-    "asc"
+    "asc",
   );
 
   return {

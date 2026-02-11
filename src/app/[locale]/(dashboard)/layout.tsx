@@ -1,4 +1,4 @@
-import { DashboardSidebar, DashboardNavbar } from "@/components/layouts";
+import { DashboardNavbar, DashboardSidebar } from "@/components/layouts";
 
 import { AuthProvider } from "@/providers/auth-provider";
 

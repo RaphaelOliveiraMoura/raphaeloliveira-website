@@ -59,7 +59,7 @@ export function ThemeProvider({
   const systemTheme = useSyncExternalStore(
     subscribeSystemTheme,
     getSystemThemeSnapshot,
-    getServerSystemTheme
+    getServerSystemTheme,
   );
 
   const resolvedTheme = theme === "system" ? systemTheme : theme;
@@ -71,20 +71,19 @@ export function ThemeProvider({
     root.classList.add(resolvedTheme);
   }, [resolvedTheme]);
 
-  const setTheme = useCallback(
-    (newTheme: Theme) => {
-      setThemeState(newTheme);
-      localStorage.setItem(STORAGE_KEY, newTheme);
-    },
-    []
-  );
+  const setTheme = useCallback((newTheme: Theme) => {
+    setThemeState(newTheme);
+    localStorage.setItem(STORAGE_KEY, newTheme);
+  }, []);
 
   const toggleTheme = useCallback(() => {
     setTheme(resolvedTheme === "light" ? "dark" : "light");
   }, [resolvedTheme, setTheme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider
+      value={{ theme, resolvedTheme, setTheme, toggleTheme }}
+    >
       {children}
     </ThemeContext.Provider>
   );

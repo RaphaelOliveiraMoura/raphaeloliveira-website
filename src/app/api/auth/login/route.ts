@@ -13,12 +13,15 @@ const MOCK_ACCESS_TOKEN = "mock-access-token-core-stack";
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as { email?: string; password?: string };
+    const body = (await request.json()) as {
+      email?: string;
+      password?: string;
+    };
 
     if (!body.email || !body.password) {
       return NextResponse.json(
         { error: "Email and password are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,7 +29,7 @@ export async function POST(request: NextRequest) {
     if (body.email !== DEMO_EMAIL || body.password !== DEMO_PASSWORD) {
       return NextResponse.json(
         { error: "Invalid credentials" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -56,7 +59,7 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { error: "Invalid request body" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 }

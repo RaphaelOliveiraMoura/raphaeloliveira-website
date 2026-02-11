@@ -1,13 +1,8 @@
 export { env } from "./env";
 export {
-  featureFlags,
   type Environment,
   type FeatureFlagConfig,
   type FeatureFlagName,
+  featureFlags,
 } from "./feature-flags";
-export {
-  locales,
-  defaultLocale,
-  localeNames,
-  type Locale,
-} from "./i18n";
+export { defaultLocale, type Locale, localeNames, locales } from "./i18n";

@@ -1,9 +1,8 @@
 "use client";
 
-import { usePathname } from "@/lib/i18n";
-
 import { AnimatePresence, motion } from "framer-motion";
 
+import { usePathname } from "@/lib/i18n";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 const pageVariants = {

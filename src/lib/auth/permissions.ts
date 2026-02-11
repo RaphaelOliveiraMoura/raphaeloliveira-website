@@ -1,4 +1,9 @@
-import { ROLE_PERMISSIONS, type Role, type Permission, type User } from "@/types/auth";
+import {
+  type Permission,
+  type Role,
+  ROLE_PERMISSIONS,
+  type User,
+} from "@/types/auth";
 
 /**
  * Verifica se um role possui determinada permissao.
@@ -12,7 +17,7 @@ export function hasPermission(role: Role, permission: Permission): boolean {
  */
 export function hasAllPermissions(
   role: Role,
-  permissions: Permission[]
+  permissions: Permission[],
 ): boolean {
   return permissions.every((p) => hasPermission(role, p));
 }
@@ -22,7 +27,7 @@ export function hasAllPermissions(
  */
 export function hasAnyPermission(
   role: Role,
-  permissions: Permission[]
+  permissions: Permission[],
 ): boolean {
   return permissions.some((p) => hasPermission(role, p));
 }

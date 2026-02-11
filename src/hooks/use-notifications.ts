@@ -71,7 +71,7 @@ function subscribe(callback: () => void): () => void {
 }
 
 function addNotification(
-  notification: Omit<Notification, "id" | "read" | "createdAt">
+  notification: Omit<Notification, "id" | "read" | "createdAt">,
 ) {
   const notifications = getStoredNotifications();
   const newNotification: Notification = {
@@ -86,7 +86,7 @@ function addNotification(
 function markAsRead(id: string) {
   const notifications = getStoredNotifications();
   const updated = notifications.map((n) =>
-    n.id === id ? { ...n, read: true } : n
+    n.id === id ? { ...n, read: true } : n,
   );
   saveNotifications(updated);
 }

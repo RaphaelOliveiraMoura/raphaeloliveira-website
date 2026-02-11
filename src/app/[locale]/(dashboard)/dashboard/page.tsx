@@ -3,17 +3,21 @@
 import { useState } from "react";
 
 import {
-  Users,
-  FileText,
   Activity,
   DollarSign,
-  TrendingUp,
+  FileText,
   Info,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 
-import { useTranslations, useNumberFormatter, useDateFormatter } from "@/lib/i18n";
-import { useAuth } from "@/providers/auth-provider";
-import { useIsMobile, useFeatureFlag } from "@/hooks";
+import { Breadcrumbs } from "@/components/navigation";
+import {
+  EmptyState,
+  Feature,
+  SkeletonCard,
+  SkeletonText,
+} from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -23,25 +27,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+
 import {
-  EmptyState,
-  Feature,
-  SkeletonCard,
-  SkeletonText,
-} from "@/components/shared";
-import { Breadcrumbs } from "@/components/navigation";
+  useDateFormatter,
+  useNumberFormatter,
+  useTranslations,
+} from "@/lib/i18n";
 import { MOCK_DASHBOARD_STATS } from "@/lib/utils/mock-data";
+import { useFeatureFlag, useIsMobile } from "@/hooks";
+
+import { useAuth } from "@/providers/auth-provider";
 
 const STAT_ICONS = {
   totalUsers: Users,
@@ -106,7 +107,9 @@ export default function DashboardPage() {
       <Tabs defaultValue="overview">
         <TabsList>
           <TabsTrigger value="overview">{t("dashboard.overview")}</TabsTrigger>
-          <TabsTrigger value="activity">{t("dashboard.recentActivity")}</TabsTrigger>
+          <TabsTrigger value="activity">
+            {t("dashboard.recentActivity")}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 pt-4">
@@ -129,14 +132,26 @@ export default function DashboardPage() {
                   <Card key={stat.key}>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                       <CardTitle className="text-sm font-medium">
-                        {t(`dashboard.${stat.key}` as "dashboard.totalUsers" | "dashboard.totalPosts" | "dashboard.activeNow" | "dashboard.revenue")}
+                        {t(
+                          `dashboard.${stat.key}` as
+                            | "dashboard.totalUsers"
+                            | "dashboard.totalPosts"
+                            | "dashboard.activeNow"
+                            | "dashboard.revenue",
+                        )}
                       </CardTitle>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Icon className="size-4 text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent>
-                          {t(`dashboard.${stat.key}` as "dashboard.totalUsers" | "dashboard.totalPosts" | "dashboard.activeNow" | "dashboard.revenue")}
+                          {t(
+                            `dashboard.${stat.key}` as
+                              | "dashboard.totalUsers"
+                              | "dashboard.totalPosts"
+                              | "dashboard.activeNow"
+                              | "dashboard.revenue",
+                          )}
                         </TooltipContent>
                       </Tooltip>
                     </CardHeader>
@@ -163,16 +178,12 @@ export default function DashboardPage() {
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">
-                    {te("data.title")}
-                  </CardTitle>
+                  <CardTitle className="text-lg">{te("data.title")}</CardTitle>
                   <Badge variant="outline">
                     {isMobile ? "Mobile" : "Desktop"}
                   </Badge>
                 </div>
-                <CardDescription>
-                  {te("data.subtitle")}
-                </CardDescription>
+                <CardDescription>{te("data.subtitle")}</CardDescription>
               </CardHeader>
               <CardContent>
                 {isLoading ? (
@@ -180,15 +191,27 @@ export default function DashboardPage() {
                 ) : (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{te("data.name")}</span>
-                      <span className="font-medium">20 {t("itemsCount", { count: 20 }).split(" ").slice(1).join(" ")}</span>
+                      <span className="text-muted-foreground">
+                        {te("data.name")}
+                      </span>
+                      <span className="font-medium">
+                        20{" "}
+                        {t("itemsCount", { count: 20 })
+                          .split(" ")
+                          .slice(1)
+                          .join(" ")}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{te("data.role")}</span>
+                      <span className="text-muted-foreground">
+                        {te("data.role")}
+                      </span>
                       <span className="font-medium">admin, editor, viewer</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{te("data.status")}</span>
+                      <span className="text-muted-foreground">
+                        {te("data.status")}
+                      </span>
                       <div className="flex gap-1">
                         <Badge variant="default">active</Badge>
                         <Badge variant="secondary">inactive</Badge>

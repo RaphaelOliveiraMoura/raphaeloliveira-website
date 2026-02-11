@@ -1,15 +1,14 @@
+import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { notFound } from "next/navigation";
 
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { ErrorBoundary, SkipLink } from "@/components/shared";
 import { Toaster } from "@/components/ui/sonner";
-import { SkipLink, ErrorBoundary } from "@/components/shared";
-
-import { ThemeProvider } from "@/providers/theme-provider";
-import { QueryProvider } from "@/providers/query-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { routing } from "@/i18n/routing";
+import { QueryProvider } from "@/providers/query-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 type Params = Promise<{ locale: string }>;
 

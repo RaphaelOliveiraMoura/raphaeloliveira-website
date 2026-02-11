@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const meta: Meta<typeof Textarea> = {
   title: "Basic/Textarea",
@@ -60,11 +60,7 @@ export const Invalid: Story = {
   render: () => (
     <div className="grid w-full max-w-sm gap-1.5">
       <Label htmlFor="bio">Bio</Label>
-      <Textarea
-        id="bio"
-        aria-invalid="true"
-        defaultValue="ab"
-      />
+      <Textarea id="bio" aria-invalid="true" defaultValue="ab" />
       <p className="text-sm text-destructive">Minimo de 10 caracteres</p>
     </div>
   ),

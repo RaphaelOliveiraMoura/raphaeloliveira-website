@@ -5,14 +5,17 @@ import { useEffect } from "react";
 type KeyCombo = string;
 
 function parseKeyCombo(combo: KeyCombo) {
-  const parts = combo.toLowerCase().split("+").map((p) => p.trim());
+  const parts = combo
+    .toLowerCase()
+    .split("+")
+    .map((p) => p.trim());
   return {
     ctrl: parts.includes("ctrl") || parts.includes("control"),
     meta: parts.includes("meta") || parts.includes("cmd"),
     alt: parts.includes("alt"),
     shift: parts.includes("shift"),
     key: parts.filter(
-      (p) => !["ctrl", "control", "meta", "cmd", "alt", "shift"].includes(p)
+      (p) => !["ctrl", "control", "meta", "cmd", "alt", "shift"].includes(p),
     )[0],
   };
 }
@@ -20,7 +23,7 @@ function parseKeyCombo(combo: KeyCombo) {
 export function useKeyboardShortcut(
   combo: KeyCombo,
   callback: (event: KeyboardEvent) => void,
-  enabled = true
+  enabled = true,
 ): void {
   useEffect(() => {
     if (!enabled) return;

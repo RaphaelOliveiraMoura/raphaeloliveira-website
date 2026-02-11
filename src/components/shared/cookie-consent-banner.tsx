@@ -1,8 +1,7 @@
 "use client";
 
-import { useCookieConsent } from "@/hooks/use-cookie-consent";
-
 import { useTranslations } from "@/lib/i18n";
+import { useCookieConsent } from "@/hooks/use-cookie-consent";
 
 export function CookieConsentBanner() {
   const { shouldShow, accept, decline } = useCookieConsent();
@@ -17,9 +16,7 @@ export function CookieConsentBanner() {
       className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background p-4 shadow-lg"
     >
       <div className="mx-auto flex max-w-4xl flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-muted-foreground">
-          {t("cookies.consent")}
-        </p>
+        <p className="text-sm text-muted-foreground">{t("cookies.consent")}</p>
         <div className="flex shrink-0 gap-2">
           <button
             onClick={decline}
