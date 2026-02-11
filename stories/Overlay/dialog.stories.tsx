@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const meta: Meta<typeof Dialog> = {
+const meta = {
   title: "Overlay/Dialog",
   component: Dialog,
   parameters: {
@@ -25,11 +25,11 @@ const meta: Meta<typeof Dialog> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Dialog>;
 
 export default meta;
 
-type Story = StoryObj<typeof Dialog>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

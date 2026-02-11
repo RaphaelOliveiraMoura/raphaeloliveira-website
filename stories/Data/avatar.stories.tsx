@@ -10,7 +10,7 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 
-const meta: Meta<typeof Avatar> = {
+const meta = {
   title: "Data/Avatar",
   component: Avatar,
   parameters: {
@@ -27,11 +27,11 @@ const meta: Meta<typeof Avatar> = {
       options: ["sm", "default", "lg"],
     },
   },
-};
+} satisfies Meta<typeof Avatar>;
 
 export default meta;
 
-type Story = StoryObj<typeof Avatar>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

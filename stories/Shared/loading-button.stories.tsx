@@ -3,7 +3,7 @@ import { Save, Send, Trash2 } from "lucide-react";
 
 import { LoadingButton } from "@/components/shared/loading-button";
 
-const meta: Meta<typeof LoadingButton> = {
+const meta = {
   title: "Shared/LoadingButton",
   component: LoadingButton,
   parameters: {
@@ -28,11 +28,11 @@ const meta: Meta<typeof LoadingButton> = {
       options: ["default", "destructive", "outline", "secondary", "ghost"],
     },
   },
-};
+} satisfies Meta<typeof LoadingButton>;
 
 export default meta;
 
-type Story = StoryObj<typeof LoadingButton>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {

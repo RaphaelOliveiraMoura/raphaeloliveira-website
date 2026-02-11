@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-const meta: Meta<typeof Textarea> = {
+const meta = {
   title: "Basic/Textarea",
   component: Textarea,
   parameters: {
@@ -22,11 +22,11 @@ const meta: Meta<typeof Textarea> = {
       control: "boolean",
     },
   },
-};
+} satisfies Meta<typeof Textarea>;
 
 export default meta;
 
-type Story = StoryObj<typeof Textarea>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {

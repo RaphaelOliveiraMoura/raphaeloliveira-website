@@ -4,9 +4,10 @@ import { fn } from "storybook/test";
 
 import { EmptyState } from "@/components/shared/empty-state";
 
-const meta: Meta<typeof EmptyState> = {
+const meta = {
   title: "Shared/EmptyState",
   component: EmptyState,
+  args: { title: "Empty state" },
   parameters: {
     docs: {
       description: {
@@ -15,11 +16,11 @@ const meta: Meta<typeof EmptyState> = {
       },
     },
   },
-};
+} satisfies Meta<typeof EmptyState>;
 
 export default meta;
 
-type Story = StoryObj<typeof EmptyState>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {

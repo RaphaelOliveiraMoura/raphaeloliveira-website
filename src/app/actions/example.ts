@@ -6,16 +6,22 @@ import { z } from "zod";
 
 const createUserSchema = z.object({
   name: z.string().min(2),
-  email: z.string().email(),
+  email: z.email(),
 });
 
 export async function createUser(formData: FormData) {
   const raw = Object.fromEntries(formData);
   const result = createUserSchema.safeParse(raw);
   if (!result.success) {
+    const tree = z.treeifyError(result.error);
     return {
       success: false as const,
-      errors: result.error.flatten().fieldErrors,
+      errors: Object.fromEntries(
+        Object.entries(tree.properties ?? {}).map(([key, value]) => [
+          key,
+          value?.errors ?? [],
+        ]),
+      ),
     };
   }
   // Simulated insert

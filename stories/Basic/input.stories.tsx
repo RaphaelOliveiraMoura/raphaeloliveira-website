@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const meta: Meta<typeof Input> = {
+const meta = {
   title: "Basic/Input",
   component: Input,
   parameters: {
@@ -30,11 +30,11 @@ const meta: Meta<typeof Input> = {
       description: "Estado desabilitado",
     },
   },
-};
+} satisfies Meta<typeof Input>;
 
 export default meta;
 
-type Story = StoryObj<typeof Input>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {

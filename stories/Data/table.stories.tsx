@@ -53,7 +53,7 @@ const statusVariant = {
   Unpaid: "destructive" as const,
 };
 
-const meta: Meta<typeof Table> = {
+const meta = {
   title: "Data/Table",
   component: Table,
   parameters: {
@@ -65,11 +65,11 @@ const meta: Meta<typeof Table> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Table>;
 
 export default meta;
 
-type Story = StoryObj<typeof Table>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

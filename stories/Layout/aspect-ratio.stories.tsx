@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
-const meta: Meta<typeof AspectRatio> = {
+const meta = {
   title: "Layout/AspectRatio",
   component: AspectRatio,
   parameters: {
@@ -19,11 +19,11 @@ const meta: Meta<typeof AspectRatio> = {
       description: "Proporcao (largura/altura). Ex: 16/9 = 1.777",
     },
   },
-};
+} satisfies Meta<typeof AspectRatio>;
 
 export default meta;
 
-type Story = StoryObj<typeof AspectRatio>;
+type Story = StoryObj<typeof meta>;
 
 export const Image16x9: Story = {
   name: "Imagem 16:9",

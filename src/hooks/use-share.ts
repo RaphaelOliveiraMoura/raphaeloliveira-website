@@ -2,6 +2,8 @@
 
 import { useCallback, useState } from "react";
 
+import { isClient } from "@/lib/utils/environment";
+
 interface ShareOptions {
   title?: string;
   text?: string;
@@ -14,7 +16,7 @@ export function useShare() {
   const share = useCallback(async (options: ShareOptions): Promise<boolean> => {
     setSharing(true);
     try {
-      if (typeof navigator !== "undefined" && navigator.share) {
+      if (isClient() && navigator.share) {
         await navigator.share(options);
         return true;
       }

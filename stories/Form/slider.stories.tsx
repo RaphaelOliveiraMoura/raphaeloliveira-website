@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-const meta: Meta<typeof Slider> = {
+const meta = {
   title: "Form/Slider",
   component: Slider,
   parameters: {
@@ -20,11 +20,11 @@ const meta: Meta<typeof Slider> = {
     step: { control: "number" },
     disabled: { control: "boolean" },
   },
-};
+} satisfies Meta<typeof Slider>;
 
 export default meta;
 
-type Story = StoryObj<typeof Slider>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

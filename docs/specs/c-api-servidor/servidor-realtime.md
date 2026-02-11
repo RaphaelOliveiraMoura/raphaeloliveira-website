@@ -37,30 +37,39 @@ Next.js 16 oferece Server Components, Server Actions e Route Handlers como pilar
 
 ```ts
 // src/app/actions/users.ts
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 const createUserSchema = z.object({
   name: z.string().min(2).max(100),
-  email: z.string().email(),
+  email: z.email(),
 });
 
 export async function createUser(prevState: unknown, formData: FormData) {
   const parsed = createUserSchema.safeParse({
-    name: formData.get('name'),
-    email: formData.get('email'),
+    name: formData.get("name"),
+    email: formData.get("email"),
   });
 
   if (!parsed.success) {
-    return { success: false, errors: parsed.error.flatten().fieldErrors };
+    const tree = z.treeifyError(parsed.error);
+    return {
+      success: false,
+      errors: Object.fromEntries(
+        Object.entries(tree.properties ?? {}).map(([key, value]) => [
+          key,
+          value?.errors ?? [],
+        ]),
+      ),
+    };
   }
 
   // `db` representa a camada de acesso a dados (ex: Prisma, Drizzle, ou qualquer ORM).
   // A configuracao do ORM nao faz parte desta spec; usar como interface generica.
   const user = await db.users.create(parsed.data);
-  revalidatePath('/users');
+  revalidatePath("/users");
   return { success: true, id: user.id };
 }
 ```
@@ -69,10 +78,10 @@ export async function createUser(prevState: unknown, formData: FormData) {
 
 ```tsx
 // src/components/user-form.tsx
-'use client';
+"use client";
 
-import { useActionState } from 'react';
-import { createUser } from '@/app/actions/users';
+import { useActionState } from "react";
+import { createUser } from "@/app/actions/users";
 
 export function UserForm() {
   const [state, formAction, isPending] = useActionState(createUser, null);
@@ -80,9 +89,22 @@ export function UserForm() {
   return (
     <form action={formAction}>
       <input name="name" placeholder="Nome" disabled={isPending} />
-      <input name="email" type="email" placeholder="Email" disabled={isPending} />
-      {state?.errors && <ul>{Object.entries(state.errors).map(([k, v]) => <li key={k}>{v}</li>)}</ul>}
-      <button type="submit" disabled={isPending}>Criar</button>
+      <input
+        name="email"
+        type="email"
+        placeholder="Email"
+        disabled={isPending}
+      />
+      {state?.errors && (
+        <ul>
+          {Object.entries(state.errors).map(([k, v]) => (
+            <li key={k}>{v}</li>
+          ))}
+        </ul>
+      )}
+      <button type="submit" disabled={isPending}>
+        Criar
+      </button>
     </form>
   );
 }
@@ -92,8 +114,8 @@ export function UserForm() {
 
 ```ts
 // src/app/api/users/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 const querySchema = z.object({
   page: z.coerce.number().min(1).default(1),
@@ -104,11 +126,17 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const parsed = querySchema.safeParse(Object.fromEntries(searchParams));
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+    return NextResponse.json(
+      { error: z.treeifyError(parsed.error) },
+      { status: 400 },
+    );
   }
   // `db` representa a camada de acesso a dados (ex: Prisma, Drizzle, ou qualquer ORM).
   // A configuracao do ORM nao faz parte desta spec; usar como interface generica.
-  const users = await db.users.findMany({ skip: (parsed.data.page - 1) * parsed.data.limit, take: parsed.data.limit });
+  const users = await db.users.findMany({
+    skip: (parsed.data.page - 1) * parsed.data.limit,
+    take: parsed.data.limit,
+  });
   return NextResponse.json(users);
 }
 ```
@@ -117,27 +145,27 @@ export async function GET(request: NextRequest) {
 
 ```ts
 // src/middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('auth-token')?.value;
-  const requiresAuth = request.nextUrl.pathname.startsWith('/dashboard');
+  const token = request.cookies.get("auth-token")?.value;
+  const requiresAuth = request.nextUrl.pathname.startsWith("/dashboard");
 
   if (requiresAuth && !token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
-  if (request.nextUrl.pathname === '/login' && token) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+  if (request.nextUrl.pathname === "/login" && token) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   const response = NextResponse.next();
-  response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
   return response;
 }
 
-export const config = { matcher: ['/dashboard/:path*', '/login'] };
+export const config = { matcher: ["/dashboard/:path*", "/login"] };
 ```
 
 ### ISR e Revalidation
@@ -149,46 +177,46 @@ export const revalidate = 60; // segundos
 export default async function ProductsPage() {
   const res = await fetch(`${process.env.API_URL}/products`, {
     next: { revalidate: 3600 },
-  })
-  const products: Product[] = await res.json()
+  });
+  const products: Product[] = await res.json();
 
-  return <ProductList products={products} />
+  return <ProductList products={products} />;
 }
 ```
 
 ```ts
 // Revalidation on-demand (route handler)
 // src/app/api/revalidate/route.ts
-import { revalidatePath } from 'next/cache';
-import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const { path } = await request.json();
-  if (typeof path === 'string') {
+  if (typeof path === "string") {
     revalidatePath(path);
     return NextResponse.json({ revalidated: path });
   }
-  return NextResponse.json({ error: 'path required' }, { status: 400 });
+  return NextResponse.json({ error: "path required" }, { status: 400 });
 }
 ```
 
 ### Guia Server vs Client
 
-| Criterio | Server | Client |
-|----------|--------|--------|
-| Acesso a dados sensiveis | Sim | Nao |
-| Interatividade (onClick, useState) | Nao | Sim |
-| Browser APIs (localStorage, window) | Nao | Sim |
-| SEO / Conteudo estatico | Sim | Nao |
-| Real-time (WebSocket, polling) | Nao | Sim |
+| Criterio                            | Server | Client |
+| ----------------------------------- | ------ | ------ |
+| Acesso a dados sensiveis            | Sim    | Nao    |
+| Interatividade (onClick, useState)  | Nao    | Sim    |
+| Browser APIs (localStorage, window) | Nao    | Sim    |
+| SEO / Conteudo estatico             | Sim    | Nao    |
+| Real-time (WebSocket, polling)      | Nao    | Sim    |
 
 ### WebSocket com reconexao
 
 ```ts
 // src/lib/realtime/use-web-socket.ts
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 export function useWebSocket(url: string) {
   const ws = useRef<WebSocket | null>(null);
@@ -224,9 +252,9 @@ export function useWebSocket(url: string) {
 
 ```tsx
 // src/lib/realtime/use-sse.ts
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export function useSSE<T>(url: string) {
   const [data, setData] = useState<T | null>(null);
@@ -246,9 +274,9 @@ export function useSSE<T>(url: string) {
 
 ```tsx
 // src/lib/realtime/use-polling.ts
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
 export function usePolling<T>(url: string, intervalMs = 5000) {
   return useQuery({

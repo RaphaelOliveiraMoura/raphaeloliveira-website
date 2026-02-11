@@ -7,9 +7,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const meta: Meta<typeof Accordion> = {
+const meta = {
   title: "Navigation/Accordion",
   component: Accordion,
+  args: { type: "single" },
   parameters: {
     docs: {
       description: {
@@ -18,11 +19,11 @@ const meta: Meta<typeof Accordion> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Accordion>;
 
 export default meta;
 
-type Story = StoryObj<typeof Accordion>;
+type Story = StoryObj<typeof meta>;
 
 export const Single: Story = {
   name: "Single (padrao)",

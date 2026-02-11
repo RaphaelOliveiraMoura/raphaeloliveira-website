@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Separator } from "@/components/ui/separator";
 
-const meta: Meta<typeof Separator> = {
+const meta = {
   title: "Basic/Separator",
   component: Separator,
   parameters: {
@@ -22,11 +22,11 @@ const meta: Meta<typeof Separator> = {
       control: "boolean",
     },
   },
-};
+} satisfies Meta<typeof Separator>;
 
 export default meta;
 
-type Story = StoryObj<typeof Separator>;
+type Story = StoryObj<typeof meta>;
 
 export const Horizontal: Story = {
   render: () => (

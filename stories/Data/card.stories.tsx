@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const meta: Meta<typeof Card> = {
+const meta = {
   title: "Data/Card",
   component: Card,
   parameters: {
@@ -26,11 +26,11 @@ const meta: Meta<typeof Card> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Card>;
 
 export default meta;
 
-type Story = StoryObj<typeof Card>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

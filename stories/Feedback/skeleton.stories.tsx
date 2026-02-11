@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-const meta: Meta<typeof Skeleton> = {
+const meta = {
   title: "Feedback/Skeleton",
   component: Skeleton,
   parameters: {
@@ -13,11 +13,11 @@ const meta: Meta<typeof Skeleton> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Skeleton>;
 
 export default meta;
 
-type Story = StoryObj<typeof Skeleton>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => <Skeleton className="h-4 w-[250px]" />,

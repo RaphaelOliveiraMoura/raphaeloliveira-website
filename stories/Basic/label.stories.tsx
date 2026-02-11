@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
-const meta: Meta<typeof Label> = {
+const meta = {
   title: "Basic/Label",
   component: Label,
   parameters: {
@@ -16,11 +16,11 @@ const meta: Meta<typeof Label> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Label>;
 
 export default meta;
 
-type Story = StoryObj<typeof Label>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {

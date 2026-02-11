@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 
 const tags = Array.from({ length: 50 }).map((_, i) => `v1.2.0-beta.${i + 1}`);
 
-const meta: Meta<typeof ScrollArea> = {
+const meta = {
   title: "Layout/ScrollArea",
   component: ScrollArea,
   parameters: {
@@ -16,11 +16,11 @@ const meta: Meta<typeof ScrollArea> = {
       },
     },
   },
-};
+} satisfies Meta<typeof ScrollArea>;
 
 export default meta;
 
-type Story = StoryObj<typeof ScrollArea>;
+type Story = StoryObj<typeof meta>;
 
 export const Vertical: Story = {
   render: () => (

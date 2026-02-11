@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const meta: Meta<typeof Tabs> = {
+const meta = {
   title: "Navigation/Tabs",
   component: Tabs,
   parameters: {
@@ -23,11 +23,11 @@ const meta: Meta<typeof Tabs> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Tabs>;
 
 export default meta;
 
-type Story = StoryObj<typeof Tabs>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

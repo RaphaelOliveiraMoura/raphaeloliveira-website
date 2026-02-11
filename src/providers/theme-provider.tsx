@@ -26,14 +26,14 @@ const STORAGE_KEY = "core-stack-theme";
 const DARK_MEDIA_QUERY = "(prefers-color-scheme: dark)";
 
 function subscribeSystemTheme(callback: () => void) {
-  if (typeof window.matchMedia !== "function") return () => {};
+  if (isServer()) return () => {};
   const mq = window.matchMedia(DARK_MEDIA_QUERY);
   mq.addEventListener("change", callback);
   return () => mq.removeEventListener("change", callback);
 }
 
 function getSystemThemeSnapshot(): "light" | "dark" {
-  if (typeof window.matchMedia !== "function") return "light";
+  if (isServer()) return "light";
   return window.matchMedia(DARK_MEDIA_QUERY).matches ? "dark" : "light";
 }
 

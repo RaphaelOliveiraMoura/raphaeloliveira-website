@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const meta: Meta<typeof Popover> = {
+const meta = {
   title: "Overlay/Popover",
   component: Popover,
   parameters: {
@@ -21,11 +21,11 @@ const meta: Meta<typeof Popover> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Popover>;
 
 export default meta;
 
-type Story = StoryObj<typeof Popover>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

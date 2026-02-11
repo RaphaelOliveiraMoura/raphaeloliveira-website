@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const meta: Meta<typeof Select> = {
+const meta = {
   title: "Form/Select",
   component: Select,
   parameters: {
@@ -23,11 +23,11 @@ const meta: Meta<typeof Select> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Select>;
 
 export default meta;
 
-type Story = StoryObj<typeof Select>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

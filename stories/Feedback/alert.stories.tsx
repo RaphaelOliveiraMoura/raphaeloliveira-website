@@ -3,7 +3,7 @@ import { AlertCircle, CheckCircle2, Info, Terminal } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const meta: Meta<typeof Alert> = {
+const meta = {
   title: "Feedback/Alert",
   component: Alert,
   parameters: {
@@ -20,11 +20,11 @@ const meta: Meta<typeof Alert> = {
       options: ["default", "destructive"],
     },
   },
-};
+} satisfies Meta<typeof Alert>;
 
 export default meta;
 
-type Story = StoryObj<typeof Alert>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

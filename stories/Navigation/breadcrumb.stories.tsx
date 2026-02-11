@@ -11,7 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-const meta: Meta<typeof Breadcrumb> = {
+const meta = {
   title: "Navigation/Breadcrumb",
   component: Breadcrumb,
   parameters: {
@@ -22,11 +22,11 @@ const meta: Meta<typeof Breadcrumb> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Breadcrumb>;
 
 export default meta;
 
-type Story = StoryObj<typeof Breadcrumb>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

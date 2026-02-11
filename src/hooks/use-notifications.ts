@@ -39,34 +39,49 @@ function saveNotifications(notifications: Notification[]) {
 }
 
 let cachedNotifications: Notification[] | null = null;
+let cachedSnapshot: NotificationStore | null = null;
+
+const SERVER_SNAPSHOT: NotificationStore = {
+  notifications: [],
+  unreadCount: 0,
+};
 
 function getSnapshot(): NotificationStore {
   const notifications = cachedNotifications ?? getStoredNotifications();
   cachedNotifications = notifications;
-  return {
+
+  if (cachedSnapshot && cachedSnapshot.notifications === notifications) {
+    return cachedSnapshot;
+  }
+
+  cachedSnapshot = {
     notifications,
     unreadCount: notifications.filter((n) => !n.read).length,
   };
+  return cachedSnapshot;
 }
 
 function getServerSnapshot(): NotificationStore {
-  return { notifications: [], unreadCount: 0 };
+  return SERVER_SNAPSHOT;
 }
 
 function subscribe(callback: () => void): () => void {
   const handler = () => {
     cachedNotifications = null;
+    cachedSnapshot = null;
     callback();
   };
 
-  window.addEventListener("notifications-change", handler);
-  window.addEventListener("storage", (e) => {
+  const storageHandler = (e: StorageEvent) => {
     if (e.key === STORAGE_KEY) handler();
-  });
+  };
+
+  window.addEventListener("notifications-change", handler);
+  window.addEventListener("storage", storageHandler);
 
   return () => {
     window.removeEventListener("notifications-change", handler);
-    window.removeEventListener("storage", handler);
+    window.removeEventListener("storage", storageHandler);
   };
 }
 

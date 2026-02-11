@@ -92,7 +92,7 @@ export function VideoPlayer({ src, poster, className }: VideoPlayerProps) {
       container.removeEventListener("mousemove", handleMouseMove);
       clearTimeout(hideTimeout);
     };
-  });
+  }, [playing]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -101,13 +101,19 @@ export function VideoPlayer({ src, poster, className }: VideoPlayerProps) {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === " ") {
         event.preventDefault();
-        togglePlay();
+        const video = videoRef.current;
+        if (!video) return;
+        if (video.paused) {
+          void video.play();
+        } else {
+          video.pause();
+        }
       }
     };
 
     container.addEventListener("keydown", handleKeyDown);
     return () => container.removeEventListener("keydown", handleKeyDown);
-  });
+  }, []);
 
   return (
     <div

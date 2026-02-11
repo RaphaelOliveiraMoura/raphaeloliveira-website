@@ -6,7 +6,7 @@ import {
   SkeletonText,
 } from "@/components/shared/skeleton-presets";
 
-const meta: Meta = {
+const meta = {
   title: "Shared/SkeletonPresets",
   parameters: {
     docs: {
@@ -16,11 +16,11 @@ const meta: Meta = {
       },
     },
   },
-};
+} satisfies Meta;
 
 export default meta;
 
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 export const Text: Story = {
   name: "SkeletonText",

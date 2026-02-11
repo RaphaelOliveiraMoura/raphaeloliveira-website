@@ -31,7 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const meta: Meta<typeof DropdownMenu> = {
+const meta = {
   title: "Overlay/DropdownMenu",
   component: DropdownMenu,
   parameters: {
@@ -43,11 +43,11 @@ const meta: Meta<typeof DropdownMenu> = {
       },
     },
   },
-};
+} satisfies Meta<typeof DropdownMenu>;
 
 export default meta;
 
-type Story = StoryObj<typeof DropdownMenu>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

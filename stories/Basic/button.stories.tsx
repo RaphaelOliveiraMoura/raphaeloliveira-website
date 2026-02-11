@@ -3,7 +3,7 @@ import { ChevronRight, Loader2, Mail, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-const meta: Meta<typeof Button> = {
+const meta = {
   title: "Basic/Button",
   component: Button,
   parameters: {
@@ -50,11 +50,11 @@ const meta: Meta<typeof Button> = {
       description: "Renderiza como filho (Slot) para composicao",
     },
   },
-};
+} satisfies Meta<typeof Button>;
 
 export default meta;
 
-type Story = StoryObj<typeof Button>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {

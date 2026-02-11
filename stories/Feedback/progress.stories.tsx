@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Progress } from "@/components/ui/progress";
 
-const meta: Meta<typeof Progress> = {
+const meta = {
   title: "Feedback/Progress",
   component: Progress,
   parameters: {
@@ -19,11 +19,11 @@ const meta: Meta<typeof Progress> = {
       description: "Valor do progresso (0-100)",
     },
   },
-};
+} satisfies Meta<typeof Progress>;
 
 export default meta;
 
-type Story = StoryObj<typeof Progress>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {

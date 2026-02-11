@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-export const emailSchema = z
-  .string()
-  .min(1, "validation.email.required")
-  .email("validation.email.invalid");
+export const emailSchema = z.email({ error: "validation.email.invalid" });
 
 /** Aceita telefone fixo (10 dígitos): (99) 9999-9999 e celular (11 dígitos): (99) 99999-9999 */
 export const phoneBrSchema = z

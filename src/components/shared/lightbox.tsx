@@ -73,27 +73,33 @@ export function Lightbox({
       switch (event.key) {
         case "ArrowLeft":
           event.preventDefault();
-          goToPrevious();
+          setCurrentIndex((prev) =>
+            prev === 0 ? images.length - 1 : prev - 1,
+          );
+          setZoom(MIN_ZOOM);
           break;
         case "ArrowRight":
           event.preventDefault();
-          goToNext();
+          setCurrentIndex((prev) =>
+            prev === images.length - 1 ? 0 : prev + 1,
+          );
+          setZoom(MIN_ZOOM);
           break;
         case "+":
         case "=":
           event.preventDefault();
-          zoomIn();
+          setZoom((prev) => Math.min(prev + ZOOM_STEP, MAX_ZOOM));
           break;
         case "-":
           event.preventDefault();
-          zoomOut();
+          setZoom((prev) => Math.max(prev - ZOOM_STEP, MIN_ZOOM));
           break;
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  });
+  }, [open, images.length]);
 
   if (images.length === 0) return null;
 

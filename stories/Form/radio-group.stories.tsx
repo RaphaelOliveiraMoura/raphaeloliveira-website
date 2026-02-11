@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-const meta: Meta<typeof RadioGroup> = {
+const meta = {
   title: "Form/RadioGroup",
   component: RadioGroup,
   parameters: {
@@ -14,11 +14,11 @@ const meta: Meta<typeof RadioGroup> = {
       },
     },
   },
-};
+} satisfies Meta<typeof RadioGroup>;
 
 export default meta;
 
-type Story = StoryObj<typeof RadioGroup>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

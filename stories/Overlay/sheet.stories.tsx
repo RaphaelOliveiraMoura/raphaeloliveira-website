@@ -13,7 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-const meta: Meta<typeof Sheet> = {
+const meta = {
   title: "Overlay/Sheet",
   component: Sheet,
   parameters: {
@@ -25,11 +25,11 @@ const meta: Meta<typeof Sheet> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Sheet>;
 
 export default meta;
 
-type Story = StoryObj<typeof Sheet>;
+type Story = StoryObj<typeof meta>;
 
 export const Right: Story = {
   name: "Direita (padrao)",

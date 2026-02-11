@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
-const meta: Meta<typeof Checkbox> = {
+const meta = {
   title: "Form/Checkbox",
   component: Checkbox,
   parameters: {
@@ -22,11 +22,11 @@ const meta: Meta<typeof Checkbox> = {
       control: "boolean",
     },
   },
-};
+} satisfies Meta<typeof Checkbox>;
 
 export default meta;
 
-type Story = StoryObj<typeof Checkbox>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

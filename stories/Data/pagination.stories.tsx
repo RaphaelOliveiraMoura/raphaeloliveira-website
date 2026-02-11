@@ -10,7 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const meta: Meta<typeof Pagination> = {
+const meta = {
   title: "Data/Pagination",
   component: Pagination,
   parameters: {
@@ -21,11 +21,11 @@ const meta: Meta<typeof Pagination> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Pagination>;
 
 export default meta;
 
-type Story = StoryObj<typeof Pagination>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (

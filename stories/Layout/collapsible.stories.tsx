@@ -8,7 +8,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-const meta: Meta<typeof Collapsible> = {
+const meta = {
   title: "Layout/Collapsible",
   component: Collapsible,
   parameters: {
@@ -19,11 +19,11 @@ const meta: Meta<typeof Collapsible> = {
       },
     },
   },
-};
+} satisfies Meta<typeof Collapsible>;
 
 export default meta;
 
-type Story = StoryObj<typeof Collapsible>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
