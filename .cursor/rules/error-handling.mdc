@@ -59,7 +59,7 @@ import { ErrorBoundary } from "@/components/shared";
 
 ## Logging de Erros
 
-Sempre usar `logger.error()` para registrar erros. **Nunca** usar `console.error` diretamente:
+Usar `logger.error()` para registrar erros (ver `general.mdc` para regra geral de logging):
 
 ```ts
 import { logger } from "@/lib/telemetry/logger";

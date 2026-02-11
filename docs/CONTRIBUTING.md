@@ -2,6 +2,8 @@
 
 Como contribuir para o Core Stack seguindo o fluxo spec-driven.
 
+> **Nota:** Este guia e voltado para desenvolvedores humanos. Agentes de IA devem seguir as diretivas em `.cursor/rules/` (especialmente `specs.mdc` para o fluxo spec-driven).
+
 ## Fluxo de Desenvolvimento
 
 ```
@@ -55,7 +57,7 @@ Siga a estrutura de pastas definida em [ARCHITECTURE.md](ARCHITECTURE.md):
 
 ### Checklist de Implementacao
 
-- [ ] Codigo segue as convencoes de nomenclatura
+- [ ] Codigo segue as convencoes de nomenclatura (ver [ARCHITECTURE.md](ARCHITECTURE.md))
 - [ ] TypeScript strict (sem `any`, tipos completos)
 - [ ] Componentes acessiveis (ARIA, keyboard nav)
 - [ ] Testes escritos (unit e/ou component)
@@ -80,7 +82,7 @@ Os componentes sao instalados em `src/components/ui/`. Customize conforme necess
 Hooks ficam em `src/hooks/` e seguem o padrao:
 
 ```tsx
-// src/hooks/useDebounce.ts
+// src/hooks/use-debounce.ts
 import { useState, useEffect } from "react"
 
 export function useDebounce<T>(value: T, delay: number): T {

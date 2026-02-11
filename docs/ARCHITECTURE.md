@@ -2,6 +2,8 @@
 
 Documento descrevendo as decisoes arquiteturais, padroes e convencoes do Core Stack.
 
+> **Escopo:** Este documento cobre o "por que" das escolhas arquiteturais. Regras operacionais para agentes de IA estao em `.cursor/rules/`. Guia de contribuicao para humanos esta em [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Visao Geral
 
 Core Stack e construido sobre o **Next.js App Router**, utilizando React Server Components como padrao e Client Components apenas quando necessario (interatividade, hooks de estado, eventos de browser).
@@ -33,6 +35,8 @@ Core Stack e construido sobre o **Next.js App Router**, utilizando React Server 
 - Futuro do Next.js - Pages Router esta em modo de manutencao
 
 ### 2. Server Components vs Client Components
+
+> Regras praticas e padroes de implementacao: `.cursor/rules/components.mdc`.
 
 **Regra geral:** Tudo e Server Component por padrao. Usar `"use client"` apenas quando necessario.
 
@@ -98,6 +102,8 @@ O estado e dividido em tres camadas:
 
 ### 7. Testes: Vitest + Testing Library + Playwright
 
+> Regras praticas de testes: `.cursor/rules/testing.mdc`. Scripts disponiveis: [CONTRIBUTING.md](CONTRIBUTING.md).
+
 | Nivel | Ferramenta | Escopo |
 |-------|-----------|--------|
 | Unit | Vitest | Funcoes, hooks, utilitarios |
@@ -136,15 +142,18 @@ Para leitura de dados:
 
 ## Convencoes de Nomenclatura
 
+> Fonte canonica: `.cursor/rules/general.mdc`. A tabela abaixo e um resumo das decisoes arquiteturais.
+
 | Tipo | Padrao | Exemplo |
 |------|--------|---------|
-| Componentes | PascalCase | `UserCard.tsx` |
-| Hooks | camelCase com `use` | `useDebounce.ts` |
-| Utilitarios | camelCase | `formatCurrency.ts` |
-| Tipos | PascalCase | `UserProfile` |
-| Constantes | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT` |
+| Arquivos (todos) | kebab-case | `user-card.tsx`, `use-debounce.ts`, `format-currency.ts` |
 | Pastas | kebab-case | `feature-flags/` |
 | Rotas (app/) | kebab-case | `app/user-settings/` |
+| Componentes (nome da funcao) | PascalCase | `UserCard`, `Button` |
+| Hooks (nome da funcao) | camelCase com `use` | `useDebounce` |
+| Utilitarios (nome da funcao) | camelCase | `formatCurrency` |
+| Tipos/Interfaces | PascalCase | `UserProfile`, `ApiResponse<T>` |
+| Constantes | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT` |
 | Arquivos de spec | kebab-case | `api-client-errors.md` |
 
 ## Modulos e Dependencias

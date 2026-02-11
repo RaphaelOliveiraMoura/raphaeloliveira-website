@@ -117,58 +117,10 @@ logger.info("Evento importante", { userId });
 
 As specs em `docs/specs/` sao a fonte de verdade do projeto. **Toda mudanca no projeto deve manter as specs sincronizadas.**
 
-### Antes de implementar
+- **Antes de implementar**: consultar a spec, seguir o design da API, verificar criterios de aceite
+- **Apos implementar**: atualizar specs, status, regras de uso, paginas de exemplo e barrel files
 
-1. **Consultar a spec** em `docs/specs/` para entender os requisitos
-2. **Seguir o design da API** definido na spec
-3. **Verificar criterios de aceite** como checklist antes de finalizar
-
-### Apos implementar ou alterar qualquer coisa
-
-4. **Validar conformidade** — verificar se a mudanca esta alinhada com as specs existentes
-5. **Atualizar as specs** quando a mudanca impactar:
-   - Estrutura de pastas ou arquivos
-   - APIs, interfaces ou contratos
-   - Regras, convencoes ou padroes do projeto
-   - Status de itens (`pendente` → `em-desenvolvimento` → `concluido`)
-   - Novos componentes, hooks, utilitarios ou funcionalidades
-6. **Criar nova spec** se a mudanca introduz uma feature ou area nao coberta pelas specs atuais (usar `docs/specs/_TEMPLATE.md` como base)
-
-### Regras de uso nas specs (OBRIGATORIO)
-
-Ao implementar um novo componente, hook ou utilitario, **sempre** adicionar uma secao "Regras de Uso" na spec correspondente contendo:
-
-- **Import correto** via barrel file (`@/components/shared`, `@/hooks`, etc.)
-- **API/Interface completa** com tipos TypeScript (props, retorno, generics)
-- **Exemplo de uso pratico** em codigo (caso de uso mais comum)
-- **Descricao do comportamento** (o que o componente faz, estados, interacoes)
-- **Referencia a pagina de exemplo** onde o componente e demonstrado
-
-### Paginas de exemplo (OBRIGATORIO)
-
-Toda nova feature visivel (componente, hook, utilitario com UI) **deve** ser adicionada a uma pagina de exemplo:
-
-- **Componentes**: adicionar na galeria em `src/app/[locale]/(examples)/examples/components/page.tsx` na secao apropriada
-- **Hooks**: adicionar no playground em `src/app/[locale]/(examples)/examples/hooks/page.tsx`
-- **Features de dashboard**: adicionar nas paginas de dashboard correspondentes
-
-Para cada novo exemplo:
-
-1. **Adicionar traducoes** nos 3 locales (`messages/pt-BR/examples.json`, `messages/en/examples.json`, `messages/es/examples.json`)
-2. **Usar `useTranslations("examples")`** para todos os textos visiveis (zero hardcoded)
-3. **Incluir demo interativa** (nao apenas renderizacao estatica — o usuario deve poder interagir)
-4. **Atualizar a spec de paginas de exemplo** (`docs/specs/j-paginas-exemplo/paginas-exemplo.md`) com o novo item
-
-### Barrel files (OBRIGATORIO)
-
-Ao criar novo componente ou hook, **sempre** adicionar o export no barrel file correspondente:
-- Componentes shared: `src/components/shared/index.ts`
-- Hooks: `src/hooks/index.ts`
-- Libs: `src/lib/{modulo}/index.ts`
-
-**Regra: nenhuma feature, regra ou mudanca estrutural e considerada finalizada sem que as specs reflitam o estado atual do projeto E sem que exista uma demonstracao nas paginas de exemplo.**
-
-As specs estao indexadas em `docs/specs/README.md`.
+> O fluxo completo, checklist de conclusao e regras detalhadas estao em `specs.mdc` (fonte canonica do fluxo spec-driven). As specs estao indexadas em `docs/specs/README.md`.
 
 ## Padroes de Export
 
@@ -183,11 +135,4 @@ As specs estao indexadas em `docs/specs/README.md`.
 
 ## Commits
 
-Seguir Conventional Commits:
-- `feat:` nova funcionalidade
-- `fix:` correcao de bug
-- `docs:` documentacao
-- `style:` formatacao (sem mudanca de logica)
-- `refactor:` refatoracao
-- `test:` testes
-- `chore:` tarefas de manutencao
+Seguir Conventional Commits. Tipos, escopos e exemplos estao em `docs/CONTRIBUTING.md` (secao "Conventional Commits").

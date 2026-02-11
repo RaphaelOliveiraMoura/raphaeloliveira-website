@@ -59,10 +59,9 @@ export function Button({ variant = "primary", isLoading, children, ...props }: B
    - Garantir navegacao por teclado (Tab, Enter, Escape)
    - Testar com screen reader quando possivel
 
-2. **TypeScript**
+2. **TypeScript** (ver `general.mdc` para regras gerais de TS)
    - Props sempre tipadas com `interface`
    - Usar `ComponentProps<>` para estender elementos HTML nativos
-   - Nunca usar `any` em props
 
 3. **Composicao**
    - Preferir composicao sobre heranca

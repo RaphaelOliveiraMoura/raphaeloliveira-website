@@ -91,15 +91,14 @@ return useCallback(
 
 ## TypeScript
 
-- **Nunca** usar `any` → usar `unknown` e refinar com type guards
+Alem das regras de TypeScript em `general.mdc` (strict mode, sem `any`, etc.), estas regras adicionais sao especificas do linter:
+
 - **Nunca** usar `var` → usar `const` (preferencial) ou `let`
 - **Nunca** usar `eval()` ou `debugger`
 
 ## Console e Logging
 
-- **Nunca** usar `console.log` / `console.info` / `console.debug` diretamente
-- Usar `logger` de `@/lib/telemetry/logger`
-- Excecao: o proprio modulo do logger (`logger.ts`) pode usar `console.*`
+Usar `logger` de `@/lib/telemetry/logger` (ver `general.mdc` para regra completa). Excecao: o proprio modulo do logger (`logger.ts`) pode usar `console.*`.
 
 ## Acessibilidade (jsx-a11y)
 
