@@ -1,6 +1,8 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -18,7 +20,12 @@ const eslintConfig = defineConfig([
     "coverage/**",
     "tests/**",
   ]),
+  // Prettier integration (desabilita regras conflitantes e reporta erros de formatacao)
+  eslintPluginPrettierRecommended,
   {
+    plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
     rules: {
       // Prevenir uso de any
       "@typescript-eslint/no-explicit-any": "error",
@@ -35,9 +42,6 @@ const eslintConfig = defineConfig([
 
       // Prevenir console.* em producao (usar logger centralizado)
       "no-console": ["warn", { allow: ["warn", "error"] }],
-
-      // Prevenir imports duplicados
-      "no-duplicate-imports": "error",
 
       // Preferir const sobre let quando nao ha reatribuicao
       "prefer-const": "error",
@@ -59,6 +63,30 @@ const eslintConfig = defineConfig([
 
       // Prevenir uso de debugger
       "no-debugger": "error",
+
+      // Ordenacao de imports conforme convencao do projeto (general.mdc)
+      "simple-import-sort/imports": [
+        "error",
+        {
+          groups: [
+            // 1. React e Next.js
+            ["^react", "^next"],
+            // 2. Bibliotecas externas
+            ["^@?(?!/)\\w"],
+            // 3. Componentes (@/components/)
+            ["^@/components"],
+            // 4. Lib/Utils (@/lib/, @/hooks/)
+            ["^@/lib", "^@/hooks"],
+            // 5. Tipos (@/types/)
+            ["^@/types"],
+            // 6. Estilos
+            ["^.+\\.s?css$"],
+            // 7. Relative imports
+            ["^\\."],
+          ],
+        },
+      ],
+      "simple-import-sort/exports": "error",
     },
   },
 ]);

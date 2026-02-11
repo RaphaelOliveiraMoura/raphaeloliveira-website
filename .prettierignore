@@ -1,0 +1,8 @@
+.next
+out
+build
+node_modules
+coverage
+storybook-static
+package-lock.json
+*.tsbuildinfo
