@@ -1,0 +1,114 @@
+---
+description: Regras para desenvolvimento de componentes React no core-stack
+globs:
+  - src/components/**
+---
+
+# Componentes - Regras
+
+## Base: shadcn/ui
+
+- Todos os componentes UI primitivos devem vir do shadcn/ui
+- Para adicionar um novo componente: `npx shadcn@latest add <component>`
+- Componentes shadcn/ui ficam em `src/components/ui/`
+- Customizacoes devem ser feitas no proprio arquivo gerado, nunca em wrappers desnecessarios
+
+## Componentes Compartilhados
+
+Componentes compostos (que combinam varios primitivos) ficam em `src/components/shared/`:
+
+```
+src/components/shared/
+├── DataTable/
+│   ├── DataTable.tsx
+│   ├── DataTableFilters.tsx
+│   ├── DataTablePagination.tsx
+│   └── index.ts
+├── SearchBar/
+│   ├── SearchBar.tsx
+│   └── index.ts
+└── ...
+```
+
+## Estrutura de um Componente
+
+```tsx
+// 1. Imports
+import { type ComponentProps } from "react"
+
+// 2. Types
+interface ButtonProps extends ComponentProps<"button"> {
+  variant?: "primary" | "secondary"
+  isLoading?: boolean
+}
+
+// 3. Component
+export function Button({ variant = "primary", isLoading, children, ...props }: ButtonProps) {
+  // hooks
+  // handlers
+  // render
+  return (...)
+}
+```
+
+## Regras Obrigatorias
+
+1. **Acessibilidade**
+   - Sempre usar elementos semanticos (`button`, `nav`, `main`, `section`)
+   - Incluir `aria-label` quando o texto visual nao e suficiente
+   - Garantir navegacao por teclado (Tab, Enter, Escape)
+   - Testar com screen reader quando possivel
+
+2. **TypeScript**
+   - Props sempre tipadas com `interface`
+   - Usar `ComponentProps<>` para estender elementos HTML nativos
+   - Nunca usar `any` em props
+
+3. **Composicao**
+   - Preferir composicao sobre heranca
+   - Usar compound components para componentes complexos
+   - Aceitar `children` quando fizer sentido
+   - Usar `forwardRef` quando o componente precisa expor a ref do DOM
+
+4. **Estilizacao**
+   - Tailwind CSS para estilos
+   - `cn()` (clsx + twMerge) para merge de classes condicionais
+   - CSS variables para valores dinamicos (cores do tema, etc.)
+   - Nunca usar `style` inline exceto para valores realmente dinamicos
+
+5. **Performance**
+   - React Compiler esta habilitado - evitar `useMemo`/`useCallback` manuais
+   - Extrair componentes pesados com `dynamic()` para lazy loading
+   - Evitar re-renders desnecessarios (elevar estado so quando necessario)
+
+## Storybook
+
+Todo componente compartilhado (em `src/components/shared/`) deve ter uma story:
+
+```tsx
+// ComponentName.stories.tsx
+import type { Meta, StoryObj } from "@storybook/react"
+import { ComponentName } from "./ComponentName"
+
+const meta: Meta<typeof ComponentName> = {
+  title: "Shared/ComponentName",
+  component: ComponentName,
+  tags: ["autodocs"],
+}
+
+export default meta
+type Story = StoryObj<typeof ComponentName>
+
+export const Default: Story = {
+  args: { /* props padrao */ },
+}
+```
+
+## Barrel Files
+
+Cada pasta de componente deve ter um `index.ts`:
+
+```ts
+export { Button } from "./Button"
+export type { ButtonProps } from "./Button"
+```

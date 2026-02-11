@@ -1,0 +1,78 @@
+---
+description: Regras para o fluxo spec-driven development no core-stack
+globs:
+  - docs/specs/**
+---
+
+# Spec-Driven Development - Regras
+
+## O que e
+
+Toda funcionalidade do core-stack e documentada em um spec ANTES de ser implementada. Specs definem o "o que" e "por que" de cada feature, servindo como contrato entre planejamento e implementacao.
+
+## Fluxo
+
+```
+rascunho → aprovado → em-desenvolvimento → concluido
+```
+
+1. **Rascunho:** Spec criada com requisitos iniciais
+2. **Aprovado:** Requisitos revisados e design da API definido
+3. **Em desenvolvimento:** Implementacao em andamento
+4. **Concluido:** Implementacao finalizada e criterios de aceite atendidos
+
+## Onde Ficam
+
+```
+docs/specs/
+├── _TEMPLATE.md                    # Template padrao para novas specs
+├── README.md                       # Indice central com status de todas as specs
+├── a-fundacao-visual/              # Design system, componentes, layouts, a11y
+├── b-dados-formularios/            # Forms, formatadores, DataTable, CRUD
+├── c-api-servidor/                 # HTTP client, erros, server patterns, real-time
+├── d-navegacao/                    # URL state, busca, breadcrumbs
+├── e-infraestrutura/               # i18n, SEO, auth, seguranca, telemetria
+├── f-padroes-ux/                   # Feedback, notifications, interacoes
+├── g-media-conteudo/               # Upload, galeria, rich content
+├── h-plataforma/                   # Hooks, storage, performance, PWA
+└── i-experiencia-desenvolvedor/    # Testes, CI/CD, feature flags
+```
+
+## Regras para Agentes de IA
+
+### Antes de implementar qualquer feature:
+
+1. **Verificar se existe spec** em `docs/specs/` para a funcionalidade
+2. **Ler a spec completa** antes de escrever codigo
+3. **Seguir o design da API/Interface** definido na spec
+4. **Respeitar as dependencias** listadas na spec
+
+### Durante a implementacao:
+
+1. Atualizar o status da spec para `em-desenvolvimento`
+2. Seguir a estrutura de arquivos sugerida na spec
+3. Instalar apenas as dependencias listadas na spec
+
+### Apos concluir:
+
+1. Verificar cada criterio de aceite da spec
+2. Atualizar o status para `concluido`
+3. Atualizar `docs/specs/README.md` com o novo status
+
+## Criando uma Nova Spec
+
+1. Copiar `docs/specs/_TEMPLATE.md`
+2. Preencher todos os campos
+3. Adicionar entrada no `docs/specs/README.md`
+4. Status inicial: `rascunho`
+
+## Formato do Template
+
+Ver `docs/specs/_TEMPLATE.md` para o template completo. Campos obrigatorios:
+
+- Status e prioridade
+- Resumo e motivacao
+- Requisitos funcionais e nao-funcionais
+- Design da API com exemplos de codigo
+- Dependencias
+- Criterios de aceite

@@ -1,0 +1,114 @@
+---
+description: Regras gerais do projeto core-stack - convencoes, estrutura e padroes
+globs:
+alwaysApply: true
+---
+
+# Core Stack - Regras Gerais
+
+## Sobre o Projeto
+
+Core Stack e um template base universal para projetos Next.js. Serve como referencia para iniciar qualquer novo projeto com uma base solida de utilitarios, componentes e padroes.
+
+## Idioma
+
+- **Codigo** (variaveis, funcoes, componentes, commits, branch names): ingles
+- **Documentacao** (README, specs, comentarios de alto nivel, guias): portugues (BR)
+- **Comentarios de codigo**: portugues (BR), SOMENTE QUANDO NECESSÁRIO
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- React 19
+- TypeScript 5 (strict mode)
+- Tailwind CSS v4
+- shadcn/ui (Radix UI + Tailwind)
+- React Compiler (habilitado)
+
+## Estrutura de Pastas
+
+```
+src/
+├── app/              → Pages e rotas (Next.js App Router)
+├── components/
+│   ├── ui/           → Componentes shadcn/ui
+│   ├── shared/       → Componentes compostos reutilizaveis
+│   └── layouts/      → Layouts (sidebar, navbar, page wrappers)
+├── lib/              → Logica de negocio e utilitarios
+│   ├── api/          → HTTP client, interceptors, React Query config
+│   ├── auth/         → Autenticacao, tokens, guards
+│   ├── datetime/     → Manipulacao de datas e timezones
+│   ├── feature-flags/→ Sistema de feature toggles
+│   ├── formatters/   → Formatadores (moeda, documentos, strings)
+│   ├── i18n/         → Internacionalizacao
+│   ├── masks/        → Mascaras de input
+│   ├── search/       → Logica de busca global
+│   ├── security/     → Sanitizacao, CSRF
+│   ├── seo/          → Utilitarios SEO
+│   ├── storage/      → Wrappers localStorage/sessionStorage/cookies
+│   ├── telemetry/    → Logs, analytics, error tracking
+│   ├── validation/   → Schemas Zod
+│   └── utils/        → Utilitarios gerais
+├── hooks/            → Custom React hooks
+├── providers/        → Context providers (theme, auth, i18n, etc.)
+├── styles/           → Estilos globais, tokens CSS
+├── types/            → Tipos TypeScript globais
+└── config/           → Env vars schema, constantes
+```
+
+## Convencoes de Nomenclatura
+
+- **Arquivos de componentes:** PascalCase (`Button.tsx`, `UserCard.tsx`)
+- **Arquivos de utilitarios/hooks:** camelCase (`useDebounce.ts`, `formatCurrency.ts`)
+- **Pastas:** kebab-case (`feature-flags/`, `date-time/`)
+- **Tipos/Interfaces:** PascalCase com prefixo descritivo (`UserProfile`, `ApiResponse<T>`)
+- **Constantes:** UPPER_SNAKE_CASE (`MAX_RETRY_COUNT`, `API_BASE_URL`)
+- **Enums:** PascalCase (`UserRole`, `HttpStatus`)
+
+## Imports
+
+- Sempre usar path alias `@/` que mapeia para `./src/`
+- Ordem de imports:
+  1. React/Next.js
+  2. Bibliotecas externas
+  3. Componentes (`@/components/`)
+  4. Lib/Utils (`@/lib/`, `@/hooks/`)
+  5. Tipos (`@/types/`)
+  6. Estilos
+
+## TypeScript
+
+- Strict mode obrigatorio
+- **Nunca** usar `any` - usar `unknown` quando o tipo nao e conhecido
+- Preferir `interface` para objetos, `type` para unions/intersections
+- Exportar tipos junto com suas implementacoes
+- Generics quando ha reuso de logica com tipos diferentes
+
+## Spec-Driven Development
+
+Antes de implementar qualquer funcionalidade:
+
+1. **Consultar a spec** em `docs/specs/` para entender os requisitos
+2. **Seguir o design da API** definido na spec
+3. **Atualizar o status** da spec conforme avanca (`em-desenvolvimento` → `concluido`)
+4. **Verificar criterios de aceite** como checklist antes de finalizar
+
+As specs estao indexadas em `docs/specs/README.md`.
+
+## Padroes de Export
+
+- Usar barrel files (`index.ts`) para re-export de modulos publicos
+- Componentes: export nomeado (`export function Button()`)
+- Hooks: export nomeado (`export function useDebounce()`)
+- Tipos: export nomeado junto com implementacao
+
+## Commits
+
+Seguir Conventional Commits:
+- `feat:` nova funcionalidade
+- `fix:` correcao de bug
+- `docs:` documentacao
+- `style:` formatacao (sem mudanca de logica)
+- `refactor:` refatoracao
+- `test:` testes
+- `chore:` tarefas de manutencao
