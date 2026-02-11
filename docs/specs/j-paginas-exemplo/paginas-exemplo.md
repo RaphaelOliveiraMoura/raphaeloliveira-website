@@ -74,7 +74,7 @@ Nenhuma nova — utiliza apenas dependencias ja existentes no projeto.
 - [x] Pagina de dados com DataTable, filtros, busca, paginacao e export
 - [x] Pagina de formularios com Zod, mascaras, upload e permissoes
 - [x] Pagina de configuracoes com tema, idioma, toasts, atalhos e PWA
-- [x] Galeria de componentes com todas as categorias
+- [x] Galeria de componentes com todas as categorias (incluindo secao "Advanced" com Lightbox, VideoPlayer, NotificationCenter, ImageCropUpload, SortableList, KanbanBoard)
 - [x] Playground de hooks com demos interativas
 - [x] Pagina indice com navegacao para todos os exemplos
 - [x] Traducoes em pt-BR, en e es

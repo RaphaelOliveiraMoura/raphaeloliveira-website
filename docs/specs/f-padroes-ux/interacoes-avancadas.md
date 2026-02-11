@@ -357,6 +357,78 @@ src/
 - [Acessibilidade](../a-fundacao-visual/acessibilidade.md) - keyboard support em DnD
 - [Exibicao & Gestao de Dados](../b-dados-formularios/exibicao-gestao-dados.md) - DataTable com shortcuts
 
+## Regras de Uso — Componentes Implementados
+
+### SortableList
+
+```tsx
+import { SortableList } from "@/components/shared";
+
+const [items, setItems] = useState([
+  { id: "1", label: "Item A" },
+  { id: "2", label: "Item B" },
+  { id: "3", label: "Item C" },
+]);
+
+<SortableList
+  items={items}
+  onReorder={setItems}
+  renderItem={(item) => <span>{item.label}</span>}
+  className="max-w-md"
+/>
+```
+
+**Comportamento:**
+- Drag handle (icone grip) a esquerda de cada item
+- `PointerSensor` com distancia minima de 8px (evita clicks acidentais)
+- `KeyboardSensor` com `sortableKeyboardCoordinates` para acessibilidade
+- `closestCenter` collision detection
+- Items genericos: qualquer tipo com `{ id: string }` e aceito
+- `onReorder` retorna array reordenado via `arrayMove`
+
+### KanbanBoard
+
+```tsx
+import { KanbanBoard, type KanbanColumn, type KanbanItem } from "@/components/shared";
+
+const [columns, setColumns] = useState<KanbanColumn[]>([
+  {
+    id: "todo",
+    title: "To Do",
+    items: [
+      { id: "1", title: "Task A", description: "Optional description" },
+    ],
+  },
+  { id: "done", title: "Done", items: [] },
+]);
+
+<KanbanBoard
+  columns={columns}
+  onMoveItem={(itemId, fromColumn, toColumn, newIndex) => {
+    // Atualizar estado movendo o item entre colunas
+  }}
+  onReorderItem={(columnId, itemId, newIndex) => {
+    // Opcional: reordenar dentro da mesma coluna
+  }}
+/>
+```
+
+**Comportamento:**
+- Layout horizontal com scroll (`overflow-x-auto`)
+- Colunas com largura fixa (288px) e badge de contagem
+- Drag overlay com rotacao visual (3deg) para feedback
+- `closestCorners` collision detection (melhor para grids)
+- `onMoveItem` para mover entre colunas, `onReorderItem` opcional para reordenar dentro da mesma coluna
+- Cards com titulo e descricao opcional
+
+### Dependencias
+
+Ambos requerem `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities` (ja instalados).
+
+### Pagina de Exemplo
+
+Ambos componentes sao demonstrados na galeria de componentes em `/examples/components` (secao "Advanced"). O SortableList inclui 5 items demo reordenaveis. O KanbanBoard inclui 3 colunas com cards demo.
+
 ## Criterios de Aceite
 
 - [ ] RF01: Copia com toast de sucesso/erro
@@ -367,8 +439,8 @@ src/
 - [ ] RF06: useKeyboardShortcut e ShortcutProvider funcionais
 - [ ] RF07: Shortcuts contextuais por pagina
 - [ ] RF08: Cheat sheet modal com tecla ?
-- [ ] RF09: SortableList com dnd-kit e persistencia
-- [ ] RF10: KanbanBoard com colunas e cards arrastaveis
+- [x] RF09: SortableList com dnd-kit e persistencia
+- [x] RF10: KanbanBoard com colunas e cards arrastaveis
 - [ ] RF11: FileDropZone com drag & drop
 - [ ] RF12: DnD acessivel com teclado
 - [ ] Testes unitarios para useClipboard, useShare, useKeyboardShortcut

@@ -28,3 +28,8 @@ export { usePWAInstall } from "./use-pwa-install";
 export { useShare } from "./use-share";
 export { useObjectUrl } from "./use-object-url";
 export { useFeatureFlag } from "./use-feature-flag";
+export {
+  useNotifications,
+  type Notification,
+  type NotificationCategory,
+} from "./use-notifications";

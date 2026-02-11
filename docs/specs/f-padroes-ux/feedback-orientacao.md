@@ -376,9 +376,68 @@ src/
 - [Layouts & Responsividade](../a-fundacao-visual/layouts-responsividade.md) - drawer de notificacoes
 - [Internacionalizacao](../e-infraestrutura/internacionalizacao.md) - textos de feedback traduziveis
 
+## Regras de Uso — Componentes Implementados
+
+### NotificationCenter
+
+```tsx
+import { NotificationCenter } from "@/components/shared";
+import { useNotifications } from "@/hooks";
+
+// Componente: botao com badge + drawer lateral
+<NotificationCenter className="..." />
+
+// Hook: gerenciamento programatico
+const { notifications, unreadCount, addNotification, markAsRead, markAllAsRead, removeNotification, clearAll } = useNotifications();
+
+addNotification({
+  category: "success",  // "info" | "success" | "warning" | "error"
+  title: "Item salvo",
+  message: "Descricao opcional",
+});
+```
+
+**Comportamento:**
+- Botao com icone de sino e badge de nao lidas (contador vermelho)
+- Drawer lateral (Sheet) com filtros por categoria via tabs
+- Persistencia em localStorage (`core-stack:notifications`)
+- Hook usa `useSyncExternalStore` para reatividade entre abas
+- Cada notificacao tem timestamp formatado e botao de remover
+
+### Tour / Onboarding
+
+```tsx
+import { Tour, resetTour, type TourConfig } from "@/components/shared";
+
+const tourConfig: TourConfig = {
+  id: "dashboard-tour",
+  steps: [
+    { target: "#step-1", title: "Welcome", content: "This is the first step.", placement: "bottom" },
+    { target: ".sidebar", title: "Navigation", content: "Use the sidebar to navigate.", placement: "right" },
+  ],
+  onComplete: () => console.log("Tour finished"),
+};
+
+// Componente renderiza null (efeito apenas)
+<Tour config={tourConfig} autoStart showOnce />
+
+// Reset manual para permitir re-exibicao
+resetTour("dashboard-tour");
+```
+
+**Comportamento:**
+- Wrapper React para `driver.js` com auto-start apos 500ms (aguarda DOM)
+- `showOnce={true}` (default) persiste conclusao em localStorage (`core-stack:tour:{id}:completed`)
+- `resetTour(id)` limpa a persistencia para re-exibir o tour
+- Progress indicator integrado via driver.js
+
+### Pagina de Exemplo
+
+Ambos componentes sao demonstrados na galeria de componentes em `/examples/components` (secao "Advanced"). O NotificationCenter inclui botoes demo para adicionar notificacoes de cada categoria.
+
 ## Criterios de Aceite
 
-- [ ] RF01: Centro de notificacoes com categorias, badge e persistencia
+- [x] RF01: Centro de notificacoes com categorias, badge e persistencia
 - [ ] RF02: Sonner configurado e wrappers toast.success/error/etc. exportados
 - [ ] RF03: EmptyState com ilustracao, titulo, descricao e CTA
 - [ ] RF04: SkeletonPresets para text, card, table, list
@@ -388,7 +447,7 @@ src/
 - [ ] RF08: ConfirmDialog reutilizavel com variante destructive
 - [ ] RF09: Padrao undo via toast.action (Desfazer)
 - [ ] RF10: LoadingButton com loading e success states
-- [ ] RF11: Tour/onboarding com coachmarks e progresso persistido
+- [x] RF11: Tour/onboarding com coachmarks e progresso persistido
 - [ ] Testes unitarios para EmptyState, ErrorState, ConfirmDialog, LoadingButton e NotificationCenter
 - [ ] Storybook stories para: EmptyState (com/sem CTA), ErrorState (com/sem retry), SkeletonPresets (text, card, table), LoadingButton (idle, loading, success)
 

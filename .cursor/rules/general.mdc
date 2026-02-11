@@ -134,7 +134,39 @@ As specs em `docs/specs/` sao a fonte de verdade do projeto. **Toda mudanca no p
    - Novos componentes, hooks, utilitarios ou funcionalidades
 6. **Criar nova spec** se a mudanca introduz uma feature ou area nao coberta pelas specs atuais (usar `docs/specs/_TEMPLATE.md` como base)
 
-**Regra: nenhuma feature, regra ou mudanca estrutural e considerada finalizada sem que as specs reflitam o estado atual do projeto.**
+### Regras de uso nas specs (OBRIGATORIO)
+
+Ao implementar um novo componente, hook ou utilitario, **sempre** adicionar uma secao "Regras de Uso" na spec correspondente contendo:
+
+- **Import correto** via barrel file (`@/components/shared`, `@/hooks`, etc.)
+- **API/Interface completa** com tipos TypeScript (props, retorno, generics)
+- **Exemplo de uso pratico** em codigo (caso de uso mais comum)
+- **Descricao do comportamento** (o que o componente faz, estados, interacoes)
+- **Referencia a pagina de exemplo** onde o componente e demonstrado
+
+### Paginas de exemplo (OBRIGATORIO)
+
+Toda nova feature visivel (componente, hook, utilitario com UI) **deve** ser adicionada a uma pagina de exemplo:
+
+- **Componentes**: adicionar na galeria em `src/app/[locale]/(examples)/examples/components/page.tsx` na secao apropriada
+- **Hooks**: adicionar no playground em `src/app/[locale]/(examples)/examples/hooks/page.tsx`
+- **Features de dashboard**: adicionar nas paginas de dashboard correspondentes
+
+Para cada novo exemplo:
+
+1. **Adicionar traducoes** nos 3 locales (`messages/pt-BR/examples.json`, `messages/en/examples.json`, `messages/es/examples.json`)
+2. **Usar `useTranslations("examples")`** para todos os textos visiveis (zero hardcoded)
+3. **Incluir demo interativa** (nao apenas renderizacao estatica — o usuario deve poder interagir)
+4. **Atualizar a spec de paginas de exemplo** (`docs/specs/j-paginas-exemplo/paginas-exemplo.md`) com o novo item
+
+### Barrel files (OBRIGATORIO)
+
+Ao criar novo componente ou hook, **sempre** adicionar o export no barrel file correspondente:
+- Componentes shared: `src/components/shared/index.ts`
+- Hooks: `src/hooks/index.ts`
+- Libs: `src/lib/{modulo}/index.ts`
+
+**Regra: nenhuma feature, regra ou mudanca estrutural e considerada finalizada sem que as specs reflitam o estado atual do projeto E sem que exista uma demonstracao nas paginas de exemplo.**
 
 As specs estao indexadas em `docs/specs/README.md`.
 

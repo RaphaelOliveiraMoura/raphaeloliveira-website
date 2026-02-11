@@ -20,7 +20,7 @@ import {
 
 import { useTranslations } from "@/lib/i18n";
 import { toast } from "@/lib/feedback";
-import { useToggle } from "@/hooks";
+import { useToggle, useNotifications as useNotificationsHook } from "@/hooks";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -53,7 +53,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CodeBlock, MarkdownContent } from "@/components/content";
-import { EmptyState, LoadingButton } from "@/components/shared";
+import {
+  EmptyState,
+  LoadingButton,
+  Lightbox,
+  VideoPlayer,
+  NotificationCenter,
+  ImageCropUpload,
+  SortableList,
+  KanbanBoard,
+  type KanbanColumn as KanbanColumnType,
+} from "@/components/shared";
 
 const NAV_SECTIONS = [
   "basic",
@@ -64,6 +74,7 @@ const NAV_SECTIONS = [
   "layout",
   "feedback",
   "content",
+  "advanced",
 ] as const;
 
 function SectionTitle({
@@ -97,11 +108,53 @@ function ComponentCard({
   );
 }
 
+const SAMPLE_IMAGES = [
+  { src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800", alt: "Landscape 1" },
+  { src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800", alt: "Landscape 2" },
+  { src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800", alt: "Landscape 3" },
+];
+
+const INITIAL_SORTABLE_ITEMS = [
+  { id: "1", label: "Design mockups" },
+  { id: "2", label: "Write documentation" },
+  { id: "3", label: "Review pull request" },
+  { id: "4", label: "Fix bug #42" },
+  { id: "5", label: "Deploy to staging" },
+];
+
+const INITIAL_KANBAN_COLUMNS: KanbanColumnType[] = [
+  {
+    id: "todo",
+    title: "To Do",
+    items: [
+      { id: "k1", title: "Research competitor features", description: "Analyze top 5 competitors" },
+      { id: "k2", title: "Create wireframes", description: "Low-fi mockups for new flow" },
+    ],
+  },
+  {
+    id: "progress",
+    title: "In Progress",
+    items: [
+      { id: "k3", title: "Implement auth flow", description: "Login, register, reset password" },
+    ],
+  },
+  {
+    id: "done",
+    title: "Done",
+    items: [
+      { id: "k4", title: "Setup CI/CD", description: "GitHub Actions pipeline" },
+    ],
+  },
+];
+
 export default function ComponentsGalleryPage() {
   const t = useTranslations("examples");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [sliderValue, setSliderValue] = useState([50]);
   const [isCollapsibleOpen, toggleCollapsible] = useToggle(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [sortableItems, setSortableItems] = useState(INITIAL_SORTABLE_ITEMS);
+  const [kanbanColumns, setKanbanColumns] = useState(INITIAL_KANBAN_COLUMNS);
 
   return (
     <div className="flex gap-8">
@@ -710,7 +763,133 @@ This is a **bold** text and this is *italic*.
             />
           </ComponentCard>
         </section>
+
+        {/* === ADVANCED === */}
+        <section className="space-y-6">
+          <SectionTitle id="advanced">{t("components.advanced")}</SectionTitle>
+
+          <ComponentCard title={t("components.lightboxTitle")}>
+            <p className="mb-3 text-sm text-muted-foreground">
+              {t("components.lightboxDesc")}
+            </p>
+            <div className="flex gap-2">
+              {SAMPLE_IMAGES.map((img, i) => (
+                // eslint-disable-next-line @next/next/no-img-element -- External demo URLs not compatible with next/image
+                <img
+                  key={i}
+                  src={img.src}
+                  alt={img.alt}
+                  className="h-20 w-28 cursor-pointer rounded-md object-cover transition-opacity hover:opacity-80"
+                  onClick={() => setLightboxOpen(true)}
+                />
+              ))}
+            </div>
+            <Lightbox
+              images={SAMPLE_IMAGES}
+              open={lightboxOpen}
+              onOpenChange={setLightboxOpen}
+            />
+          </ComponentCard>
+
+          <ComponentCard title={t("components.videoPlayerTitle")}>
+            <p className="mb-3 text-sm text-muted-foreground">
+              {t("components.videoPlayerDesc")}
+            </p>
+            <VideoPlayer
+              src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+              poster="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
+              className="aspect-video max-w-lg"
+            />
+          </ComponentCard>
+
+          <ComponentCard title={t("components.notificationCenterTitle")}>
+            <p className="mb-3 text-sm text-muted-foreground">
+              {t("components.notificationCenterDesc")}
+            </p>
+            <div className="flex items-center gap-4">
+              <NotificationCenter />
+              <NotificationDemoButtons />
+            </div>
+          </ComponentCard>
+
+          <ComponentCard title={t("components.imageCropTitle")}>
+            <p className="mb-3 text-sm text-muted-foreground">
+              {t("components.imageCropDesc")}
+            </p>
+            <ImageCropUpload
+              onCropped={() => toast.success("Image cropped successfully!")}
+              aspectRatio={16 / 9}
+            />
+          </ComponentCard>
+
+          <ComponentCard title={t("components.sortableListTitle")}>
+            <p className="mb-3 text-sm text-muted-foreground">
+              {t("components.sortableListDesc")}
+            </p>
+            <SortableList
+              items={sortableItems}
+              onReorder={setSortableItems}
+              renderItem={(item) => (
+                <span className="text-sm">{item.label}</span>
+              )}
+              className="max-w-md"
+            />
+          </ComponentCard>
+
+          <ComponentCard title={t("components.kanbanTitle")}>
+            <p className="mb-3 text-sm text-muted-foreground">
+              {t("components.kanbanDesc")}
+            </p>
+            <KanbanBoard
+              columns={kanbanColumns}
+              onMoveItem={(itemId, fromCol, toCol, newIndex) => {
+                setKanbanColumns((prev) => {
+                  const updated = prev.map((col) => ({
+                    ...col,
+                    items: [...col.items],
+                  }));
+                  const sourceCol = updated.find((c) => c.id === fromCol);
+                  const targetCol = updated.find((c) => c.id === toCol);
+                  if (!sourceCol || !targetCol) return prev;
+                  const itemIdx = sourceCol.items.findIndex((i) => i.id === itemId);
+                  if (itemIdx === -1) return prev;
+                  const [item] = sourceCol.items.splice(itemIdx, 1);
+                  if (item) targetCol.items.splice(newIndex, 0, item);
+                  return updated;
+                });
+              }}
+            />
+          </ComponentCard>
+        </section>
       </div>
+    </div>
+  );
+}
+
+function NotificationDemoButtons() {
+  const { addNotification } = useNotificationsHook();
+  const t = useTranslations("examples");
+
+  const categories = ["info", "success", "warning", "error"] as const;
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {categories.map((category) => (
+        <Button
+          key={category}
+          size="sm"
+          variant="outline"
+          onClick={() =>
+            addNotification({
+              category,
+              title: `${category.charAt(0).toUpperCase() + category.slice(1)} notification`,
+              message: "This is a demo notification.",
+            })
+          }
+        >
+          {t("components.addNotification")} ({category})
+        </Button>
+      ))}
     </div>
   );
 }

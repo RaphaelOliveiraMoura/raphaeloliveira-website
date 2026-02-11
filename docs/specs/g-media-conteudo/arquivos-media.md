@@ -445,6 +445,62 @@ src/
 - `Avatar` com fallback de iniciais e baseado no componente `Avatar` do shadcn/ui, customizado com logica de iniciais.
 - O hook `useObjectUrl` (listado na estrutura de arquivos) encapsula `URL.createObjectURL` / `revokeObjectURL` com cleanup automatico via `useEffect`.
 
+## Regras de Uso — Componentes Implementados
+
+### ImageCropUpload
+
+```tsx
+import { ImageCropUpload } from "@/components/shared";
+
+<ImageCropUpload
+  onCropped={(blob) => handleUpload(blob)}
+  aspectRatio={16 / 9}          // default: 1 (quadrado)
+  label="Select image"          // texto do botao
+  confirmLabel="Confirm crop"   // botao de confirmacao
+  cancelLabel="Cancel"          // botao de cancelar
+/>
+```
+
+**Comportamento:** Abre dialog modal com area de crop interativa (react-image-crop). O blob resultante e gerado via Canvas API com qualidade JPEG 90%. O aspect ratio e configuravel.
+
+### Lightbox
+
+```tsx
+import { Lightbox } from "@/components/shared";
+
+const [open, setOpen] = useState(false);
+
+<Lightbox
+  images={[
+    { src: "/photo1.jpg", alt: "Description 1" },
+    { src: "/photo2.jpg", alt: "Description 2" },
+  ]}
+  open={open}
+  onOpenChange={setOpen}
+  initialIndex={0}   // default: 0
+/>
+```
+
+**Comportamento:** Dialog fullscreen com navegacao por setas (teclado ArrowLeft/ArrowRight), zoom (+/-) de 100% a 300%, indicador de posicao. Escape fecha. Loop entre imagens.
+
+### VideoPlayer
+
+```tsx
+import { VideoPlayer } from "@/components/shared";
+
+<VideoPlayer
+  src="/video.mp4"
+  poster="/poster.jpg"   // opcional
+  className="aspect-video max-w-lg"
+/>
+```
+
+**Comportamento:** Player nativo com overlay de controles (play/pause, mute, fullscreen, seek bar). Controles auto-hide apos 3s de inatividade. Tecla Espaco para play/pause. Overlay central de play quando pausado.
+
+### Pagina de Exemplo
+
+Todos os tres componentes sao demonstrados na galeria de componentes em `/examples/components` (secao "Advanced").
+
 ## Criterios de Aceite
 
 - [ ] RF01: Zona de upload com drag & drop e feedback visual
@@ -452,11 +508,11 @@ src/
 - [ ] RF03: Preview de imagens e PDFs
 - [ ] RF04: Upload multiplo com lista de arquivos
 - [ ] RF05: Validacao de tipo e tamanho com mensagens
-- [ ] RF06: ImageCropUpload funcional
-- [ ] RF07: Lightbox com zoom, navegacao e teclado
+- [x] RF06: ImageCropUpload funcional
+- [x] RF07: Lightbox com zoom, navegacao e teclado
 - [ ] RF08: Avatar com imagem, iniciais e status
 - [ ] RF09: ResponsiveImage com Next/Image, blur e lazy
-- [ ] RF10: VideoPlayer basico (play, pause, fullscreen)
+- [x] RF10: VideoPlayer basico (play, pause, fullscreen)
 - [ ] RF11: downloadWithProgress com callback onProgress
 - [ ] Testes unitarios para validacao e downloadWithProgress
 - [ ] Storybook com exemplos de todos os componentes

@@ -58,6 +58,11 @@ docs/specs/
 1. Verificar cada criterio de aceite da spec
 2. Atualizar o status para `concluido`
 3. Atualizar `docs/specs/README.md` com o novo status
+4. **Adicionar secao "Regras de Uso"** na spec com: import, API/interface completa, exemplo de uso, descricao do comportamento e referencia a pagina de exemplo
+5. **Adicionar demo interativa** na pagina de exemplo correspondente (galeria de componentes, playground de hooks, ou pagina de dashboard)
+6. **Adicionar traducoes** nos 3 locales (`messages/pt-BR/`, `messages/en/`, `messages/es/`) para os textos da demo
+7. **Atualizar barrel files** (`index.ts`) para exportar os novos modulos
+8. **Atualizar spec de paginas de exemplo** (`docs/specs/j-paginas-exemplo/paginas-exemplo.md`)
 
 ## Criando uma Nova Spec
 

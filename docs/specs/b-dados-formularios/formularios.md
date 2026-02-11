@@ -330,6 +330,67 @@ src/
 - [Componentes & Storybook](../a-fundacao-visual/componentes-storybook.md) - FormField, Input, Button
 - [Feedback & Orientação](../f-padroes-ux/feedback-orientacao.md) - toast de sucesso/erro
 
+## Regras de Uso — FormWizard
+
+### Import
+
+```tsx
+import { FormWizard, type StepConfig } from "@/components/shared";
+```
+
+### API
+
+```tsx
+interface StepConfig<TValues extends FieldValues> {
+  id: string;
+  title: string;
+  fields: Path<TValues>[];
+  schema: $ZodType;
+}
+
+interface FormWizardProps<TValues extends FieldValues> {
+  steps: StepConfig<TValues>[];
+  defaultValues?: DefaultValues<TValues>;
+  schema: $ZodType<TValues, TValues>;   // Schema Zod completo (todas as etapas)
+  onSubmit: (data: TValues) => void | Promise<void>;
+  children: (step: StepConfig<TValues>, index: number) => React.ReactNode;
+  className?: string;
+  submitLabel?: string;   // default: "Submit"
+  nextLabel?: string;     // default: "Next"
+  backLabel?: string;     // default: "Back"
+}
+```
+
+### Uso
+
+```tsx
+const steps: StepConfig<MyFormValues>[] = [
+  { id: "personal", title: "Personal Info", fields: ["name", "email"], schema: personalSchema },
+  { id: "address", title: "Address", fields: ["cep", "street"], schema: addressSchema },
+];
+
+<FormWizard steps={steps} schema={fullSchema} defaultValues={defaults} onSubmit={handleSubmit}>
+  {(step, _index) => (
+    <>
+      {step.id === "personal" && <PersonalFields />}
+      {step.id === "address" && <AddressFields />}
+    </>
+  )}
+</FormWizard>
+```
+
+### Comportamento
+
+- Usa `FormProvider` do react-hook-form — campos filhos usam `useFormContext()`
+- Validacao por etapa via `form.trigger(step.fields)` antes de avancar
+- Estado e preservado entre etapas (nao reseta campos ao voltar)
+- Barra de `Progress` e indicadores de step visuais incluidos
+- Botao "Submit" aparece apenas na ultima etapa
+
+### Pagina de Exemplo
+
+Demonstrado na galeria de componentes em `/examples/components` (secao "Advanced").
+
 ## Critérios de Aceite
 
 - [ ] RF01: RHF + Zod integrados via zodResolver em todos os exemplos
@@ -339,7 +400,7 @@ src/
 - [ ] RF05: Componente Form wrapper exportado e documentado
 - [ ] RF06: Máscaras para todos os tipos listados (phone, CPF, CNPJ, CEP, date, currency, card)
 - [ ] RF07: Paste em MaskedInput remove caracteres não numéricos e aplica máscara corretamente
-- [ ] RF08: FormWizard com progresso, validação por step e preservação de estado
+- [x] RF08: FormWizard com progresso, validação por step e preservação de estado
 - [ ] Testes unitários para schemas e máscaras
 - [ ] Storybook com exemplos de Form, MaskedInput e FormWizard
 
