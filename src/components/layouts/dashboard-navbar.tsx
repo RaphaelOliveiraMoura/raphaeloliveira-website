@@ -1,5 +1,7 @@
 "use client";
 
+import { GlobalSearch } from "@/components/search";
+
 import { Link, useTranslations } from "@/lib/i18n";
 
 export function DashboardNavbar() {
@@ -10,11 +12,17 @@ export function DashboardNavbar() {
       <Link href="/dashboard" className="text-lg font-semibold">
         {t("logo")}
       </Link>
-      <nav className="flex items-center gap-4" aria-label={t("nav.secondary")}>
-        <span className="text-sm text-muted-foreground">
-          {t("nav.navigation")}
-        </span>
-      </nav>
+      <div className="flex items-center gap-4">
+        <GlobalSearch />
+        <nav
+          className="flex items-center gap-4"
+          aria-label={t("nav.secondary")}
+        >
+          <span className="text-sm text-muted-foreground">
+            {t("nav.navigation")}
+          </span>
+        </nav>
+      </div>
     </header>
   );
 }

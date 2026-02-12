@@ -22,8 +22,11 @@ import {
   CookieConsentBanner,
   LanguageSwitcher,
   OfflineBanner,
+  resetTour,
   ShortcutCheatSheet,
   type ShortcutItem,
+  Tour,
+  type TourConfig,
 } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -65,8 +68,35 @@ export default function SettingsPage() {
   const isOnline = useOnlineStatus();
   const [shortcutsOpen, toggleShortcuts] = useToggle(false);
   const [showCookieBanner, setShowCookieBanner] = useState(false);
+  const [tourKey, setTourKey] = useState(0);
   const { isInstallable, install } = usePWAInstall();
   const { share } = useShare();
+
+  const tourConfig: TourConfig = {
+    id: "settings-tour",
+    steps: [
+      {
+        target: "#tour-appearance",
+        title: t("settings.tourAppearanceTitle"),
+        content: t("settings.tourAppearanceContent"),
+      },
+      {
+        target: "#tour-language",
+        title: t("settings.tourLanguageTitle"),
+        content: t("settings.tourLanguageContent"),
+      },
+      {
+        target: "#tour-shortcuts",
+        title: t("settings.tourShortcutsTitle"),
+        content: t("settings.tourShortcutsContent"),
+      },
+      {
+        target: "#tour-notifications",
+        title: t("settings.tourNotificationsTitle"),
+        content: t("settings.tourNotificationsContent"),
+      },
+    ],
+  };
 
   useKeyboardShortcut("Ctrl+T", () => {
     toggleTheme();
@@ -109,7 +139,7 @@ export default function SettingsPage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Appearance */}
-        <Card>
+        <Card id="tour-appearance">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Sun className="size-4" />
@@ -163,7 +193,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Language */}
-        <Card>
+        <Card id="tour-language">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Globe className="size-4" />
@@ -202,7 +232,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Keyboard Shortcuts */}
-        <Card>
+        <Card id="tour-shortcuts">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Keyboard className="size-4" />
@@ -225,7 +255,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notifications */}
-        <Card>
+        <Card id="tour-notifications">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Bell className="size-4" />
@@ -307,6 +337,42 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Guided Tour */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Info className="size-4" />
+            <CardTitle>{t("settings.tour")}</CardTitle>
+          </div>
+          <CardDescription>{t("settings.tourDesc")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                resetTour("settings-tour");
+                setTourKey((k) => k + 1);
+              }}
+            >
+              {t("settings.tourStart")}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => resetTour("settings-tour")}
+            >
+              {t("settings.tourReset")}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {tourKey > 0 && (
+        <Tour key={tourKey} config={tourConfig} showOnce={false} />
+      )}
 
       <OfflineBanner />
     </div>

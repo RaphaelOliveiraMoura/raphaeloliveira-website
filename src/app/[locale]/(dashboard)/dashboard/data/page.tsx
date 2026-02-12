@@ -33,11 +33,27 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-import { exportToCsv, exportToJson } from "@/lib/data";
-import { formatDate } from "@/lib/datetime";
+import { downloadFile, exportToCsv, exportToJson } from "@/lib/data";
+import {
+  formatDate,
+  formatDateRange,
+  formatRelativeTime,
+} from "@/lib/datetime";
 import { toast } from "@/lib/feedback";
-import { formatCpf } from "@/lib/formatters";
+import {
+  abbreviateNumber,
+  capitalize,
+  formatCep,
+  formatCnpj,
+  formatCpf,
+  formatCurrency,
+  pluralize,
+  slugify,
+  truncate,
+} from "@/lib/formatters";
 import { useTranslations } from "@/lib/i18n";
+import { fuzzySearch } from "@/lib/search";
+import { getContrastRatio, meetsContrastRatio } from "@/lib/utils/contrast";
 import { MOCK_USERS, type MockUser } from "@/lib/utils/mock-data";
 import { useDebounce } from "@/hooks";
 
@@ -46,6 +62,199 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   inactive: "secondary",
   pending: "outline",
 };
+
+const SEARCHABLE_ITEMS = [
+  {
+    id: "1",
+    title: "Dashboard",
+    description: "Main dashboard view",
+    url: "/dashboard",
+  },
+  {
+    id: "2",
+    title: "Settings",
+    description: "Application settings",
+    url: "/settings",
+  },
+  {
+    id: "3",
+    title: "User Profile",
+    description: "Edit your profile",
+    url: "/profile",
+  },
+  {
+    id: "4",
+    title: "Analytics",
+    description: "View analytics data",
+    url: "/analytics",
+  },
+  {
+    id: "5",
+    title: "Reports",
+    description: "Generate reports",
+    url: "/reports",
+  },
+  {
+    id: "6",
+    title: "Users Management",
+    description: "Manage users",
+    url: "/users",
+  },
+  {
+    id: "7",
+    title: "Products",
+    description: "Product catalog",
+    url: "/products",
+  },
+];
+
+// Datas pre-computadas para demo (fora do render para evitar impureza)
+const DEMO_NOW = new Date();
+const DEMO_ONE_HOUR_AGO = new Date(DEMO_NOW.getTime() - 3600000);
+const DEMO_THREE_DAYS_AGO = new Date(DEMO_NOW.getTime() - 86400000 * 3);
+const DEMO_NEXT_WEEK = new Date(DEMO_NOW.getTime() + 7 * 86400000);
+
+function DateTimeSection() {
+  const t = useTranslations("examples");
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("data.datetime")}</CardTitle>
+        <CardDescription>{t("data.datetimeDesc")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-muted-foreground">
+              formatDate (short)
+            </p>
+            <p className="text-sm">{formatDate(DEMO_NOW, "short")}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-muted-foreground">
+              formatDate (long)
+            </p>
+            <p className="text-sm">{formatDate(DEMO_NOW, "long")}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-muted-foreground">
+              formatRelativeTime
+            </p>
+            <p className="text-sm">{formatRelativeTime(DEMO_ONE_HOUR_AGO)}</p>
+            <p className="text-sm">{formatRelativeTime(DEMO_THREE_DAYS_AGO)}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-muted-foreground">
+              formatDateRange
+            </p>
+            <p className="text-sm">
+              {formatDateRange(DEMO_NOW, DEMO_NEXT_WEEK)}
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function FuzzySearchSection() {
+  const t = useTranslations("examples");
+  const [query, setQuery] = useState("");
+  const results = query ? fuzzySearch(SEARCHABLE_ITEMS, query) : [];
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("data.fuzzySearch")}</CardTitle>
+        <CardDescription>{t("data.fuzzySearchDesc")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <Input
+            placeholder="Try searching: 'dash', 'sett', 'anl'..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="max-w-sm"
+          />
+          {results.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {results.map((r) => (
+                <Badge key={r.id} variant="secondary">
+                  {r.title}
+                </Badge>
+              ))}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function DataImportSection() {
+  const t = useTranslations("examples");
+  const [importResult, setImportResult] = useState<string | null>(null);
+
+  const handleFileImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const { readFileAsText, parseCsv } = await import("@/lib/data/import");
+    try {
+      const text = await readFileAsText(file);
+      if (file.name.endsWith(".csv")) {
+        const result = parseCsv(text);
+        setImportResult(
+          `Parsed ${result.data.length} rows, ${result.headers.length} columns`,
+        );
+      } else {
+        const parsed = JSON.parse(text);
+        const count = Array.isArray(parsed) ? parsed.length : 1;
+        setImportResult(`Parsed JSON: ${count} item(s)`);
+      }
+      toast.success("File imported successfully");
+    } catch {
+      setImportResult("Failed to parse file");
+      toast.error("Failed to parse file");
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("data.dataImport")}</CardTitle>
+        <CardDescription>{t("data.dataImportDesc")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <input
+            type="file"
+            accept=".csv,.json"
+            onChange={handleFileImport}
+            className="text-sm"
+          />
+          {importResult && <Badge variant="secondary">{importResult}</Badge>}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              downloadFile(
+                "name,email\nJohn,john@test.com\nJane,jane@test.com",
+                "sample.csv",
+                "text/csv",
+              );
+              toast.success("Sample file downloaded");
+            }}
+          >
+            <Download className="mr-2 size-4" />
+            Download sample CSV
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function DataPage() {
   const t = useTranslations("examples");
@@ -318,6 +527,137 @@ export default function DataPage() {
           />
         </CardContent>
       </Card>
+
+      <Separator />
+
+      {/* Formatters Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("data.formatters")}</CardTitle>
+          <CardDescription>{t("data.formattersDesc")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                formatCurrency
+              </p>
+              <p className="font-mono text-sm">{formatCurrency(1234.56)}</p>
+              <p className="font-mono text-sm">{formatCurrency(9999999)}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                formatCpf / formatCnpj / formatCep
+              </p>
+              <p className="font-mono text-sm">{formatCpf("12345678901")}</p>
+              <p className="font-mono text-sm">
+                {formatCnpj("12345678000195")}
+              </p>
+              <p className="font-mono text-sm">{formatCep("01001000")}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                abbreviateNumber
+              </p>
+              <p className="font-mono text-sm">{abbreviateNumber(1500)}</p>
+              <p className="font-mono text-sm">{abbreviateNumber(2500000)}</p>
+              <p className="font-mono text-sm">
+                {abbreviateNumber(1200000000)}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                truncate
+              </p>
+              <p className="text-sm">
+                {truncate(
+                  "This is a very long text that should be truncated",
+                  30,
+                )}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                capitalize / slugify
+              </p>
+              <p className="text-sm">{capitalize("hello world")}</p>
+              <p className="font-mono text-sm">{slugify("Hello World Test")}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                pluralize
+              </p>
+              <p className="text-sm">0: {pluralize(0, "item")}</p>
+              <p className="text-sm">1: {pluralize(1, "item")}</p>
+              <p className="text-sm">5: {pluralize(5, "item")}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Date & Time Section */}
+      <DateTimeSection />
+
+      {/* Fuzzy Search Section */}
+      <FuzzySearchSection />
+
+      {/* Contrast Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("data.contrast")}</CardTitle>
+          <CardDescription>{t("data.contrastDesc")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="size-8 rounded border bg-black" />
+                <div className="size-8 rounded border bg-white" />
+                <div className="text-sm">
+                  Ratio: {getContrastRatio("#000000", "#FFFFFF").toFixed(2)}:1
+                  {" — "}
+                  <Badge
+                    variant={
+                      meetsContrastRatio("#000000", "#FFFFFF", "AA")
+                        ? "default"
+                        : "destructive"
+                    }
+                  >
+                    {meetsContrastRatio("#000000", "#FFFFFF", "AA")
+                      ? "AA Pass"
+                      : "AA Fail"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div
+                  className="size-8 rounded border"
+                  style={{ backgroundColor: "#777777" }}
+                />
+                <div className="size-8 rounded border bg-white" />
+                <div className="text-sm">
+                  Ratio: {getContrastRatio("#777777", "#FFFFFF").toFixed(2)}:1
+                  {" — "}
+                  <Badge
+                    variant={
+                      meetsContrastRatio("#777777", "#FFFFFF", "AA")
+                        ? "default"
+                        : "destructive"
+                    }
+                  >
+                    {meetsContrastRatio("#777777", "#FFFFFF", "AA")
+                      ? "AA Pass"
+                      : "AA Fail"}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Data Import Section */}
+      <DataImportSection />
     </div>
   );
 }

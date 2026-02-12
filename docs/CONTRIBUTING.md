@@ -83,21 +83,22 @@ Hooks ficam em `src/hooks/` e seguem o padrao:
 
 ```tsx
 // src/hooks/use-debounce.ts
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value)
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay)
-    return () => clearTimeout(timer)
-  }, [value, delay])
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
 
-  return debouncedValue
+  return debouncedValue;
 }
 ```
 
 Regras:
+
 - Prefixo `use` obrigatorio
 - Um hook por arquivo
 - Exportar via barrel file `src/hooks/index.ts`
@@ -109,15 +110,15 @@ Formato: `<tipo>(<escopo>): <descricao>`
 
 ### Tipos
 
-| Tipo | Uso |
-|------|-----|
-| `feat` | Nova funcionalidade |
-| `fix` | Correcao de bug |
-| `docs` | Documentacao |
-| `style` | Formatacao (sem mudanca de logica) |
-| `refactor` | Refatoracao de codigo |
-| `test` | Adicao/correcao de testes |
-| `chore` | Manutencao (deps, configs) |
+| Tipo       | Uso                                |
+| ---------- | ---------------------------------- |
+| `feat`     | Nova funcionalidade                |
+| `fix`      | Correcao de bug                    |
+| `docs`     | Documentacao                       |
+| `style`    | Formatacao (sem mudanca de logica) |
+| `refactor` | Refatoracao de codigo              |
+| `test`     | Adicao/correcao de testes          |
+| `chore`    | Manutencao (deps, configs)         |
 
 ### Escopos (opcionais)
 
@@ -140,18 +141,23 @@ chore(ci): add GitHub Actions workflow for lint and tests
 **Titulo:** Seguir conventional commits (`feat(ui): add Button component`)
 
 **Corpo:**
+
 ```markdown
 ## Resumo
+
 Breve descricao do que foi feito e por que.
 
 ## Spec
+
 Link para a spec: `docs/specs/<pasta>/<arquivo>.md`
 
 ## Mudancas
+
 - Mudanca 1
 - Mudanca 2
 
 ## Checklist
+
 - [ ] Testes passando
 - [ ] Lint passando
 - [ ] Spec atualizada (status)
@@ -160,13 +166,66 @@ Link para a spec: `docs/specs/<pasta>/<arquivo>.md`
 
 ## 7. Scripts Disponiveis
 
+### Desenvolvimento
+
 ```bash
-npm run dev          # Servidor de desenvolvimento
-npm run build        # Build de producao
-npm run lint         # ESLint
-npm run storybook    # Storybook dev server
-npm run test         # Vitest em modo watch
-npm run test:run     # Execucao unica
-npm run test:coverage # Testes com cobertura
-npm run test:e2e     # Testes end-to-end (Playwright)
+npm run dev            # Servidor de desenvolvimento (Next.js)
+npm run storybook      # Storybook dev server (porta 6006)
 ```
+
+### Build
+
+```bash
+npm run build          # Build de producao (Next.js)
+npm run build-storybook # Build estatico do Storybook
+npm start              # Servidor de producao (apos build)
+```
+
+### Qualidade de Codigo
+
+```bash
+npm run lint           # ESLint
+npm run lint:fix       # ESLint com auto-fix
+npm run lint:ci        # ESLint strict (zero warnings, para CI)
+npm run typecheck      # TypeScript type-check (tsc --noEmit)
+npm run format         # Prettier (formata todos os arquivos)
+npm run format:check   # Prettier (verifica sem alterar, para CI)
+```
+
+### Testes
+
+```bash
+npm test               # Vitest (execucao unica)
+npm run test:debug     # Vitest em modo watch (desenvolvimento)
+npm run test:coverage  # Vitest com cobertura (v8)
+npm run test:e2e       # Playwright (end-to-end)
+npm run test:e2e:ui    # Playwright com UI interativa
+```
+
+## 8. Git Hooks (Husky)
+
+O projeto usa [Husky](https://typicode.github.io/husky/) para automatizar verificacoes antes de commits e pushes. Os hooks sao instalados automaticamente via `npm install` (script `prepare`).
+
+### pre-commit
+
+Executado a cada commit. Roda lint e type-check apenas nos arquivos staged:
+
+```bash
+npm run lint:staged    # lint-staged (ESLint + Prettier nos arquivos alterados)
+npm run typecheck      # TypeScript type-check completo
+```
+
+### pre-push
+
+Executado antes de cada push. Roda a suite completa de verificacoes:
+
+```bash
+npm run lint:staged    # lint-staged
+npm run typecheck      # TypeScript type-check
+npm run test           # Vitest (todos os testes)
+npm run build          # Build de producao (garante que compila)
+```
+
+### commit-msg
+
+Valida a mensagem de commit usando [commitlint](https://commitlint.js.org/) com a convencao Conventional Commits (ver secao 5).

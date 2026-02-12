@@ -20,12 +20,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { useTranslations } from "@/lib/i18n";
 import {
+  AnimatedTabIndicator,
   AnimateOnScroll,
+  AnimatePresence,
+  bounceIn,
   CountUp,
   FadeIn,
   fadeInUp,
+  fastTransition,
+  scaleIn,
   ScaleOnHover,
   SlideIn,
+  smoothTransition,
+  springTransition,
   StaggerChildren,
   StaggerItem,
   TypeWriter,
@@ -40,6 +47,7 @@ const NAV_SECTIONS = [
   "microInteractions",
   "loading",
   "states",
+  "variants",
 ] as const;
 
 function SectionTitle({
@@ -334,6 +342,33 @@ export default function AnimationsPage() {
             />
           </div>
         </section>
+
+        <Separator />
+
+        {/* ===== VARIANTS & TRANSITIONS ===== */}
+        <section className="space-y-6">
+          <SectionTitle id="variants">{t("animations.variants")}</SectionTitle>
+          <p className="text-muted-foreground">
+            {t("animations.variantsDesc")}
+          </p>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <BounceInDemo label={t("animations.bounceIn")} />
+            <ScaleInDemo label={t("animations.scaleIn")} />
+          </div>
+
+          <DemoCard title={t("animations.animatedTabIndicator")}>
+            <AnimatedTabIndicatorDemo />
+          </DemoCard>
+
+          <DemoCard title={t("animations.animatePresence")}>
+            <AnimatePresenceDemo replayLabel={t("animations.replay")} />
+          </DemoCard>
+
+          <DemoCard title={t("animations.transitions")}>
+            <TransitionPresetsDemo />
+          </DemoCard>
+        </section>
       </div>
     </div>
   );
@@ -549,6 +584,226 @@ function StatesDemo({
           />
         )}
       </div>
+    </div>
+  );
+}
+
+function BounceInDemo({ label }: { label: string }) {
+  const [key, setKey] = useState(0);
+
+  return (
+    <Card className="overflow-hidden">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center justify-between text-sm">
+          {label}
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => setKey((k) => k + 1)}
+          >
+            <RotateCcw className="size-3" />
+          </Button>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <motion.div
+          key={key}
+          variants={bounceIn}
+          initial="initial"
+          animate="animate"
+          className="rounded-lg bg-primary/10 p-4 text-center text-sm font-medium"
+        >
+          {label}
+        </motion.div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ScaleInDemo({ label }: { label: string }) {
+  const [key, setKey] = useState(0);
+
+  return (
+    <Card className="overflow-hidden">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center justify-between text-sm">
+          {label}
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => setKey((k) => k + 1)}
+          >
+            <RotateCcw className="size-3" />
+          </Button>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <motion.div
+          key={key}
+          variants={scaleIn}
+          initial="initial"
+          animate="animate"
+          transition={smoothTransition}
+          className="rounded-lg bg-primary/10 p-4 text-center text-sm font-medium"
+        >
+          {label}
+        </motion.div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function AnimatedTabIndicatorDemo() {
+  const [activeTab, setActiveTab] = useState(0);
+  const tabs = ["Tab 1", "Tab 2", "Tab 3"];
+
+  return (
+    <div className="space-y-4">
+      <div className="relative flex gap-1 rounded-lg border p-1">
+        {tabs.map((tab, i) => (
+          <button
+            key={tab}
+            type="button"
+            onClick={() => setActiveTab(i)}
+            className="relative z-10 flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors"
+          >
+            {activeTab === i && (
+              <AnimatedTabIndicator
+                layoutId="demo-tab"
+                className="absolute inset-0 rounded-md bg-primary/10"
+              />
+            )}
+            <span className="relative z-10">{tab}</span>
+          </button>
+        ))}
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Uses{" "}
+        <code className="rounded bg-muted px-1 py-0.5 text-xs">layoutId</code>{" "}
+        for smooth indicator transitions between tabs.
+      </p>
+    </div>
+  );
+}
+
+function AnimatePresenceDemo({ replayLabel }: { replayLabel: string }) {
+  const [items, setItems] = useState([1, 2, 3]);
+  const [nextId, setNextId] = useState(4);
+
+  const addItem = () => {
+    setItems((prev) => [...prev, nextId]);
+    setNextId((n) => n + 1);
+  };
+
+  const removeItem = (id: number) => {
+    setItems((prev) => prev.filter((item) => item !== id));
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex gap-2">
+        <Button variant="outline" size="sm" onClick={addItem}>
+          Add Item
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setItems([1, 2, 3]);
+            setNextId(4);
+          }}
+        >
+          <RotateCcw className="mr-2 size-3" />
+          {replayLabel}
+        </Button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <AnimatePresence mode="popLayout">
+          {items.map((id) => (
+            <motion.div
+              key={id}
+              layout
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={springTransition}
+            >
+              <Badge
+                variant="secondary"
+                className="cursor-pointer px-4 py-2 text-sm"
+                onClick={() => removeItem(id)}
+              >
+                Item {id} ×
+              </Badge>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Click items to remove with exit animation. AnimatePresence enables
+        smooth mount/unmount transitions.
+      </p>
+    </div>
+  );
+}
+
+function TransitionPresetsDemo() {
+  const [key, setKey] = useState(0);
+
+  return (
+    <div className="space-y-4">
+      <Button variant="outline" size="sm" onClick={() => setKey((k) => k + 1)}>
+        <RotateCcw className="mr-2 size-3" />
+        Replay
+      </Button>
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">
+            springTransition
+          </p>
+          <motion.div
+            key={`spring-${key}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={springTransition}
+            className="rounded-lg bg-primary/10 p-3 text-center text-sm"
+          >
+            Spring
+          </motion.div>
+        </div>
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">
+            smoothTransition
+          </p>
+          <motion.div
+            key={`smooth-${key}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={smoothTransition}
+            className="rounded-lg bg-primary/10 p-3 text-center text-sm"
+          >
+            Smooth
+          </motion.div>
+        </div>
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">
+            fastTransition
+          </p>
+          <motion.div
+            key={`fast-${key}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={fastTransition}
+            className="rounded-lg bg-primary/10 p-3 text-center text-sm"
+          >
+            Fast
+          </motion.div>
+        </div>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Compare the three transition presets: spring (bouncy), smooth (0.3s
+        ease), and fast (0.15s ease).
+      </p>
     </div>
   );
 }

@@ -94,8 +94,8 @@ export const handlers = [
 
 ## Scripts
 
-- `npm test` - Vitest em modo watch
-- `npm run test:run` - Execucao unica
+- `npm test` - Vitest (execucao unica)
+- `npm run test:debug` - Vitest em modo watch (desenvolvimento)
 - `npm run test:coverage` - Com cobertura (v8)
 - `npm run test:e2e` - Playwright
 - `npm run test:e2e:ui` - Playwright com UI

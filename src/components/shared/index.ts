@@ -7,7 +7,6 @@ export { Countdown } from "./countdown";
 export { DataTable } from "./data-table";
 export { EmptyState } from "./empty-state";
 export { ErrorBoundary } from "./error-boundary";
-export { ErrorFallback } from "./error-fallback";
 export { ErrorState } from "./error-state";
 export type { FAQItem } from "./faq";
 export { FAQ } from "./faq";

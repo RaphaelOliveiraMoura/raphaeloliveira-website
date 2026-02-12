@@ -4,6 +4,15 @@ import {
   PageTransition,
 } from "@/components/layouts";
 
+import { generateMetadata as generateSeoMetadata } from "@/lib/seo";
+
+export const metadata = generateSeoMetadata({
+  title: "Core Stack",
+  description:
+    "Template base universal para projetos Next.js com componentes, hooks e utilitarios prontos para producao.",
+  path: "/",
+});
+
 export default function MarketingLayout({
   children,
 }: {

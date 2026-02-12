@@ -3,8 +3,18 @@ import {
   DashboardSidebar,
   PageTransition,
 } from "@/components/layouts";
+import { CommandPalette } from "@/components/navigation";
+
+import { generateMetadata as generateSeoMetadata } from "@/lib/seo";
 
 import { AuthProvider } from "@/providers/auth-provider";
+
+export const metadata = generateSeoMetadata({
+  title: "Dashboard — Core Stack",
+  description: "Painel de controle com dados, formularios e configuracoes.",
+  path: "/dashboard",
+  noIndex: true,
+});
 
 export default function DashboardLayout({
   children,
@@ -22,6 +32,7 @@ export default function DashboardLayout({
           </main>
         </div>
       </div>
+      <CommandPalette />
     </AuthProvider>
   );
 }

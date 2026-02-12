@@ -1,29 +1,37 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 import { useTranslations } from "@/lib/i18n";
 import {
   useBreakpoint,
   useClipboard,
+  useCookieConsent,
   useDebounce,
+  useEventListener,
   useIntersectionObserver,
   useIsDesktop,
   useIsMobile,
   useIsTablet,
   useKeyboardShortcut,
   useLocalStorage,
+  useMediaQuery,
+  useObjectUrl,
   useOnClickOutside,
   useOnlineStatus,
   usePrevious,
   useReducedMotion,
   useScrollPosition,
   useSessionStorage,
+  useStorageSync,
+  useThrottle,
   useToggle,
   useWindowSize,
 } from "@/hooks";
@@ -34,6 +42,7 @@ const NAV_SECTIONS = [
   "storage",
   "observers",
   "state",
+  "advanced",
 ] as const;
 
 function SectionTitle({
@@ -328,6 +337,276 @@ function PreviousDemo() {
   );
 }
 
+function ThrottleDemo() {
+  const t = useTranslations("examples");
+  const [count, setCount] = useState(0);
+  const throttledIncrement = useThrottle(() => {
+    setCount((c) => c + 1);
+  }, 1000);
+
+  return (
+    <HookCard name="useThrottle">
+      <div className="space-y-3">
+        <Button size="sm" variant="outline" onClick={throttledIncrement}>
+          {t("hooks.throttleClick")}
+        </Button>
+        <ValueDisplay label={t("hooks.throttleCount")} value={count} />
+        <p className="text-xs text-muted-foreground">
+          Throttled to max 1 call per second
+        </p>
+      </div>
+    </HookCard>
+  );
+}
+
+function EventListenerDemo() {
+  const t = useTranslations("examples");
+  const [lastKey, setLastKey] = useState("—");
+
+  useEventListener("keydown", (e) => {
+    setLastKey(e.key);
+  });
+
+  return (
+    <HookCard name="useEventListener">
+      <div className="space-y-3">
+        <p className="text-sm text-muted-foreground">
+          {t("hooks.eventType")}: keydown
+        </p>
+        <ValueDisplay label={t("hooks.lastEvent")} value={lastKey} />
+      </div>
+    </HookCard>
+  );
+}
+
+function MediaQueryDemo() {
+  const isDark = useMediaQuery("(prefers-color-scheme: dark)");
+  const isPortrait = useMediaQuery("(orientation: portrait)");
+  const isHighRes = useMediaQuery("(min-resolution: 2dppx)");
+
+  return (
+    <HookCard name="useMediaQuery">
+      <div className="space-y-3">
+        <ValueDisplay
+          label="prefers-color-scheme: dark"
+          value={
+            <Badge variant={isDark ? "default" : "secondary"}>
+              {String(isDark)}
+            </Badge>
+          }
+        />
+        <ValueDisplay
+          label="orientation: portrait"
+          value={
+            <Badge variant={isPortrait ? "default" : "secondary"}>
+              {String(isPortrait)}
+            </Badge>
+          }
+        />
+        <ValueDisplay
+          label="min-resolution: 2dppx"
+          value={
+            <Badge variant={isHighRes ? "default" : "secondary"}>
+              {String(isHighRes)}
+            </Badge>
+          }
+        />
+      </div>
+    </HookCard>
+  );
+}
+
+function ObjectUrlDemo() {
+  const t = useTranslations("examples");
+  const [file, setFile] = useState<File | null>(null);
+  const objectUrl = useObjectUrl(file);
+
+  return (
+    <HookCard name="useObjectUrl">
+      <div className="space-y-3">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          className="text-sm"
+        />
+        {objectUrl ? (
+          <div className="space-y-2">
+            <ValueDisplay label={t("hooks.previewUrl")} value="Generated" />
+            {/* eslint-disable-next-line @next/next/no-img-element -- Blob URL from ObjectURL, not compatible with next/image */}
+            <img
+              src={objectUrl}
+              alt="Preview"
+              className="h-24 w-24 rounded-md border object-cover"
+            />
+          </div>
+        ) : (
+          <ValueDisplay
+            label={t("hooks.previewUrl")}
+            value={t("hooks.noFileSelected")}
+          />
+        )}
+      </div>
+    </HookCard>
+  );
+}
+
+function CookieConsentDemo() {
+  const t = useTranslations("examples");
+  const { consent, shouldShow, accept, decline, updateConsent } =
+    useCookieConsent();
+
+  return (
+    <HookCard name="useCookieConsent">
+      <div className="space-y-3">
+        <ValueDisplay
+          label={t("hooks.showBanner")}
+          value={
+            <Badge variant={shouldShow ? "default" : "secondary"}>
+              {String(shouldShow)}
+            </Badge>
+          }
+        />
+        <ValueDisplay
+          label={t("hooks.cookieEssential")}
+          value={<Badge variant="default">{String(consent.essential)}</Badge>}
+        />
+        <div className="flex items-center justify-between">
+          <Label className="text-sm">{t("hooks.cookieAnalytics")}</Label>
+          <Switch
+            checked={consent.analytics}
+            onCheckedChange={(v) => updateConsent({ analytics: v })}
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <Label className="text-sm">{t("hooks.cookieMarketing")}</Label>
+          <Switch
+            checked={consent.marketing}
+            onCheckedChange={(v) => updateConsent({ marketing: v })}
+          />
+        </div>
+        <div className="flex gap-2">
+          <Button size="sm" onClick={accept}>
+            {t("hooks.acceptAll")}
+          </Button>
+          <Button size="sm" variant="outline" onClick={decline}>
+            {t("hooks.declineAll")}
+          </Button>
+        </div>
+      </div>
+    </HookCard>
+  );
+}
+
+function StorageSyncDemo() {
+  const t = useTranslations("examples");
+  const syncedValue = useStorageSync("demo-sync-key");
+
+  return (
+    <HookCard name="useStorageSync">
+      <div className="space-y-3">
+        <ValueDisplay
+          label={t("hooks.storageSyncValue")}
+          value={syncedValue ?? "null"}
+        />
+        <p className="text-xs text-muted-foreground">
+          {t("hooks.storageSyncHint")}
+        </p>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() =>
+            localStorage.setItem("demo-sync-key", `synced-${Date.now()}`)
+          }
+        >
+          Set value in localStorage
+        </Button>
+      </div>
+    </HookCard>
+  );
+}
+
+function UrlStateDemo() {
+  const t = useTranslations("examples");
+
+  return (
+    <HookCard name="useUrlState / useUrlPagination">
+      <div className="space-y-3">
+        <p className="text-sm text-muted-foreground">
+          These hooks sync state with URL search params. They require Next.js
+          navigation context and are best demonstrated in the Data page
+          (dashboard/data).
+        </p>
+        <ValueDisplay
+          label={t("hooks.urlStateKey")}
+          value="?page=1&pageSize=20"
+        />
+        <p className="text-xs text-muted-foreground">
+          useUrlState syncs any value with a URL param. useUrlPagination wraps
+          it for page/pageSize/sortBy/sortOrder.
+        </p>
+      </div>
+    </HookCard>
+  );
+}
+
+function RealtimeDemo() {
+  return (
+    <HookCard name="usePolling / useSSE / useWebSocket">
+      <div className="space-y-3">
+        <p className="text-sm text-muted-foreground">
+          Realtime communication hooks from{" "}
+          <code className="rounded bg-muted px-1 py-0.5 text-xs">
+            @/lib/realtime
+          </code>
+          :
+        </p>
+        <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+          <li>
+            <strong>usePolling</strong> — React Query wrapper with
+            refetchInterval
+          </li>
+          <li>
+            <strong>useSSE</strong> — Server-Sent Events with auto-reconnect
+          </li>
+          <li>
+            <strong>useWebSocket</strong> — WebSocket with exponential backoff
+            retry
+          </li>
+        </ul>
+        <p className="text-xs text-muted-foreground">
+          These hooks require a backend endpoint to demonstrate live. Connect
+          them to your API for real-time data streaming.
+        </p>
+      </div>
+    </HookCard>
+  );
+}
+
+function PermissionsDemo() {
+  const t = useTranslations("examples");
+
+  return (
+    <HookCard name="usePermissions">
+      <div className="space-y-3">
+        <p className="text-sm text-muted-foreground">
+          Requires AuthProvider context. Demonstrated in the Dashboard Forms
+          page with the Can component and PermissionButton.
+        </p>
+        <div className="space-y-1">
+          <ValueDisplay label={t("hooks.canRead")} value="—" />
+          <ValueDisplay label={t("hooks.canWrite")} value="—" />
+          <ValueDisplay label={t("hooks.canDelete")} value="—" />
+          <ValueDisplay label={t("hooks.canManageUsers")} value="—" />
+        </div>
+        <p className="text-xs text-muted-foreground">
+          See /dashboard/forms for live permission checks.
+        </p>
+      </div>
+    </HookCard>
+  );
+}
+
 export default function HooksPlaygroundPage() {
   const t = useTranslations("examples");
   const { width, height } = useWindowSize();
@@ -462,6 +741,24 @@ export default function HooksPlaygroundPage() {
           <div className="grid gap-6 lg:grid-cols-2">
             <ToggleDemo />
             <PreviousDemo />
+            <ThrottleDemo />
+          </div>
+        </section>
+
+        {/* === ADVANCED === */}
+        <section className="space-y-6">
+          <SectionTitle id="advanced">{t("hooks.advanced")}</SectionTitle>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <EventListenerDemo />
+            <MediaQueryDemo />
+            <ObjectUrlDemo />
+            <CookieConsentDemo />
+            <StorageSyncDemo />
+            <RealtimeDemo />
+            <PermissionsDemo />
+            <Suspense fallback={null}>
+              <UrlStateDemo />
+            </Suspense>
           </div>
         </section>
       </div>

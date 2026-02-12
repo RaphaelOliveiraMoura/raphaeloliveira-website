@@ -52,15 +52,24 @@ export interface ApiError {
   original?: unknown;
 }
 
-export type RequestInterceptor = (config: RequestInit & { url: string }) => RequestInit & { url: string };
-export type ResponseInterceptor = <T>(response: Response, data: T) => T | Promise<T>;
+export type RequestInterceptor = (
+  config: RequestInit & { url: string },
+) => RequestInit & { url: string };
+export type ResponseInterceptor = <T>(
+  response: Response,
+  data: T,
+) => T | Promise<T>;
 ```
 
 ### API Client com interceptors
 
 ```ts
 // src/lib/api/client.ts
-import type { ApiResponse, RequestInterceptor, ResponseInterceptor } from './types';
+import type {
+  ApiResponse,
+  RequestInterceptor,
+  ResponseInterceptor,
+} from "./types";
 
 export function createApiClient(baseUrl: string) {
   const requestInterceptors: RequestInterceptor[] = [];
@@ -73,14 +82,18 @@ export function createApiClient(baseUrl: string) {
 
   const addResponseInterceptor = (fn: ResponseInterceptor) => {
     responseInterceptors.push(fn);
-    return () => responseInterceptors.splice(responseInterceptors.indexOf(fn), 1);
+    return () =>
+      responseInterceptors.splice(responseInterceptors.indexOf(fn), 1);
   };
 
   async function request<T>(
     url: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<ApiResponse<T>> {
-    let config: RequestInit & { url: string } = { ...options, url: `${baseUrl}${url}` };
+    let config: RequestInit & { url: string } = {
+      ...options,
+      url: `${baseUrl}${url}`,
+    };
     for (const fn of requestInterceptors) config = fn(config);
     const { url: finalUrl, ...init } = config;
     const response = await fetch(finalUrl, init);
@@ -90,34 +103,34 @@ export function createApiClient(baseUrl: string) {
   }
 
   const get = <T>(url: string, options?: RequestInit) =>
-    request<T>(url, { ...options, method: 'GET' });
+    request<T>(url, { ...options, method: "GET" });
 
   const post = <T>(url: string, body?: unknown, options?: RequestInit) =>
     request<T>(url, {
       ...options,
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      headers: { "Content-Type": "application/json", ...options?.headers },
     });
 
   const put = <T>(url: string, body?: unknown, options?: RequestInit) =>
     request<T>(url, {
       ...options,
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      headers: { "Content-Type": "application/json", ...options?.headers },
     });
 
   const patch = <T>(url: string, body?: unknown, options?: RequestInit) =>
     request<T>(url, {
       ...options,
-      method: 'PATCH',
+      method: "PATCH",
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      headers: { "Content-Type": "application/json", ...options?.headers },
     });
 
   const del = <T>(url: string, options?: RequestInit) =>
-    request<T>(url, { ...options, method: 'DELETE' });
+    request<T>(url, { ...options, method: "DELETE" });
 
   return {
     request,
@@ -132,7 +145,7 @@ export function createApiClient(baseUrl: string) {
 }
 
 // Instancia padrao usando variavel de ambiente
-export const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL ?? '');
+export const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL ?? "");
 ```
 
 ### Token injection e refresh
@@ -142,7 +155,7 @@ export const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL ?? '');
 export function setupAuthInterceptors(
   client: ReturnType<typeof createApiClient>,
   getToken: () => string | null,
-  refreshToken: () => Promise<string | null>
+  refreshToken: () => Promise<string | null>,
 ) {
   client.addRequestInterceptor((config) => {
     const token = getToken();
@@ -175,10 +188,10 @@ export function setupAuthInterceptors(
 
 ```tsx
 // src/providers/query-provider.tsx
-'use client';
+"use client";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -207,20 +220,26 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
 
 ```tsx
 // Exemplo de uso em componente
-import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/lib/api/client';
-import { ErrorFallback } from '@/components/shared/error-fallback';
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api/client";
+import { ErrorState } from "@/components/shared/error-state";
 
 function UserList() {
   const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => apiClient.get<User[]>('/users'),
+    queryKey: ["users"],
+    queryFn: () => apiClient.get<User[]>("/users"),
     retry: 3,
   });
 
-  if (error) return <ErrorFallback error={error} onRetry={() => refetch()} />;
+  if (error) return <ErrorState error={error} onRetry={() => refetch()} />;
   if (isLoading) return <Skeleton />;
-  return <ul>{data?.map((u) => <li key={u.id}>{u.name}</li>)}</ul>;
+  return (
+    <ul>
+      {data?.map((u) => (
+        <li key={u.id}>{u.name}</li>
+      ))}
+    </ul>
+  );
 }
 ```
 
@@ -228,10 +247,10 @@ function UserList() {
 
 ```tsx
 // src/components/shared/error-boundary.tsx
-'use client';
+"use client";
 
-import { Component, type ReactNode } from 'react';
-import { logger } from '@/lib/telemetry/logger';
+import { Component, type ReactNode } from "react";
+import { logger } from "@/lib/telemetry/logger";
 
 interface Props {
   children: ReactNode;
@@ -239,7 +258,10 @@ interface Props {
   onError?: (error: Error) => void;
 }
 
-export class ErrorBoundary extends Component<Props, { hasError: boolean; error?: Error }> {
+export class ErrorBoundary extends Component<
+  Props,
+  { hasError: boolean; error?: Error }
+> {
   state = { hasError: false, error: undefined as Error | undefined };
 
   static getDerivedStateFromError(error: Error) {
@@ -247,17 +269,23 @@ export class ErrorBoundary extends Component<Props, { hasError: boolean; error?:
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    logger.error('Unhandled render error', error, { componentStack: info.componentStack });
+    logger.error("Unhandled render error", error, {
+      componentStack: info.componentStack,
+    });
     this.props.onError?.(error);
   }
 
   render() {
     if (this.state.hasError && this.state.error) {
-      return this.props.fallback ?? (
-        <div role="alert">
-          <h2>Algo deu errado</h2>
-          <button onClick={() => this.setState({ hasError: false })}>Tentar novamente</button>
-        </div>
+      return (
+        this.props.fallback ?? (
+          <div role="alert">
+            <h2>Algo deu errado</h2>
+            <button onClick={() => this.setState({ hasError: false })}>
+              Tentar novamente
+            </button>
+          </div>
+        )
       );
     }
     return this.props.children;
@@ -270,19 +298,24 @@ export class ErrorBoundary extends Component<Props, { hasError: boolean; error?:
 ```ts
 // src/lib/api/errors.ts
 export function normalizeApiError(err: unknown): ApiError {
-  if (typeof err === 'object' && err !== null && 'message' in err) {
-    const e = err as { message?: string; code?: string; status?: number; details?: unknown };
+  if (typeof err === "object" && err !== null && "message" in err) {
+    const e = err as {
+      message?: string;
+      code?: string;
+      status?: number;
+      details?: unknown;
+    };
     return {
-      code: e.code ?? 'UNKNOWN',
-      message: e.message ?? 'Erro desconhecido',
+      code: e.code ?? "UNKNOWN",
+      message: e.message ?? "Erro desconhecido",
       status: e.status,
       details: e.details,
       original: err,
     };
   }
   return {
-    code: 'UNKNOWN',
-    message: err instanceof Error ? err.message : 'Erro desconhecido',
+    code: "UNKNOWN",
+    message: err instanceof Error ? err.message : "Erro desconhecido",
     original: err,
   };
 }
@@ -342,7 +375,7 @@ src/
 - [ ] Error boundary global e por secao
 - [ ] Normalizador `normalizeApiError` para formatos diversos
 - [ ] Toast automatico para erros de API (via provider ou interceptor)
-- [ ] Componentes ErrorFallback e LoadingFallback
+- [ ] Componentes ErrorState e LoadingFallback
 - [ ] Integracao logger.error com modulo de telemetria
 - [ ] Testes unitarios para client, errors e interceptors
 - [ ] Documentacao de uso no README ou Storybook

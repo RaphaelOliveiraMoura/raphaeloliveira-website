@@ -2,6 +2,7 @@
 
 import { Menu } from "lucide-react";
 
+import { GlobalSearch } from "@/components/search";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -117,6 +118,7 @@ export function MarketingNavbar() {
         <nav className="flex gap-6" aria-label={t("nav.primary")}>
           {navLinks}
         </nav>
+        <GlobalSearch />
       </div>
     </header>
   );

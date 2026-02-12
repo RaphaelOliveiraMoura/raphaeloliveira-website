@@ -121,5 +121,5 @@ Antes de considerar qualquer implementacao pronta:
 
 1. `npm run lint` passa sem erros nem warnings
 2. `npm run typecheck` passa sem erros
-3. `npm run test:run` passa sem falhas
+3. `npm test` passa sem falhas
 4. Nenhum `eslint-disable` adicionado sem justificativa no comentario

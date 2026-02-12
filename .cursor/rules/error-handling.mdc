@@ -47,10 +47,6 @@ import { ErrorBoundary } from "@/components/shared";
 </ErrorBoundary>
 ```
 
-### `ErrorFallback` (compatibilidade)
-
-`ErrorFallback` e um wrapper fino sobre `ErrorState` mantido para compatibilidade. Em codigo novo, preferir `ErrorState` diretamente.
-
 ## Erros em Nivel de Rota (Next.js)
 
 - `error.tsx` - captura erros dentro do root layout

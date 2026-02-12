@@ -10,10 +10,13 @@ import { Breadcrumbs } from "@/components/navigation";
 import {
   FileUpload,
   Form,
+  FormWizard,
   LoadingButton,
   MaskedInput,
+  type StepConfig,
 } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -38,6 +41,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -48,7 +52,11 @@ import {
   cepSchema,
   cpfSchema,
   emailSchema,
+  formatValidationSummary,
   phoneBrSchema,
+  translateFieldErrors,
+  zodToFieldErrors,
+  zodToFieldMap,
 } from "@/lib/validation";
 
 const contactFormSchema = z.object({
@@ -217,6 +225,177 @@ function MaskedFormFields() {
   );
 }
 
+const wizardSchema = z.object({
+  name: z.string().min(2, "Min 2 characters"),
+  email: emailSchema,
+  street: z.string().min(3, "Min 3 characters"),
+  city: z.string().min(2, "Min 2 characters"),
+  state: z.string().min(2, "Min 2 characters"),
+  agree: z.literal(true, { error: "You must agree to continue" }),
+});
+
+type WizardValues = z.infer<typeof wizardSchema>;
+
+const WIZARD_STEPS: StepConfig<WizardValues>[] = [
+  {
+    id: "personal",
+    title: "Personal Info",
+    fields: ["name", "email"],
+    schema: z.object({
+      name: z.string().min(2),
+      email: emailSchema,
+    }),
+  },
+  {
+    id: "address",
+    title: "Address",
+    fields: ["street", "city", "state"],
+    schema: z.object({
+      street: z.string().min(3),
+      city: z.string().min(2),
+      state: z.string().min(2),
+    }),
+  },
+  {
+    id: "confirm",
+    title: "Confirmation",
+    fields: ["agree"],
+    schema: z.object({
+      agree: z.literal(true),
+    }),
+  },
+];
+
+function WizardStepFields({ stepIndex }: { stepIndex: number }) {
+  const t = useTranslations("examples");
+  const { control, getValues } = useFormContext<WizardValues>();
+
+  if (stepIndex === 0) {
+    return (
+      <>
+        <FormField
+          control={control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("forms.fullName")}</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="John Doe" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("forms.email")}</FormLabel>
+              <FormControl>
+                <Input {...field} type="email" placeholder="john@example.com" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </>
+    );
+  }
+
+  if (stepIndex === 1) {
+    return (
+      <>
+        <FormField
+          control={control}
+          name="street"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("forms.wizardStreet")}</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="123 Main St" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="city"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("forms.wizardCity")}</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="New York" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="state"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("forms.wizardState")}</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="NY" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </>
+    );
+  }
+
+  // Step 3: Confirmation
+  const values = getValues();
+  return (
+    <div className="space-y-3">
+      <div className="rounded-md border p-4 text-sm">
+        <div className="grid grid-cols-2 gap-2">
+          <span className="text-muted-foreground">{t("forms.fullName")}:</span>
+          <span>{values.name || "—"}</span>
+          <span className="text-muted-foreground">{t("forms.email")}:</span>
+          <span>{values.email || "—"}</span>
+          <span className="text-muted-foreground">
+            {t("forms.wizardStreet")}:
+          </span>
+          <span>{values.street || "—"}</span>
+          <span className="text-muted-foreground">
+            {t("forms.wizardCity")}:
+          </span>
+          <span>{values.city || "—"}</span>
+          <span className="text-muted-foreground">
+            {t("forms.wizardState")}:
+          </span>
+          <span>{values.state || "—"}</span>
+        </div>
+      </div>
+      <p className="text-sm text-muted-foreground">
+        {t("forms.wizardConfirm")}
+      </p>
+      <FormField
+        control={control}
+        name="agree"
+        render={({ field }) => (
+          <FormItem className="flex items-center gap-3">
+            <FormControl>
+              <Switch
+                checked={field.value === true}
+                onCheckedChange={field.onChange}
+              />
+            </FormControl>
+            <FormLabel className="!mt-0">{t("forms.wizardAgree")}</FormLabel>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+}
+
 export default function FormsPage() {
   const t = useTranslations("examples");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -357,6 +536,125 @@ export default function FormsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Form Wizard */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("forms.wizard")}</CardTitle>
+          <CardDescription>{t("forms.wizardDesc")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FormWizard<WizardValues>
+            steps={WIZARD_STEPS}
+            schema={wizardSchema}
+            defaultValues={{
+              name: "",
+              email: "",
+              street: "",
+              city: "",
+              state: "",
+              agree: false as unknown as true,
+            }}
+            onSubmit={() => {
+              toast.success(t("forms.wizardSuccess"));
+            }}
+            submitLabel={t("forms.submit")}
+          >
+            {(_step, index) => <WizardStepFields stepIndex={index} />}
+          </FormWizard>
+        </CardContent>
+      </Card>
+
+      <Separator />
+
+      {/* Validation Error Utilities */}
+      <ValidationErrorsDemo />
     </div>
+  );
+}
+
+/* ===========================
+   Validation Errors Demo
+   =========================== */
+
+const demoSchema = z.object({
+  name: z.string().min(3, "validation.name.min"),
+  email: z.email("validation.email.invalid"),
+  age: z.number().min(18, "validation.age.min"),
+});
+
+function ValidationErrorsDemo() {
+  const t = useTranslations("examples");
+  const [result, setResult] = useState<{
+    fieldErrors: ReturnType<typeof zodToFieldErrors>;
+    fieldMap: ReturnType<typeof zodToFieldMap>;
+    translated: Record<string, string>;
+    summary: string;
+  } | null>(null);
+
+  const triggerValidation = () => {
+    const parseResult = demoSchema.safeParse({
+      name: "A",
+      email: "not-an-email",
+      age: 10,
+    });
+
+    if (!parseResult.success) {
+      const fieldErrors = zodToFieldErrors(parseResult.error);
+      const fieldMap = zodToFieldMap(parseResult.error);
+      const translated = translateFieldErrors(fieldMap, (key) => {
+        // Simula traducao: em producao seria t(key)
+        const translations: Record<string, string> = {
+          "validation.name.min": "Name must have at least 3 characters",
+          "validation.email.invalid": "Invalid email address",
+          "validation.age.min": "Must be at least 18 years old",
+        };
+        return translations[key] ?? key;
+      });
+      const summary = formatValidationSummary(translated);
+
+      setResult({ fieldErrors, fieldMap, translated, summary });
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("forms.validationErrors")}</CardTitle>
+        <CardDescription>{t("forms.validationErrorsDesc")}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <Button variant="outline" onClick={triggerValidation}>
+          {t("forms.triggerValidation")}
+        </Button>
+
+        {result && (
+          <div className="grid gap-4 lg:grid-cols-3">
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">
+                {t("forms.fieldErrors")}
+              </h4>
+              <pre className="overflow-auto rounded-md bg-muted p-3 text-xs">
+                {JSON.stringify(result.fieldErrors, null, 2)}
+              </pre>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">{t("forms.fieldMap")}</h4>
+              <pre className="overflow-auto rounded-md bg-muted p-3 text-xs">
+                {JSON.stringify(result.fieldMap, null, 2)}
+              </pre>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">{t("forms.summary")}</h4>
+              <pre className="overflow-auto whitespace-pre-wrap rounded-md bg-muted p-3 text-xs">
+                {result.summary}
+              </pre>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
