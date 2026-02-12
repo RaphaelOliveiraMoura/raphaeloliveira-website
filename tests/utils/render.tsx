@@ -10,11 +10,15 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import enCommon from "../../messages/en/common.json";
 import enAuth from "../../messages/en/auth.json";
 import enErrors from "../../messages/en/errors.json";
+import enExamples from "../../messages/en/examples.json";
+import enValidation from "../../messages/en/validation.json";
 
 const testMessages = {
   common: enCommon,
   auth: enAuth,
   errors: enErrors,
+  examples: enExamples,
+  validation: enValidation,
 };
 
 function createTestQueryClient() {
@@ -49,7 +53,7 @@ function AllProviders({ children }: AllProvidersProps) {
 
 function customRender(
   ui: ReactElement,
-  options?: Omit<RenderOptions, "wrapper">
+  options?: Omit<RenderOptions, "wrapper">,
 ) {
   return {
     user: userEvent.setup(),

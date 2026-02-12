@@ -4,17 +4,25 @@ export interface ApiResponse<T> {
   headers: Headers;
 }
 
-export interface ApiError {
-  code: string;
-  message: string;
-  details?: Record<string, unknown>;
-  status?: number;
-  original?: unknown;
+export interface RetryConfig {
+  /** Numero maximo de tentativas (default: 3) */
+  maxRetries: number;
+  /** Delay base em ms para backoff exponencial (default: 1000) */
+  baseDelay: number;
+  /** Status codes que devem ser retentados (default: [408, 429, 500, 502, 503, 504]) */
+  retryableStatuses: number[];
+}
+
+export interface ApiRequestConfig extends RequestInit {
+  /** Timeout em ms (default: 30000) */
+  timeout?: number;
+  /** Configuracao de retry. false desabilita retry. */
+  retry?: Partial<RetryConfig> | false;
 }
 
 export type RequestInterceptor = (
-  config: RequestInit & { url: string },
-) => RequestInit & { url: string };
+  config: ApiRequestConfig & { url: string },
+) => ApiRequestConfig & { url: string };
 
 export type ResponseInterceptor = <T>(
   response: Response,

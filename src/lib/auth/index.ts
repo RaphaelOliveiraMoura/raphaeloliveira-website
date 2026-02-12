@@ -1,4 +1,5 @@
 export {
+  getUserPermissions,
   hasAllPermissions,
   hasAnyPermission,
   hasPermission,

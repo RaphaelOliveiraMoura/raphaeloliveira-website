@@ -1,0 +1,30 @@
+{
+  "email": {
+    "invalid": "Invalid email"
+  },
+  "phone": {
+    "invalid": "Invalid phone number"
+  },
+  "cpf": {
+    "invalid": "Invalid CPF"
+  },
+  "cnpj": {
+    "invalid": "Invalid CNPJ"
+  },
+  "cep": {
+    "invalid": "Invalid ZIP code"
+  },
+  "date": {
+    "invalid": "Invalid date"
+  },
+  "currency": {
+    "invalid": "Invalid amount"
+  },
+  "required": "Required field",
+  "minLength": "Minimum {min} characters",
+  "maxLength": "Maximum {max} characters",
+  "min": "Minimum value: {min}",
+  "max": "Maximum value: {max}",
+  "pattern": "Invalid format",
+  "passwordMismatch": "Passwords do not match"
+}

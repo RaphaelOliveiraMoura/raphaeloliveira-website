@@ -28,6 +28,7 @@ export { useReducedMotion } from "./use-reduced-motion";
 export { useScrollPosition } from "./use-scroll-position";
 export { useSessionStorage } from "./use-session-storage";
 export { useShare } from "./use-share";
+export { useStorageSync } from "./use-storage-sync";
 export { useThrottle } from "./use-throttle";
 export { useToggle } from "./use-toggle";
 export { useUrlPagination } from "./use-url-pagination";

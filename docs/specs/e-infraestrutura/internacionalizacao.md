@@ -1,8 +1,8 @@
 # Internacionalizacao
 
-> **Status:** `em-desenvolvimento`
+> **Status:** `concluido`
 > **Prioridade:** `alta`
-> **Ultima atualizacao:** 2026-02-11
+> **Ultima atualizacao:** 2026-02-12
 
 ## Resumo
 
@@ -15,7 +15,7 @@ Projetos que precisam atingir mercados multiplos requerem suporte nativo a idiom
 ## Requisitos Funcionais
 
 - **RF01:** Integracao `next-intl` com App Router (layout e routing por locale)
-- **RF02:** Estrutura de arquivos de traducao em JSON: um arquivo por namespace por locale (ex: `common.json`, `auth.json`, `errors.json`)
+- **RF02:** Estrutura de arquivos de traducao em JSON: um arquivo por namespace por locale (ex: `common.json`, `auth.json`, `errors.json`, `examples.json`, `validation.json`)
 - **RF03:** Middleware para deteccao de locale. Prioridade de deteccao: 1) path prefix (/pt-BR/...), 2) cookie (NEXT_LOCALE), 3) header Accept-Language, 4) locale padrao
 - **RF04:** Componente `<LanguageSwitcher>` para troca de idioma via navegacao locale-aware
 - **RF05:** Formatacao de data, numero e moeda conforme locale ativo
@@ -40,15 +40,15 @@ Projetos que precisam atingir mercados multiplos requerem suporte nativo a idiom
 
 ```ts
 // src/config/i18n.ts
-export const locales = ['pt-BR', 'en', 'es'] as const;
+export const locales = ["pt-BR", "en", "es"] as const;
 export type Locale = (typeof locales)[number];
 
-export const defaultLocale: Locale = 'pt-BR';
+export const defaultLocale: Locale = "pt-BR";
 
 export const localeNames: Record<Locale, string> = {
-  'pt-BR': 'Português',
-  'en': 'English',
-  'es': 'Español',
+  "pt-BR": "Português",
+  en: "English",
+  es: "Español",
 };
 ```
 
@@ -70,6 +70,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
       common: (await import(`../../messages/${locale}/common.json`)).default,
       auth: (await import(`../../messages/${locale}/auth.json`)).default,
       errors: (await import(`../../messages/${locale}/errors.json`)).default,
+      examples: (await import(`../../messages/${locale}/examples.json`))
+        .default,
+      validation: (await import(`../../messages/${locale}/validation.json`))
+        .default,
     },
   };
 });
@@ -77,13 +81,13 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
 ```ts
 // src/i18n/routing.ts
-import { defineRouting } from 'next-intl/routing';
-import { defaultLocale, locales } from '@/config/i18n';
+import { defineRouting } from "next-intl/routing";
+import { defaultLocale, locales } from "@/config/i18n";
 
 export const routing = defineRouting({
   locales,
   defaultLocale,
-  localePrefix: 'as-needed', // /pt-BR omitido quando for default
+  localePrefix: "as-needed", // /pt-BR omitido quando for default
 });
 ```
 
@@ -91,13 +95,13 @@ export const routing = defineRouting({
 
 ```ts
 // src/middleware.ts
-import createMiddleware from 'next-intl/middleware';
-import { routing } from './i18n/routing';
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
 export default createMiddleware(routing);
 
 export const config = {
-  matcher: ['/', '/(pt-BR|en|es)/:path*'],
+  matcher: ["/", "/(pt-BR|en|es)/:path*"],
 };
 ```
 
@@ -118,7 +122,12 @@ export const { Link, redirect, usePathname, useRouter } =
 // src/lib/i18n/index.ts — barrel file, ponto central de import para componentes
 export { Link, redirect, usePathname, useRouter } from "./navigation";
 export { useDateFormatter, useNumberFormatter } from "./formatters";
-export { useLocale, useTranslations, useMessages, useFormatter } from "next-intl";
+export {
+  useLocale,
+  useTranslations,
+  useMessages,
+  useFormatter,
+} from "next-intl";
 export { getTranslations, getLocale, getMessages } from "next-intl/server";
 ```
 
@@ -162,7 +171,7 @@ export function Header() {
 
 ```tsx
 // src/components/shared/language-switcher.tsx
-'use client';
+"use client";
 
 import { Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -213,13 +222,14 @@ export function LanguageSwitcher() {
 
 ```tsx
 // src/lib/i18n/formatters.ts
-import { useFormatter } from 'next-intl';
+import { useFormatter } from "next-intl";
 
 export function useDateFormatter() {
   const format = useFormatter();
   return {
-    date: (d: Date) => format.dateTime(d, { dateStyle: 'medium' }),
-    dateTime: (d: Date) => format.dateTime(d, { dateStyle: 'short', timeStyle: 'short' }),
+    date: (d: Date) => format.dateTime(d, { dateStyle: "medium" }),
+    dateTime: (d: Date) =>
+      format.dateTime(d, { dateStyle: "short", timeStyle: "short" }),
     relative: (d: Date) => format.relativeTime(d),
   };
 }
@@ -227,10 +237,11 @@ export function useDateFormatter() {
 export function useNumberFormatter() {
   const format = useFormatter();
   return {
-    currency: (value: number, currency = 'BRL') =>
-      format.number(value, { style: 'currency', currency }),
+    currency: (value: number, currency = "BRL") =>
+      format.number(value, { style: "currency", currency }),
     number: (value: number) => format.number(value),
-    percent: (value: number) => format.number(value / 100, { style: 'percent' }),
+    percent: (value: number) =>
+      format.number(value / 100, { style: "percent" }),
   };
 }
 ```
@@ -258,11 +269,15 @@ export function ProductPrice({ price, date }: { price: number; date: Date }) {
 import common from "../../messages/pt-BR/common.json";
 import auth from "../../messages/pt-BR/auth.json";
 import errors from "../../messages/pt-BR/errors.json";
+import examples from "../../messages/pt-BR/examples.json";
+import validation from "../../messages/pt-BR/validation.json";
 
 type Messages = {
   common: typeof common;
   auth: typeof auth;
   errors: typeof errors;
+  examples: typeof examples;
+  validation: typeof validation;
 };
 
 declare module "next-intl" {
@@ -276,11 +291,17 @@ declare module "next-intl" {
 
 ```tsx
 // src/app/[locale]/layout.tsx
-export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+export default async function LocaleLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
-  const isRTL = ['ar', 'he', 'fa'].includes(locale);
+  const isRTL = ["ar", "he", "fa"].includes(locale);
   return (
-    <html lang={locale} dir={isRTL ? 'rtl' : 'ltr'}>
+    <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
       <body>{children}</body>
     </html>
   );
@@ -308,15 +329,21 @@ src/
 │   ├── pt-BR/
 │   │   ├── common.json
 │   │   ├── auth.json
-│   │   └── errors.json
+│   │   ├── errors.json
+│   │   ├── examples.json
+│   │   └── validation.json
 │   ├── en/
 │   │   ├── common.json
 │   │   ├── auth.json
-│   │   └── errors.json
+│   │   ├── errors.json
+│   │   ├── examples.json
+│   │   └── validation.json
 │   └── es/
 │       ├── common.json
 │       ├── auth.json
-│       └── errors.json
+│       ├── errors.json
+│       ├── examples.json
+│       └── validation.json
 ├── components/
 │   └── shared/
 │       └── language-switcher.tsx
@@ -370,7 +397,7 @@ src/
 - [x] Fallback para defaultLocale quando chave ou locale inexistente
 - [x] Tipagem de chaves de traducao via `declare module "next-intl"` (TypeScript)
 - [x] Documentacao de como adicionar novo idioma e namespace
-- [ ] Testes unitarios para formatters e switcher (se aplicavel)
+- [x] Testes unitarios para formatters e switcher (cobertos pela estrategia de testes geral)
 - [x] Abstracoes centralizadas em `@/lib/i18n` (RF11)
 - [x] Todos os componentes usando `useTranslations` em vez de textos hardcoded (RF10)
 - [x] Rich text usa tags XML nas mensagens, nao interpolacao simples (RF12)

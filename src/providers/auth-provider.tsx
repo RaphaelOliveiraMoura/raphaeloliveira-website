@@ -5,9 +5,10 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
+
+import { tokenManager } from "@/lib/auth/token";
 
 import type { User } from "@/types/auth";
 
@@ -36,7 +37,6 @@ const AUTH_REFRESH_URL = "/api/auth/refresh";
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const accessTokenRef = useRef<string | null>(null);
 
   const refreshAccessToken = useCallback(async (): Promise<string | null> => {
     try {
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         accessToken?: string;
       };
       const token = data.token ?? data.accessToken ?? null;
-      if (token) accessTokenRef.current = token;
+      if (token) tokenManager.set(token);
       return token;
     } catch {
       return null;
@@ -58,16 +58,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Registrar handler de refresh para auto-refresh proativo
+    tokenManager.setRefreshHandler(refreshAccessToken);
+
     let cancelled = false;
 
     async function checkSession() {
       try {
-        const token = accessTokenRef.current ?? (await refreshAccessToken());
+        let token = tokenManager.get();
+
+        // Se token expirado ou ausente, tentar refresh
+        if (!token || tokenManager.isExpired(token)) {
+          token = await refreshAccessToken();
+        }
+
         if (cancelled) return;
         if (!token) {
           setIsLoading(false);
           return;
         }
+
         const res = await fetch(AUTH_ME_URL, {
           headers: { Authorization: `Bearer ${token}` },
           credentials: "include",
@@ -77,12 +87,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const data = (await res.json()) as User;
           setUser(data);
         } else {
-          accessTokenRef.current = null;
+          tokenManager.clear();
           setUser(null);
         }
       } catch {
         if (!cancelled) {
-          accessTokenRef.current = null;
+          tokenManager.clear();
           setUser(null);
         }
       } finally {
@@ -110,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       accessToken?: string;
     };
     const token = data.token ?? data.accessToken ?? null;
-    if (token) accessTokenRef.current = token;
+    if (token) tokenManager.set(token);
     setUser(data.user);
   }, []);
 
@@ -118,7 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await fetch(AUTH_LOGOUT_URL, { method: "POST", credentials: "include" });
     } finally {
-      accessTokenRef.current = null;
+      tokenManager.clear();
       setUser(null);
     }
   }, []);

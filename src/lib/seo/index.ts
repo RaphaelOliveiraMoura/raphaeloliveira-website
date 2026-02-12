@@ -8,3 +8,6 @@ export {
   type OrganizationSchema,
 } from "./json-ld";
 export { generateMetadata } from "./metadata";
+// generateOgImage is intentionally NOT exported here.
+// It imports next/og which is server-only (uses Node.js 'fs').
+// Import it directly: import { generateOgImage } from "@/lib/seo/og-image"

@@ -19,9 +19,11 @@ describe("track", () => {
       expect.objectContaining({
         level: "info",
         message: "[Analytics]",
-        event: "test_event",
-        page: "/home",
-      })
+        context: expect.objectContaining({
+          event: "test_event",
+          page: "/home",
+        }),
+      }),
     );
     spy.mockRestore();
   });
@@ -41,12 +43,14 @@ describe("track", () => {
       expect.objectContaining({
         level: "info",
         message: "[Analytics]",
-        event: "form_submit",
-        email: "[REDACTED]",
-        password: "[REDACTED]",
-        cpf: "[REDACTED]",
-        page: "/form",
-      })
+        context: expect.objectContaining({
+          event: "form_submit",
+          email: "[REDACTED]",
+          password: "[REDACTED]",
+          cpf: "[REDACTED]",
+          page: "/form",
+        }),
+      }),
     );
     spy.mockRestore();
   });

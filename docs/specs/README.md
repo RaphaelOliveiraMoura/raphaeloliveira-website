@@ -40,13 +40,13 @@ Indice central de todas as funcionalidades do Core Stack, documentadas seguindo 
 
 ## E. Infraestrutura
 
-| #   | Spec                                                                       | Descricao                                                        | Status                |
-| --- | -------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------- |
-| 11  | [Internacionalizacao](e-infraestrutura/internacionalizacao.md)             | next-intl, arquivos de traducao, formatacao locale, pluralizacao | 🔵 em-desenvolvimento |
-| 12  | [SEO](e-infraestrutura/seo.md)                                             | Metadata API, Open Graph, JSON-LD, sitemap, robots.txt           | 🟢 concluido          |
-| 13  | [Autenticacao & Autorizacao](e-infraestrutura/autenticacao-autorizacao.md) | Login/logout, tokens, RBAC, componente Can, usePermissions       | 🟢 concluido          |
-| 14  | [Seguranca & Configuracao](e-infraestrutura/seguranca-configuracao.md)     | XSS, CSRF, CSP, env vars tipadas (t3-env/zod)                    | 🟢 concluido          |
-| 15  | [Logging & Telemetria](e-infraestrutura/logging-telemetria.md)             | Logger com niveis, error tracking, analytics, Web Vitals         | 🟢 concluido          |
+| #   | Spec                                                                       | Descricao                                                        | Status       |
+| --- | -------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------ |
+| 11  | [Internacionalizacao](e-infraestrutura/internacionalizacao.md)             | next-intl, arquivos de traducao, formatacao locale, pluralizacao | 🟢 concluido |
+| 12  | [SEO](e-infraestrutura/seo.md)                                             | Metadata API, Open Graph, JSON-LD, sitemap, robots.txt           | 🟢 concluido |
+| 13  | [Autenticacao & Autorizacao](e-infraestrutura/autenticacao-autorizacao.md) | Login/logout, tokens, RBAC, componente Can, usePermissions       | 🟢 concluido |
+| 14  | [Seguranca & Configuracao](e-infraestrutura/seguranca-configuracao.md)     | XSS, CSRF, CSP, env vars tipadas (t3-env/zod)                    | 🟢 concluido |
+| 15  | [Logging & Telemetria](e-infraestrutura/logging-telemetria.md)             | Logger com niveis, error tracking, analytics, Web Vitals         | 🟢 concluido |
 
 ## F. Padroes de UX
 
@@ -90,6 +90,6 @@ Indice central de todas as funcionalidades do Core Stack, documentadas seguindo 
 | --------------------- | ---------- |
 | 🔴 Rascunho           | 0          |
 | 🟡 Aprovado           | 0          |
-| 🔵 Em desenvolvimento | 1          |
-| 🟢 Concluido          | 24         |
+| 🔵 Em desenvolvimento | 0          |
+| 🟢 Concluido          | 25         |
 | **Total**             | **25**     |

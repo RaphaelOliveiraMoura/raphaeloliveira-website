@@ -1,0 +1,30 @@
+{
+  "email": {
+    "invalid": "E-mail inválido"
+  },
+  "phone": {
+    "invalid": "Telefone inválido"
+  },
+  "cpf": {
+    "invalid": "CPF inválido"
+  },
+  "cnpj": {
+    "invalid": "CNPJ inválido"
+  },
+  "cep": {
+    "invalid": "CEP inválido"
+  },
+  "date": {
+    "invalid": "Data inválida"
+  },
+  "currency": {
+    "invalid": "Valor inválido"
+  },
+  "required": "Campo obrigatório",
+  "minLength": "Mínimo de {min} caracteres",
+  "maxLength": "Máximo de {max} caracteres",
+  "min": "Valor mínimo: {min}",
+  "max": "Valor máximo: {max}",
+  "pattern": "Formato inválido",
+  "passwordMismatch": "As senhas não conferem"
+}
