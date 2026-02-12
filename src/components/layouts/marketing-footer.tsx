@@ -5,7 +5,7 @@ export function MarketingFooter() {
 
   return (
     <footer className="border-t bg-muted/30">
-      <div className="container py-8 md:py-12">
+      <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           <div>
             <Link href="/" className="text-lg font-semibold">

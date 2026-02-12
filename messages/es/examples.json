@@ -17,7 +17,9 @@
     "settings": "Configuracion",
     "settingsDesc": "Tema, idioma, toasts, atajos de teclado y preferencias.",
     "animations": "Animaciones",
-    "animationsDesc": "Primitivos de motion, micro-interacciones y efectos visuales."
+    "animationsDesc": "Primitivos de motion, micro-interacciones y efectos visuales.",
+    "landingPages": "Landing Pages",
+    "landingPagesDesc": "Variaciones de landing pages completas demostrando diferentes estilos y componentes."
   },
   "components": {
     "title": "Galeria de Componentes",
@@ -270,5 +272,224 @@
     "errorShake": "Estado de Error",
     "scrollProgress": "Barra de Progreso",
     "backToTop": "Volver Arriba"
+  },
+  "landings": {
+    "index": {
+      "title": "Variaciones de Landing Pages",
+      "subtitle": "Ejemplos completos de landing pages demostrando diferentes estilos y componentes.",
+      "saas": "SaaS",
+      "saasDesc": "Landing page clasica de producto SaaS con hero animado, precios, testimonios, FAQ y formulario de newsletter.",
+      "startup": "Startup",
+      "startupDesc": "Landing page moderna de startup con secciones alternadas, metricas animadas y captura de email.",
+      "portfolio": "Portfolio / Evento",
+      "portfolioDesc": "Landing page creativa con video, galeria de imagenes, countdown, timeline y formulario de contacto."
+    },
+    "saas": {
+      "hero": {
+        "badge": "Lanzamiento v2.0",
+        "titleBefore": "Simplifique su flujo de trabajo con ",
+        "titleHighlight": "automatizacion inteligente",
+        "subtitle": "La plataforma completa para equipos que quieren entregar mas rapido, con menos esfuerzo y mas calidad."
+      },
+      "logos": {
+        "title": "Usado por equipos de empresas lideres"
+      },
+      "features": {
+        "title": "Todo lo que su equipo necesita",
+        "subtitle": "Funciones poderosas para cada etapa de su flujo.",
+        "tab1": "Productividad",
+        "tab1Desc": "Automatice tareas repetitivas y enfoquese en lo que importa.",
+        "tab1Feature1": "Automatizacion de workflows",
+        "tab1Feature2": "Plantillas inteligentes",
+        "tab1Feature3": "Integraciones nativas",
+        "tab2": "Colaboracion",
+        "tab2Desc": "Trabaje en equipo en tiempo real, sin friccion.",
+        "tab2Feature1": "Edicion colaborativa",
+        "tab2Feature2": "Comentarios en contexto",
+        "tab2Feature3": "Notificaciones inteligentes",
+        "tab3": "Seguridad",
+        "tab3Desc": "Proteccion de nivel enterprise para sus datos.",
+        "tab3Feature1": "Cifrado de extremo a extremo",
+        "tab3Feature2": "SSO y SAML",
+        "tab3Feature3": "Registros de auditoria completos"
+      },
+      "stats": {
+        "users": "Usuarios activos",
+        "uptime": "Uptime",
+        "countries": "Paises",
+        "satisfaction": "Satisfaccion"
+      },
+      "testimonials": {
+        "title": "Lo que dicen nuestros clientes",
+        "subtitle": "Miles de equipos ya transformaron su flujo de trabajo.",
+        "t1Quote": "La plataforma transformo completamente como nuestro equipo colabora. Ahorramos horas por semana.",
+        "t1Name": "Ana Silva",
+        "t1Role": "CTO @ TechStart",
+        "t2Quote": "La mejor herramienta de productividad que hemos usado. El soporte es excepcional.",
+        "t2Name": "Carlos Mendes",
+        "t2Role": "Lead Developer @ GlobalApp",
+        "t3Quote": "Integraciones perfectas con nuestro stack existente. Configuracion en minutos, resultados inmediatos.",
+        "t3Name": "Mariana Costa",
+        "t3Role": "Product Manager @ PixelCraft"
+      },
+      "pricing": {
+        "title": "Precios simples y transparentes",
+        "subtitle": "Sin sorpresas. Cancele cuando quiera.",
+        "free": "Free",
+        "freeDesc": "Para proyectos personales",
+        "freePrice": "$0",
+        "freeCta": "Comenzar gratis",
+        "pro": "Pro",
+        "proDesc": "Para equipos en crecimiento",
+        "proPrice": "$29",
+        "proCta": "Iniciar prueba gratis",
+        "proBadge": "Mas popular",
+        "enterprise": "Enterprise",
+        "enterpriseDesc": "Para grandes organizaciones",
+        "enterprisePrice": "$99",
+        "enterpriseCta": "Contactar ventas",
+        "period": "mes",
+        "feat1": "Hasta 3 proyectos",
+        "feat2": "1 GB de almacenamiento",
+        "feat3": "Soporte de la comunidad",
+        "feat4": "Dominios personalizados",
+        "feat5": "Analytics avanzado",
+        "feat6": "Proyectos ilimitados",
+        "feat7": "50 GB de almacenamiento",
+        "feat8": "Soporte prioritario",
+        "feat9": "Todo ilimitado",
+        "feat10": "500 GB de almacenamiento",
+        "feat11": "Soporte dedicado"
+      },
+      "faq": {
+        "title": "Preguntas frecuentes",
+        "subtitle": "Todo lo que necesita saber sobre la plataforma.",
+        "q1": "Puedo probar antes de suscribirme?",
+        "a1": "Si! Ofrecemos 14 dias de prueba gratis en el plan Pro, sin necesidad de tarjeta de credito.",
+        "q2": "Que metodos de pago aceptan?",
+        "a2": "Aceptamos tarjetas de credito y PayPal. Los planes anuales tienen 20% de descuento.",
+        "q3": "Puedo cambiar de plan despues?",
+        "a3": "Si, puede hacer upgrade o downgrade en cualquier momento. Los cambios son proporcionales.",
+        "q4": "Ofrecen soporte en espanol?",
+        "a4": "Si, nuestro soporte esta disponible en espanol 24/7, con un tiempo promedio de respuesta de 2 horas."
+      },
+      "cta": {
+        "title": "Listo para transformar su flujo?",
+        "subtitle": "Unase a miles de equipos que ya usan nuestra plataforma.",
+        "placeholder": "tu@email.com",
+        "button": "Comenzar gratis",
+        "success": "Inscripcion realizada! Verifique su email."
+      }
+    },
+    "startup": {
+      "hero": {
+        "badge": "Beta abierto",
+        "title": "El futuro de la gestion de proyectos",
+        "subtitle": "Una nueva forma de planificar, ejecutar y entregar proyectos. Simple, rapido y visual.",
+        "cta": "Comenzar gratis",
+        "secondary": "Ver demo"
+      },
+      "logos": {
+        "title": "Respaldado por"
+      },
+      "features": {
+        "title": "Por que elegirnos",
+        "subtitle": "Construido para equipos modernos que exigen velocidad y simplicidad.",
+        "f1Title": "Paneles visuales",
+        "f1Desc": "Visualice el progreso de su proyecto con dashboards intuitivos y personalizables.",
+        "f2Title": "Colaboracion en tiempo real",
+        "f2Desc": "Edite documentos, comente y revise cambios simultaneamente con su equipo.",
+        "f3Title": "Automatizaciones inteligentes",
+        "f3Desc": "Automatice tareas repetitivas con reglas personalizables e integraciones nativas.",
+        "f4Title": "Seguridad enterprise",
+        "f4Desc": "Cifrado, SSO, registros de auditoria y cumplimiento desde el primer dia."
+      },
+      "stats": {
+        "projects": "Proyectos creados",
+        "teams": "Equipos activos",
+        "tasks": "Tareas completadas",
+        "hours": "Horas ahorradas"
+      },
+      "testimonials": {
+        "title": "Amado por equipos",
+        "subtitle": "Vea lo que nuestros usuarios estan diciendo.",
+        "t1Quote": "Finalmente una herramienta que no estorba. Interfaz limpia y funcionalidades poderosas.",
+        "t1Name": "Pedro Almeida",
+        "t1Role": "Tech Lead @ DevFlow",
+        "t2Quote": "Migramos de Jira y nunca miramos atras. La experiencia es incomparable.",
+        "t2Name": "Julia Santos",
+        "t2Role": "Product Owner @ NovaTech"
+      },
+      "cta": {
+        "title": "Empiece a construir hoy",
+        "subtitle": "Gratis para equipos de hasta 5 personas. Sin tarjeta de credito.",
+        "placeholder": "tu@email.com",
+        "button": "Crear cuenta gratis",
+        "success": "Cuenta creada! Redirigiendo..."
+      }
+    },
+    "portfolio": {
+      "hero": {
+        "badge": "Conferencia 2026",
+        "title": "Design & Tech Summit",
+        "subtitle": "El mayor evento de diseno y tecnologia de America Latina. 3 dias de charlas, talleres y networking."
+      },
+      "countdown": {
+        "title": "El evento comienza en",
+        "days": "Dias",
+        "hours": "Horas",
+        "minutes": "Min",
+        "seconds": "Seg"
+      },
+      "gallery": {
+        "title": "Momentos de la edicion anterior",
+        "subtitle": "Reviva los mejores momentos del evento pasado."
+      },
+      "process": {
+        "title": "Como funciona",
+        "subtitle": "Tres simples pasos para participar.",
+        "step1Title": "Registrese",
+        "step1Desc": "Complete el formulario y asegure su lugar. Cupos limitados.",
+        "step2Title": "Participe",
+        "step2Desc": "Asista a charlas, participe en talleres y haga networking.",
+        "step3Title": "Conectese",
+        "step3Desc": "Mantenga contacto con la comunidad despues del evento."
+      },
+      "team": {
+        "title": "Ponentes",
+        "subtitle": "Expertos que compartiran su conocimiento.",
+        "s1Name": "Fernanda Lima",
+        "s1Role": "Design Lead @ Meta",
+        "s2Name": "Rafael Torres",
+        "s2Role": "Staff Engineer @ Google",
+        "s3Name": "Camila Rocha",
+        "s3Role": "VP of Product @ Stripe",
+        "s4Name": "Lucas Martins",
+        "s4Role": "Founding Designer @ Linear"
+      },
+      "faq": {
+        "title": "Preguntas frecuentes",
+        "subtitle": "Informacion sobre el evento.",
+        "q1": "Donde sera el evento?",
+        "a1": "El evento sera en el Centro de Convenciones de Sao Paulo, con transmision online para quienes no puedan asistir presencialmente.",
+        "q2": "El evento es gratuito?",
+        "a2": "La entrada basica es gratuita. Talleres y actividades premium requieren entrada VIP.",
+        "q3": "Hay certificado de participacion?",
+        "a3": "Si, todos los participantes reciben certificado digital despues del evento.",
+        "q4": "Puedo cancelar mi inscripcion?",
+        "a4": "Si, las cancelaciones se pueden hacer hasta 7 dias antes del evento con reembolso completo."
+      },
+      "contact": {
+        "title": "Asegure su lugar",
+        "subtitle": "Complete el formulario para inscribirse en el evento.",
+        "name": "Nombre completo",
+        "email": "Correo electronico",
+        "phone": "Telefono",
+        "company": "Empresa",
+        "role": "Cargo",
+        "button": "Inscribirse",
+        "success": "Inscripcion exitosa! Verifique su email."
+      }
+    }
   }
 }

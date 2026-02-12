@@ -201,6 +201,55 @@ const reduced = useReducedMotion();
 // Desabilitar parallax, efeitos pesados, etc.
 ```
 
+### PageTransition (transicao entre paginas)
+
+O componente `PageTransition` (`src/components/layouts/page-transition.tsx`) envolve o `children` do layout e anima a entrada de cada nova pagina usando `key={pathname}`.
+
+**Abordagem adotada:** animacao de entrada (enter-only) sem `AnimatePresence mode="wait"`.
+
+```tsx
+import { motion } from "framer-motion";
+import { usePathname } from "@/lib/i18n";
+import { useReducedMotion } from "@/hooks";
+
+export function PageTransition({ children }) {
+  const pathname = usePathname();
+  const reduced = useReducedMotion();
+
+  return (
+    <motion.div
+      key={pathname}
+      initial={reduced ? false : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: reduced ? 0 : 0.25, ease: [0.4, 0, 0.2, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+```
+
+**Por que NAO usar `AnimatePresence mode="wait"`:**
+
+O Next.js App Router gerencia a arvore de componentes internamente — ao navegar entre rotas, o React troca o `children` do layout sem desmontar/remontar o componente pai. O `AnimatePresence mode="wait"` espera a animacao de saida (exit) completar antes de montar o novo conteudo. Porem:
+
+1. **O App Router nao desmonta o children via React key** — ele faz a troca internamente, entao o `AnimatePresence` nao detecta a saida corretamente.
+2. **O novo conteudo fica bloqueado** — como `mode="wait"` impede a montagem ate o exit completar, e o exit nunca dispara de fato, a pagina permanece em branco/preta indefinidamente.
+3. **Problema documentado:** Issues no GitHub do Framer Motion (#380, #2411) e no Next.js (#49279) reportam que `AnimatePresence mode="wait"` causa tela em branco no App Router.
+
+**Alternativas avaliadas:**
+
+| Abordagem                          | Pros                                            | Contras                                                                               | Status            |
+| ---------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------- |
+| Enter-only (adotada)               | Simples, confiavel, sem risco de tela em branco | Sem animacao de saida                                                                 | **Adotada**       |
+| `AnimatePresence mode="wait"`      | Exit + enter completos                          | Tela em branco no App Router                                                          | Descartada        |
+| `AnimatePresence mode="popLayout"` | Exit e enter simultaneos                        | Sobreposicao visual entre paginas                                                     | Nao recomendada   |
+| FrozenRouter + AnimatePresence     | Exit + enter funcionais                         | Depende de APIs internas do Next.js (`LayoutRouterContext`) que quebram entre versoes | Nao recomendada   |
+| View Transition API (nativa)       | Nativa do browser, performatica                 | Experimental no Next.js 16, nao recomendada para producao ainda                       | Futuro            |
+| `next-view-transitions` (lib)      | Leve (~8KB), polyfill                           | Limitacoes com Suspense/streaming, dependencia externa                                | Avaliar no futuro |
+
+**Caminho futuro:** O Next.js 16 oferece `experimental.viewTransition` no `next.config.ts` que habilita a View Transition API nativa do React. Quando sair do experimental, migrar `PageTransition` para usar `<ViewTransition>` do React em vez de Framer Motion. Monitorar: https://nextjs.org/docs/app/api-reference/config/next-config-js/viewTransition
+
 ### Performance
 
 - Preferir `transform` e `opacity` para animacoes (GPU-accelerated)
@@ -277,3 +326,7 @@ src/
 - [Tailwind CSS v4 - Animations](https://tailwindcss.com/docs/animation)
 - [prefers-reduced-motion - MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion)
 - [Web Animations Performance](https://web.dev/animations-overview/)
+- [AnimatePresence + App Router - GitHub Issue #49279](https://github.com/vercel/next.js/issues/49279)
+- [Framer Motion Issue #380 - Children stuck in exit variant](https://github.com/framer/motion/issues/380)
+- [Next.js View Transition API (experimental)](https://nextjs.org/docs/app/api-reference/config/next-config-js/viewTransition)
+- [View Transition API - MDN](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)

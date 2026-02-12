@@ -4,6 +4,7 @@ import {
   Database,
   FileText,
   LayoutDashboard,
+  PanelTop,
   Settings,
   Sparkles,
 } from "lucide-react";
@@ -32,6 +33,11 @@ const EXAMPLES = [
     key: "animations" as const,
     icon: Sparkles,
     href: "/examples/animations",
+  },
+  {
+    key: "landingPages" as const,
+    icon: PanelTop,
+    href: "/landings",
   },
 ];
 

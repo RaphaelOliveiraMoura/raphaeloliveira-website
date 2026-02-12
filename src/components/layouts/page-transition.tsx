@@ -1,15 +1,9 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { usePathname } from "@/lib/i18n";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-
-const pageVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
-};
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -19,21 +13,20 @@ export function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
   const reduced = useReducedMotion();
 
+  // Usa key para re-montar o motion.div a cada navegacao, disparando a animacao
+  // de entrada. Nao usa AnimatePresence mode="wait" pois no App Router ele bloqueia
+  // a renderizacao do novo conteudo, causando tela em branco.
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={pathname}
-        variants={pageVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        transition={{
-          duration: reduced ? 0 : 0.3,
-          ease: "easeInOut",
-        }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      key={pathname}
+      initial={reduced ? false : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: reduced ? 0 : 0.25,
+        ease: [0.4, 0, 0.2, 1],
+      }}
+    >
+      {children}
+    </motion.div>
   );
 }

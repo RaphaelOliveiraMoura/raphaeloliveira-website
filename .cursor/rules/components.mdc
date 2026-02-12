@@ -111,6 +111,33 @@ export default function Page() {
    - E puramente de apresentacao com dados estaticos? → Server Component (sem diretiva)
    - Recebe funcoes como props/children? → Provavelmente precisa de `"use client"`
 
+## PageTransition e AnimatePresence no App Router
+
+**NUNCA usar `AnimatePresence mode="wait"` para transicoes de pagina no App Router.** O App Router troca o `children` internamente sem desmontar via React key, causando tela em branco permanente (exit nunca completa, enter nunca monta).
+
+A abordagem correta e **enter-only**: usar `motion.div` com `key={pathname}` sem `AnimatePresence`. Ao trocar a key, React desmonta/remonta o `motion.div`, disparando a animacao de entrada.
+
+```tsx
+// ERRADO - causa tela em branco no App Router
+<AnimatePresence mode="wait">
+  <motion.div key={pathname} exit={{ opacity: 0 }}>
+    {children}
+  </motion.div>
+</AnimatePresence>
+
+// CERTO - enter-only, confiavel
+<motion.div
+  key={pathname}
+  initial={{ opacity: 0, y: 16 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+>
+  {children}
+</motion.div>
+```
+
+Detalhes completos, alternativas avaliadas e caminho futuro (View Transition API): ver spec `animacoes-micro-interacoes.md`.
+
 ## Storybook
 
 Todo componente compartilhado (em `src/components/shared/`) deve ter uma story:

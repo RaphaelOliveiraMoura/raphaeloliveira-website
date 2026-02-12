@@ -42,6 +42,12 @@ export function MarketingNavbar() {
       >
         {t("nav.examples")}
       </Link>
+      <Link
+        href="/landings"
+        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
+      >
+        {t("nav.landings")}
+      </Link>
     </>
   );
 
@@ -98,7 +104,7 @@ export function MarketingNavbar() {
           : "border-transparent bg-background",
       )}
     >
-      <div className="container flex h-14 items-center justify-between">
+      <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <Link
           href="/"
           className={cn(

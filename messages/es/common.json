@@ -37,7 +37,8 @@
     "goToData": "Ir a Datos",
     "goToForms": "Ir a Formularios",
     "goToSettings": "Ir a Configuración",
-    "goToExamples": "Ir a Ejemplos"
+    "goToExamples": "Ir a Ejemplos",
+    "landings": "Landings"
   },
   "search": {
     "placeholder": "Buscar...",

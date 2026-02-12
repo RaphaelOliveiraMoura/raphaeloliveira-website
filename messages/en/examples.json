@@ -17,7 +17,9 @@
     "settings": "Settings",
     "settingsDesc": "Theme, language, toasts, keyboard shortcuts, and preferences.",
     "animations": "Animations",
-    "animationsDesc": "Motion primitives, micro-interactions, and visual effects."
+    "animationsDesc": "Motion primitives, micro-interactions, and visual effects.",
+    "landingPages": "Landing Pages",
+    "landingPagesDesc": "Complete landing page variations showcasing different styles and components."
   },
   "components": {
     "title": "Components Gallery",
@@ -270,5 +272,224 @@
     "errorShake": "Error State",
     "scrollProgress": "Progress Bar",
     "backToTop": "Back to Top"
+  },
+  "landings": {
+    "index": {
+      "title": "Landing Page Variations",
+      "subtitle": "Complete landing page examples showcasing different styles and components.",
+      "saas": "SaaS",
+      "saasDesc": "Classic SaaS product landing page with animated hero, pricing, testimonials, FAQ and newsletter form.",
+      "startup": "Startup",
+      "startupDesc": "Modern startup landing page with alternating sections, animated metrics, and email capture.",
+      "portfolio": "Portfolio / Event",
+      "portfolioDesc": "Creative landing page with video, image gallery, countdown, timeline and contact form."
+    },
+    "saas": {
+      "hero": {
+        "badge": "Launch v2.0",
+        "titleBefore": "Simplify your workflow with ",
+        "titleHighlight": "intelligent automation",
+        "subtitle": "The complete platform for teams that want to deliver faster, with less effort and more quality."
+      },
+      "logos": {
+        "title": "Trusted by teams at leading companies"
+      },
+      "features": {
+        "title": "Everything your team needs",
+        "subtitle": "Powerful features for every stage of your workflow.",
+        "tab1": "Productivity",
+        "tab1Desc": "Automate repetitive tasks and focus on what matters.",
+        "tab1Feature1": "Workflow automation",
+        "tab1Feature2": "Smart templates",
+        "tab1Feature3": "Native integrations",
+        "tab2": "Collaboration",
+        "tab2Desc": "Work as a team in real time, without friction.",
+        "tab2Feature1": "Collaborative editing",
+        "tab2Feature2": "Contextual comments",
+        "tab2Feature3": "Smart notifications",
+        "tab3": "Security",
+        "tab3Desc": "Enterprise-grade protection for your data.",
+        "tab3Feature1": "End-to-end encryption",
+        "tab3Feature2": "SSO and SAML",
+        "tab3Feature3": "Complete audit logs"
+      },
+      "stats": {
+        "users": "Active users",
+        "uptime": "Uptime",
+        "countries": "Countries",
+        "satisfaction": "Satisfaction"
+      },
+      "testimonials": {
+        "title": "What our customers say",
+        "subtitle": "Thousands of teams have already transformed their workflow.",
+        "t1Quote": "The platform completely transformed how our team collaborates. We save hours every week.",
+        "t1Name": "Ana Silva",
+        "t1Role": "CTO @ TechStart",
+        "t2Quote": "The best productivity tool we've ever used. Support is exceptional.",
+        "t2Name": "Carlos Mendes",
+        "t2Role": "Lead Developer @ GlobalApp",
+        "t3Quote": "Seamless integrations with our existing stack. Setup in minutes, immediate results.",
+        "t3Name": "Mariana Costa",
+        "t3Role": "Product Manager @ PixelCraft"
+      },
+      "pricing": {
+        "title": "Simple, transparent pricing",
+        "subtitle": "No surprises. Cancel anytime.",
+        "free": "Free",
+        "freeDesc": "For personal projects",
+        "freePrice": "$0",
+        "freeCta": "Get started free",
+        "pro": "Pro",
+        "proDesc": "For growing teams",
+        "proPrice": "$29",
+        "proCta": "Start free trial",
+        "proBadge": "Most Popular",
+        "enterprise": "Enterprise",
+        "enterpriseDesc": "For large organizations",
+        "enterprisePrice": "$99",
+        "enterpriseCta": "Contact sales",
+        "period": "month",
+        "feat1": "Up to 3 projects",
+        "feat2": "1 GB storage",
+        "feat3": "Community support",
+        "feat4": "Custom domains",
+        "feat5": "Advanced analytics",
+        "feat6": "Unlimited projects",
+        "feat7": "50 GB storage",
+        "feat8": "Priority support",
+        "feat9": "Unlimited everything",
+        "feat10": "500 GB storage",
+        "feat11": "Dedicated support"
+      },
+      "faq": {
+        "title": "Frequently asked questions",
+        "subtitle": "Everything you need to know about the platform.",
+        "q1": "Can I try before subscribing?",
+        "a1": "Yes! We offer a 14-day free trial on the Pro plan, no credit card required.",
+        "q2": "What payment methods do you accept?",
+        "a2": "We accept credit cards and PayPal. Annual plans get 20% off.",
+        "q3": "Can I change plans later?",
+        "a3": "Yes, you can upgrade or downgrade at any time. Changes are prorated.",
+        "q4": "Do you offer support in English?",
+        "a4": "Yes, our support is available in English 24/7, with an average response time of 2 hours."
+      },
+      "cta": {
+        "title": "Ready to transform your workflow?",
+        "subtitle": "Join thousands of teams already using our platform.",
+        "placeholder": "you@email.com",
+        "button": "Get started free",
+        "success": "Signed up! Check your email."
+      }
+    },
+    "startup": {
+      "hero": {
+        "badge": "Open beta",
+        "title": "The future of project management",
+        "subtitle": "A new way to plan, execute, and deliver projects. Simple, fast, and visual.",
+        "cta": "Get started free",
+        "secondary": "Watch demo"
+      },
+      "logos": {
+        "title": "Backed by"
+      },
+      "features": {
+        "title": "Why choose us",
+        "subtitle": "Built for modern teams that demand speed and simplicity.",
+        "f1Title": "Visual dashboards",
+        "f1Desc": "Visualize your project progress with intuitive, customizable dashboards.",
+        "f2Title": "Real-time collaboration",
+        "f2Desc": "Edit documents, comment, and review changes simultaneously with your team.",
+        "f3Title": "Smart automations",
+        "f3Desc": "Automate repetitive tasks with customizable rules and native integrations.",
+        "f4Title": "Enterprise security",
+        "f4Desc": "Encryption, SSO, audit logs, and compliance from day one."
+      },
+      "stats": {
+        "projects": "Projects created",
+        "teams": "Active teams",
+        "tasks": "Tasks completed",
+        "hours": "Hours saved"
+      },
+      "testimonials": {
+        "title": "Loved by teams",
+        "subtitle": "See what our users are saying.",
+        "t1Quote": "Finally a tool that doesn't get in the way. Clean interface and powerful features.",
+        "t1Name": "Pedro Almeida",
+        "t1Role": "Tech Lead @ DevFlow",
+        "t2Quote": "We migrated from Jira and never looked back. The experience is unmatched.",
+        "t2Name": "Julia Santos",
+        "t2Role": "Product Owner @ NovaTech"
+      },
+      "cta": {
+        "title": "Start building today",
+        "subtitle": "Free for teams up to 5 people. No credit card required.",
+        "placeholder": "you@email.com",
+        "button": "Create free account",
+        "success": "Account created! Redirecting..."
+      }
+    },
+    "portfolio": {
+      "hero": {
+        "badge": "Conference 2026",
+        "title": "Design & Tech Summit",
+        "subtitle": "The largest design and technology event in Latin America. 3 days of talks, workshops, and networking."
+      },
+      "countdown": {
+        "title": "The event starts in",
+        "days": "Days",
+        "hours": "Hours",
+        "minutes": "Min",
+        "seconds": "Sec"
+      },
+      "gallery": {
+        "title": "Highlights from last edition",
+        "subtitle": "Relive the best moments from the previous event."
+      },
+      "process": {
+        "title": "How it works",
+        "subtitle": "Three simple steps to participate.",
+        "step1Title": "Register",
+        "step1Desc": "Fill out the form and secure your spot. Limited seats.",
+        "step2Title": "Attend",
+        "step2Desc": "Watch talks, join workshops, and network with peers.",
+        "step3Title": "Connect",
+        "step3Desc": "Stay in touch with the community after the event."
+      },
+      "team": {
+        "title": "Speakers",
+        "subtitle": "Experts who will share their knowledge.",
+        "s1Name": "Fernanda Lima",
+        "s1Role": "Design Lead @ Meta",
+        "s2Name": "Rafael Torres",
+        "s2Role": "Staff Engineer @ Google",
+        "s3Name": "Camila Rocha",
+        "s3Role": "VP of Product @ Stripe",
+        "s4Name": "Lucas Martins",
+        "s4Role": "Founding Designer @ Linear"
+      },
+      "faq": {
+        "title": "Frequently asked questions",
+        "subtitle": "Event information.",
+        "q1": "Where is the event?",
+        "a1": "The event will be held at the São Paulo Convention Center, with online streaming for those who cannot attend in person.",
+        "q2": "Is the event free?",
+        "a2": "Basic admission is free. Workshops and premium activities require a VIP ticket.",
+        "q3": "Is there a participation certificate?",
+        "a3": "Yes, all participants receive a digital certificate after the event.",
+        "q4": "Can I cancel my registration?",
+        "a4": "Yes, cancellations can be made up to 7 days before the event with a full refund."
+      },
+      "contact": {
+        "title": "Secure your spot",
+        "subtitle": "Fill out the form to register for the event.",
+        "name": "Full name",
+        "email": "Email",
+        "phone": "Phone",
+        "company": "Company",
+        "role": "Job title",
+        "button": "Register",
+        "success": "Registration successful! Check your email."
+      }
+    }
   }
 }
