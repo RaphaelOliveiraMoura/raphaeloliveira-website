@@ -15,7 +15,9 @@
     "forms": "Formularios",
     "formsDesc": "Validacion Zod, mascaras de input, carga de archivos y permisos.",
     "settings": "Configuracion",
-    "settingsDesc": "Tema, idioma, toasts, atajos de teclado y preferencias."
+    "settingsDesc": "Tema, idioma, toasts, atajos de teclado y preferencias.",
+    "animations": "Animaciones",
+    "animationsDesc": "Primitivos de motion, micro-interacciones y efectos visuales."
   },
   "components": {
     "title": "Galeria de Componentes",
@@ -57,7 +59,15 @@
     "kanbanDesc": "Tarjetas arrastrables entre columnas con feedback visual via overlay.",
     "tourTitle": "Tour / Onboarding",
     "tourDesc": "Coachmarks y tooltips guiados para descubrimiento de funcionalidades, via driver.js.",
-    "startTour": "Iniciar Tour"
+    "startTour": "Iniciar Tour",
+    "motion": "Motion y Animaciones",
+    "motionFadeIn": "FadeIn",
+    "motionStagger": "StaggerChildren",
+    "motionScale": "ScaleOnHover",
+    "motionCounter": "CountUp",
+    "motionScrollProgress": "ScrollProgress",
+    "motionScrollProgressDesc": "La barra de progreso en la parte superior de la pagina muestra el progreso de scroll. Vea el componente ScrollProgress.",
+    "motionSkeleton": "Skeleton Shimmer"
   },
   "hooks": {
     "title": "Playground de Hooks",
@@ -216,5 +226,49 @@
       "subtitle": "Clone el repositorio y empiece a construir.",
       "button": "Ver en GitHub"
     }
+  },
+  "animations": {
+    "title": "Animaciones y Micro-Interacciones",
+    "subtitle": "Primitivos reutilizables de motion para interfaces profesionales.",
+    "entrance": "Animaciones de Entrada",
+    "entranceDesc": "Componentes que se animan al aparecer en pantalla.",
+    "stagger": "Stagger (Cascada)",
+    "staggerDesc": "Elementos que entran en secuencia con retardo entre ellos.",
+    "scroll": "Basado en Scroll",
+    "scrollDesc": "Animaciones activadas cuando el elemento entra en el viewport.",
+    "numbers": "Numeros Animados",
+    "numbersDesc": "Conteo animado desde cero hasta el valor final.",
+    "text": "Efectos de Texto",
+    "textDesc": "Efecto de escritura letra por letra.",
+    "microInteractions": "Micro-Interacciones",
+    "microInteractionsDesc": "Retroalimentacion visual sutil en interacciones del usuario.",
+    "loading": "Estados de Carga",
+    "loadingDesc": "Indicadores visuales de carga con shimmer y transiciones.",
+    "states": "Estados de Feedback",
+    "statesDesc": "Animaciones de entrada para estados vacios y de error.",
+    "replay": "Repetir",
+    "triggerShake": "Disparar Shake",
+    "fadeInUp": "Fade In Up",
+    "fadeInDown": "Fade In Down",
+    "fadeInLeft": "Fade In Left",
+    "fadeInRight": "Fade In Right",
+    "slideIn": "Slide In",
+    "scaleOnHover": "Scale on Hover",
+    "hoverMe": "Pasa el raton",
+    "staggerCards": "Cards en Cascada",
+    "scrollReveal": "Revelacion en Scroll",
+    "scrollRevealDesc": "Desplacese hacia abajo para ver los elementos aparecer.",
+    "counterAnimation": "Animacion de Numeros",
+    "typewriterEffect": "Efecto Typewriter",
+    "typewriterText": "Bienvenido a Core Stack — tu plantilla base para Next.js.",
+    "buttonHover": "Hover y Active",
+    "buttonLoading": "Estados de Carga",
+    "cardLift": "Card Lift",
+    "cardLiftDesc": "Las cards se elevan ligeramente al pasar el raton.",
+    "skeletonShimmer": "Skeleton Shimmer",
+    "emptyBounce": "Estado Vacio",
+    "errorShake": "Estado de Error",
+    "scrollProgress": "Barra de Progreso",
+    "backToTop": "Volver Arriba"
   }
 }

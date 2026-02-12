@@ -6,35 +6,39 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { Link, useTranslations } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-breakpoint";
+import { useScrollPosition } from "@/hooks/use-scroll-position";
 
 export function MarketingNavbar() {
   const isMobile = useIsMobile();
   const t = useTranslations("common");
+  const { y: scrollY } = useScrollPosition();
+  const isScrolled = scrollY > 20;
 
   const navLinks = (
     <>
       <Link
         href="/features"
-        className="text-muted-foreground hover:text-foreground transition-colors"
+        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
       >
         {t("nav.features")}
       </Link>
       <Link
         href="/pricing"
-        className="text-muted-foreground hover:text-foreground transition-colors"
+        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
       >
         {t("nav.pricing")}
       </Link>
       <Link
         href="/docs"
-        className="text-muted-foreground hover:text-foreground transition-colors"
+        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
       >
         {t("nav.docs")}
       </Link>
       <Link
         href="/examples"
-        className="text-muted-foreground hover:text-foreground transition-colors"
+        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
       >
         {t("nav.examples")}
       </Link>
@@ -43,9 +47,22 @@ export function MarketingNavbar() {
 
   if (isMobile) {
     return (
-      <header className="sticky top-0 z-50 border-b bg-background">
+      <header
+        className={cn(
+          "sticky top-0 z-50 border-b transition-all duration-normal",
+          isScrolled
+            ? "border-border bg-background/80 shadow-sm backdrop-blur-lg"
+            : "border-transparent bg-background",
+        )}
+      >
         <div className="flex h-14 items-center justify-between px-4">
-          <Link href="/" className="text-lg font-semibold">
+          <Link
+            href="/"
+            className={cn(
+              "font-semibold transition-all duration-normal",
+              isScrolled ? "text-base" : "text-lg",
+            )}
+          >
             {t("logo")}
           </Link>
           <Sheet>
@@ -73,9 +90,22 @@ export function MarketingNavbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background">
+    <header
+      className={cn(
+        "sticky top-0 z-50 border-b transition-all duration-normal",
+        isScrolled
+          ? "border-border bg-background/80 shadow-sm backdrop-blur-lg"
+          : "border-transparent bg-background",
+      )}
+    >
       <div className="container flex h-14 items-center justify-between">
-        <Link href="/" className="text-lg font-semibold">
+        <Link
+          href="/"
+          className={cn(
+            "font-semibold transition-all duration-normal",
+            isScrolled ? "text-base" : "text-lg",
+          )}
+        >
           {t("logo")}
         </Link>
         <nav className="flex gap-6" aria-label={t("nav.primary")}>

@@ -15,7 +15,9 @@
     "forms": "Forms",
     "formsDesc": "Zod validation, input masks, file upload, and permissions.",
     "settings": "Settings",
-    "settingsDesc": "Theme, language, toasts, keyboard shortcuts, and preferences."
+    "settingsDesc": "Theme, language, toasts, keyboard shortcuts, and preferences.",
+    "animations": "Animations",
+    "animationsDesc": "Motion primitives, micro-interactions, and visual effects."
   },
   "components": {
     "title": "Components Gallery",
@@ -57,7 +59,15 @@
     "kanbanDesc": "Draggable cards across columns with visual overlay feedback.",
     "tourTitle": "Tour / Onboarding",
     "tourDesc": "Guided coachmarks and tooltips for feature discovery, powered by driver.js.",
-    "startTour": "Start Tour"
+    "startTour": "Start Tour",
+    "motion": "Motion & Animations",
+    "motionFadeIn": "FadeIn",
+    "motionStagger": "StaggerChildren",
+    "motionScale": "ScaleOnHover",
+    "motionCounter": "CountUp",
+    "motionScrollProgress": "ScrollProgress",
+    "motionScrollProgressDesc": "The progress bar at the top of the page shows scroll progress. See the ScrollProgress component.",
+    "motionSkeleton": "Skeleton Shimmer"
   },
   "hooks": {
     "title": "Hooks Playground",
@@ -216,5 +226,49 @@
       "subtitle": "Clone the repository and start building.",
       "button": "View on GitHub"
     }
+  },
+  "animations": {
+    "title": "Animations & Micro-Interactions",
+    "subtitle": "Reusable motion primitives for professional interfaces.",
+    "entrance": "Entrance Animations",
+    "entranceDesc": "Components that animate when they appear on screen.",
+    "stagger": "Stagger (Cascade)",
+    "staggerDesc": "Elements that enter in sequence with delay between them.",
+    "scroll": "Scroll-based",
+    "scrollDesc": "Animations triggered when the element enters the viewport.",
+    "numbers": "Animated Numbers",
+    "numbersDesc": "Animated count from zero to the final value.",
+    "text": "Text Effects",
+    "textDesc": "Typewriter effect, letter by letter.",
+    "microInteractions": "Micro-Interactions",
+    "microInteractionsDesc": "Subtle visual feedback on user interactions.",
+    "loading": "Loading States",
+    "loadingDesc": "Visual loading indicators with shimmer and transitions.",
+    "states": "Feedback States",
+    "statesDesc": "Entrance animations for empty and error states.",
+    "replay": "Replay",
+    "triggerShake": "Trigger Shake",
+    "fadeInUp": "Fade In Up",
+    "fadeInDown": "Fade In Down",
+    "fadeInLeft": "Fade In Left",
+    "fadeInRight": "Fade In Right",
+    "slideIn": "Slide In",
+    "scaleOnHover": "Scale on Hover",
+    "hoverMe": "Hover me",
+    "staggerCards": "Stagger Cards",
+    "scrollReveal": "Scroll Reveal",
+    "scrollRevealDesc": "Scroll down to see the elements appear.",
+    "counterAnimation": "Counter Animation",
+    "typewriterEffect": "Typewriter Effect",
+    "typewriterText": "Welcome to Core Stack — your base template for Next.js.",
+    "buttonHover": "Hover & Active",
+    "buttonLoading": "Loading States",
+    "cardLift": "Card Lift",
+    "cardLiftDesc": "Cards lift slightly on hover.",
+    "skeletonShimmer": "Skeleton Shimmer",
+    "emptyBounce": "Empty State",
+    "errorShake": "Error State",
+    "scrollProgress": "Progress Bar",
+    "backToTop": "Back to Top"
   }
 }

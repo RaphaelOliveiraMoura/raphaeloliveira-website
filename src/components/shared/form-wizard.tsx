@@ -11,6 +11,7 @@ import {
 } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence, motion } from "framer-motion";
 import type { $ZodType } from "zod/v4/core";
 
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,7 @@ export function FormWizard<TValues extends FieldValues>({
   backLabel = "Back",
 }: FormWizardProps<TValues>) {
   const [currentStep, setCurrentStep] = useState(0);
+  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
 
   const form = useForm<TValues>({
     resolver: zodResolver(schema) as Resolver<TValues>,
@@ -64,6 +66,7 @@ export function FormWizard<TValues extends FieldValues>({
 
   const goBack = () => {
     if (!isFirstStep) {
+      setDirection(-1);
       setCurrentStep((prev) => prev - 1);
     }
   };
@@ -77,6 +80,7 @@ export function FormWizard<TValues extends FieldValues>({
     if (isLastStep) {
       await form.handleSubmit(onSubmit)();
     } else {
+      setDirection(1);
       setCurrentStep((prev) => prev + 1);
     }
   };
@@ -116,7 +120,23 @@ export function FormWizard<TValues extends FieldValues>({
           }}
           className="space-y-4"
         >
-          {children(step, currentStep)}
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={currentStep}
+              custom={direction}
+              variants={{
+                enter: (d: number) => ({ opacity: 0, x: d * 50 }),
+                center: { opacity: 1, x: 0 },
+                exit: (d: number) => ({ opacity: 0, x: d * -50 }),
+              }}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+            >
+              {children(step, currentStep)}
+            </motion.div>
+          </AnimatePresence>
 
           <div className="flex justify-between pt-4">
             <Button

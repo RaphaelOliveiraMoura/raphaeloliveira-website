@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 import { Button } from "@/components/ui/button";
 
 interface EmptyStateProps {
@@ -14,19 +18,56 @@ export function EmptyState({
   action,
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
-      {icon && <div className="mb-4 text-muted-foreground">{icon}</div>}
-      <h3 className="text-lg font-semibold">{title}</h3>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+      className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center"
+    >
+      {icon && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 15,
+            delay: 0.1,
+          }}
+          className="mb-4 text-muted-foreground"
+        >
+          {icon}
+        </motion.div>
+      )}
+      <motion.h3
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.15 }}
+        className="text-lg font-semibold"
+      >
+        {title}
+      </motion.h3>
       {description && (
-        <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="mt-2 max-w-sm text-sm text-muted-foreground"
+        >
           {description}
-        </p>
+        </motion.p>
       )}
       {action && (
-        <Button className="mt-4" onClick={action.onClick}>
-          {action.label}
-        </Button>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.25 }}
+        >
+          <Button className="mt-4" onClick={action.onClick}>
+            {action.label}
+          </Button>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }

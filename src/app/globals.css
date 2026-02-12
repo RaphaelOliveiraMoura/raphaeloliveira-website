@@ -71,6 +71,29 @@
   --color-chart-1: var(--chart-1);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Animacao - Duracoes */
+  --duration-fast: var(--animate-duration-fast);
+  --duration-normal: var(--animate-duration-normal);
+  --duration-slow: var(--animate-duration-slow);
+
+  /* Animacao - Easings */
+  --ease-in: var(--animate-ease-in);
+  --ease-out: var(--animate-ease-out);
+  --ease-in-out: var(--animate-ease-in-out);
+
+  /* Animacao - Keyframes */
+  --animate-shimmer: shimmer 2s infinite linear;
+  --animate-shake: shake 0.4s ease-in-out;
+  --animate-wiggle: wiggle 0.5s ease-in-out;
+  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+  --animate-draw: draw 0.6s ease-out forwards;
+  --animate-fade-in-up: fade-in-up 0.4s ease-out forwards;
+  --animate-fade-in-down: fade-in-down 0.4s ease-out forwards;
+  --animate-slide-in-left: slide-in-left 0.3s ease-out forwards;
+  --animate-slide-in-right: slide-in-right 0.3s ease-out forwards;
+  --animate-scale-in: scale-in 0.2s ease-out forwards;
+  --animate-bounce-in: bounce-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 body {
@@ -147,6 +170,9 @@ body {
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   * {
     border-color: var(--color-border);
     outline-color: color-mix(in oklch, var(--color-ring) 50%, transparent);
@@ -154,5 +180,35 @@ body {
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  /* Focus ring com transicao suave */
+  :focus-visible {
+    transition:
+      box-shadow 0.15s ease-out,
+      outline 0.15s ease-out;
+  }
+
+  /* Imagens com fade-in ao carregar */
+  img {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+  img[loading="lazy"] {
+    opacity: 0;
+  }
+  img[loading="lazy"].loaded,
+  img[loading="lazy"][complete] {
+    opacity: 1;
+  }
+
+  /* Text wrap balance para titulos */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
   }
 }

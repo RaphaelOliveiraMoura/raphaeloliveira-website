@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { routing } from "@/i18n/routing";
+import { MotionProvider } from "@/providers/motion-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 
@@ -34,17 +35,19 @@ export default async function LocaleLayout({
   return (
     <ThemeProvider defaultTheme="system">
       <QueryProvider>
-        <TooltipProvider>
-          <NextIntlClientProvider messages={messages}>
-            <ErrorBoundary>
-              <SkipLink />
-              <main id="main-content" tabIndex={-1}>
-                {children}
-              </main>
-            </ErrorBoundary>
-            <Toaster />
-          </NextIntlClientProvider>
-        </TooltipProvider>
+        <MotionProvider>
+          <TooltipProvider>
+            <NextIntlClientProvider messages={messages}>
+              <ErrorBoundary>
+                <SkipLink />
+                <main id="main-content" tabIndex={-1}>
+                  {children}
+                </main>
+              </ErrorBoundary>
+              <Toaster />
+            </NextIntlClientProvider>
+          </TooltipProvider>
+        </MotionProvider>
       </QueryProvider>
     </ThemeProvider>
   );

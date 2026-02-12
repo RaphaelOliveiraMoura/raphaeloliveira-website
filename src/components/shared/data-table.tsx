@@ -233,8 +233,10 @@ export function DataTable<TData extends { id?: string }>({
                         {canSort && (
                           <ArrowUpDownIcon
                             className={cn(
-                              "size-4 opacity-50",
+                              "size-4 opacity-50 transition-all duration-fast",
                               header.column.getIsSorted() && "opacity-100",
+                              header.column.getIsSorted() === "desc" &&
+                                "rotate-180",
                             )}
                           />
                         )}
@@ -262,6 +264,7 @@ export function DataTable<TData extends { id?: string }>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="transition-colors duration-fast"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

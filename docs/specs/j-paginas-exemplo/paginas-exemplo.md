@@ -22,6 +22,7 @@ O Core Stack possui 78+ componentes, 28+ hooks e dezenas de utilitarios, mas sem
 - **RF06:** Galeria de componentes (kitchen sink) com todos os primitivos UI organizados por categoria
 - **RF07:** Playground de hooks com demos interativas ao vivo
 - **RF08:** Pagina indice com cards linkando para todas as paginas de exemplo
+- **RF09:** Pagina de animacoes & micro-interacoes com demos interativas dos primitivos de motion (FadeIn, StaggerChildren, AnimateOnScroll, CountUp, TypeWriter, etc.)
 
 ## Requisitos Nao-Funcionais
 
@@ -46,7 +47,8 @@ src/app/[locale]/
     ├── layout.tsx                    # Layout dos exemplos
     ├── page.tsx                      # Indice
     ├── components/page.tsx           # Galeria de componentes
-    └── hooks/page.tsx                # Playground de hooks
+    ├── hooks/page.tsx                # Playground de hooks
+    └── animations/page.tsx           # Animacoes & micro-interacoes
 
 src/lib/utils/mock-data.ts            # Dados mock reutilizaveis
 messages/{locale}/examples.json       # Traducoes (3 locales)
@@ -66,6 +68,7 @@ Nenhuma nova — utiliza apenas dependencias ja existentes no projeto.
 - [Exibicao & Gestao de Dados](../b-dados-formularios/exibicao-gestao-dados.md) - DataTable e export
 - [Hooks & Utilitarios](../h-plataforma/hooks-utilitarios.md) - hooks demonstrados
 - [Internacionalizacao](../e-infraestrutura/internacionalizacao.md) - namespace `examples`
+- [Animacoes & Micro-Interacoes](../a-fundacao-visual/animacoes-micro-interacoes.md) - primitivos de motion demonstrados
 
 ## Criterios de Aceite
 
@@ -80,3 +83,4 @@ Nenhuma nova — utiliza apenas dependencias ja existentes no projeto.
 - [x] Traducoes em pt-BR, en e es
 - [x] Navegacao atualizada (sidebar, navbar, command palette)
 - [x] Dados mock centralizados em arquivo reutilizavel
+- [x] Pagina de animacoes com demos interativas dos primitivos de motion

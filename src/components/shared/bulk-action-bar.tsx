@@ -2,6 +2,8 @@
 
 import type { ComponentProps } from "react";
 
+import { motion } from "framer-motion";
+
 import { Button } from "@/components/ui/button";
 
 import { useTranslations } from "@/lib/i18n";
@@ -33,7 +35,11 @@ export function BulkActionBar({
   if (selectedCount === 0) return null;
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
       className={cn(
         "flex items-center gap-3 rounded-lg border bg-muted/50 px-4 py-2",
         className,
@@ -64,6 +70,6 @@ export function BulkActionBar({
       >
         {t("bulkActions.clear")}
       </Button>
-    </div>
+    </motion.div>
   );
 }

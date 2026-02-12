@@ -1,4 +1,8 @@
-import { MarketingFooter, MarketingNavbar } from "@/components/layouts";
+import {
+  MarketingFooter,
+  MarketingNavbar,
+  PageTransition,
+} from "@/components/layouts";
 
 export default function MarketingLayout({
   children,
@@ -8,7 +12,9 @@ export default function MarketingLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <MarketingNavbar />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1">
+        <PageTransition>{children}</PageTransition>
+      </main>
       <MarketingFooter />
     </div>
   );

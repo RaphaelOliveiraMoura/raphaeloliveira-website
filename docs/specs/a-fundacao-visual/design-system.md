@@ -92,7 +92,8 @@ Projetos derivados do Core Stack precisam de uma base visual consistente e exten
   --radius-full: 9999px;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --animate-duration-fast: 150ms;
   --animate-duration-normal: 250ms;
   --animate-duration-slow: 400ms;
@@ -106,17 +107,17 @@ Projetos derivados do Core Stack precisam de uma base visual consistente e exten
 // src/components/layouts/page-transition.tsx
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion"
-import { usePathname } from "next/navigation"
+import { AnimatePresence, motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -20 },
-}
+};
 
 export function PageTransition({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <AnimatePresence mode="wait">
@@ -131,7 +132,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
         {children}
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }
 ```
 
@@ -166,7 +167,7 @@ const reduced = useReducedMotion();
   transition={{ duration: reduced ? 0 : 0.3 }}
 >
   {content}
-</motion.div>
+</motion.div>;
 ```
 
 ## Estrutura de Arquivos
@@ -201,6 +202,29 @@ src/
 - [Componentes & Storybook](./componentes-storybook.md) - componentes consomem tokens
 - [Acessibilidade](./acessibilidade.md) - reduced-motion, contraste
 - [Layouts & Responsividade](./layouts-responsividade.md) - containers e espacamento
+- [Animacoes & Micro-Interacoes](./animacoes-micro-interacoes.md) - primitivos Framer Motion, keyframes CSS, MotionProvider
+
+## Regras de Uso
+
+### Tokens de Animacao
+
+Tokens de duracao e easing estao definidos em `src/styles/animations.css` e mapeados no Tailwind `@theme inline` em `src/app/globals.css`:
+
+```html
+<!-- Duracoes -->
+<div class="duration-fast" />
+<!-- 150ms -->
+<div class="duration-normal" />
+<!-- 250ms -->
+<div class="duration-slow" />
+<!-- 400ms -->
+
+<!-- Easings -->
+<div class="ease-in-out" />
+<!-- cubic-bezier(0.4, 0, 0.2, 1) -->
+```
+
+Para primitivos de animacao Framer Motion, variantes e componentes reutilizaveis, ver [Animacoes & Micro-Interacoes](./animacoes-micro-interacoes.md).
 
 ## Notas de Implementacao
 

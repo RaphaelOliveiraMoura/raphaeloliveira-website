@@ -129,6 +129,13 @@ import {
 
 import { toast } from "@/lib/feedback";
 import { useTranslations } from "@/lib/i18n";
+import {
+  CountUp,
+  FadeIn,
+  ScaleOnHover,
+  StaggerChildren,
+  StaggerItem,
+} from "@/lib/motion";
 import { useNotifications as useNotificationsHook, useToggle } from "@/hooks";
 
 const NAV_SECTIONS = [
@@ -141,6 +148,7 @@ const NAV_SECTIONS = [
   "feedback",
   "content",
   "advanced",
+  "motion",
 ] as const;
 
 function SectionTitle({
@@ -973,6 +981,77 @@ This is a **bold** text and this is *italic*.
                 });
               }}
             />
+          </ComponentCard>
+        </section>
+
+        {/* ===== MOTION ===== */}
+        <section className="space-y-4">
+          <SectionTitle id="motion">{t("components.motion")}</SectionTitle>
+
+          <ComponentCard title={t("components.motionFadeIn")}>
+            <FadeIn duration={0.5}>
+              <div className="rounded-lg bg-primary/10 p-4 text-center text-sm font-medium">
+                FadeIn Component
+              </div>
+            </FadeIn>
+          </ComponentCard>
+
+          <ComponentCard title={t("components.motionStagger")}>
+            <StaggerChildren
+              staggerDelay={0.08}
+              className="grid grid-cols-4 gap-2"
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <StaggerItem key={i}>
+                  <div className="rounded-lg bg-primary/10 p-3 text-center text-sm font-bold">
+                    {i}
+                  </div>
+                </StaggerItem>
+              ))}
+            </StaggerChildren>
+          </ComponentCard>
+
+          <ComponentCard title={t("components.motionScale")}>
+            <div className="flex gap-3">
+              {["Card A", "Card B", "Card C"].map((label) => (
+                <ScaleOnHover key={label} scale={1.05}>
+                  <div className="cursor-pointer rounded-lg border bg-card p-4 text-center text-sm shadow-sm">
+                    {label}
+                  </div>
+                </ScaleOnHover>
+              ))}
+            </div>
+          </ComponentCard>
+
+          <ComponentCard title={t("components.motionCounter")}>
+            <div className="flex gap-8">
+              <div className="text-center">
+                <div className="text-3xl font-bold">
+                  <CountUp end={42} duration={1.5} />
+                </div>
+                <p className="text-xs text-muted-foreground">Items</p>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold">
+                  <CountUp end={1200} suffix="+" duration={2} />
+                </div>
+                <p className="text-xs text-muted-foreground">Users</p>
+              </div>
+            </div>
+          </ComponentCard>
+
+          <ComponentCard title={t("components.motionScrollProgress")}>
+            <p className="text-sm text-muted-foreground">
+              {t("components.motionScrollProgressDesc")}
+            </p>
+          </ComponentCard>
+
+          <ComponentCard title={t("components.motionSkeleton")}>
+            <div className="space-y-2">
+              <div className="animate-shimmer h-4 w-3/4 rounded bg-gradient-to-r from-accent via-accent/50 to-accent bg-[length:200%_100%]" />
+              <div className="animate-shimmer h-4 w-full rounded bg-gradient-to-r from-accent via-accent/50 to-accent bg-[length:200%_100%]" />
+              <div className="animate-shimmer h-4 w-1/2 rounded bg-gradient-to-r from-accent via-accent/50 to-accent bg-[length:200%_100%]" />
+            </div>
           </ComponentCard>
         </section>
       </div>

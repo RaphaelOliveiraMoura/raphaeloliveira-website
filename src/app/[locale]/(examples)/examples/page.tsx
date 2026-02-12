@@ -5,6 +5,7 @@ import {
   FileText,
   LayoutDashboard,
   Settings,
+  Sparkles,
 } from "lucide-react";
 
 import {
@@ -27,6 +28,11 @@ const EXAMPLES = [
   { key: "dataManagement" as const, icon: Database, href: "/dashboard/data" },
   { key: "forms" as const, icon: FileText, href: "/dashboard/forms" },
   { key: "settings" as const, icon: Settings, href: "/dashboard/settings" },
+  {
+    key: "animations" as const,
+    icon: Sparkles,
+    href: "/examples/animations",
+  },
 ];
 
 export default async function ExamplesIndexPage() {

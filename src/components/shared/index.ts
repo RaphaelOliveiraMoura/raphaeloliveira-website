@@ -1,3 +1,4 @@
+export { BackToTop } from "./back-to-top";
 export { BulkActionBar } from "./bulk-action-bar";
 export { ConfirmDialog } from "./confirm-dialog";
 export { CookieConsentBanner } from "./cookie-consent-banner";
@@ -24,6 +25,7 @@ export { MaskedInput } from "./masked-input";
 export { NotificationCenter } from "./notification-center";
 export { OfflineBanner } from "./offline-banner";
 export { ResponsiveImage } from "./responsive-image";
+export { ScrollProgress } from "./scroll-progress";
 export type { ShortcutItem } from "./shortcut-cheat-sheet";
 export { ShortcutCheatSheet } from "./shortcut-cheat-sheet";
 export { SkeletonCard, SkeletonTable, SkeletonText } from "./skeleton-presets";
