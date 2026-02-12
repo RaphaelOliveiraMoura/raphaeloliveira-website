@@ -84,3 +84,9 @@ Nenhuma nova — utiliza apenas dependencias ja existentes no projeto.
 - [x] Navegacao atualizada (sidebar, navbar, command palette)
 - [x] Dados mock centralizados em arquivo reutilizavel
 - [x] Pagina de animacoes com demos interativas dos primitivos de motion
+
+## Referencias Externas
+
+Catalogo de libs de componentes, blocos de marketing e inspiracao para landing pages: **[docs/UI-REFERENCES.md](../../UI-REFERENCES.md)**.
+
+Recursos uteis para novas paginas de exemplo: 21st.dev (galeria de componentes), SaaSFrame (exemplos reais de landing pages), Blocks.so e Shadcnblocks (blocos de marketing prontos). Ver catalogo completo.

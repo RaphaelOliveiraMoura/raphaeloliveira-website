@@ -2,7 +2,7 @@
 
 > **Status:** `concluido`
 > **Prioridade:** `alta`
-> **Ultima atualizacao:** 2026-02-11
+> **Ultima atualizacao:** 2026-02-12
 
 ## Resumo
 
@@ -25,6 +25,7 @@ Usuarios precisam de feedback imediato e contextual para entender o resultado de
 - **RF09:** Padroes de undo: toast "Item deletado. Desfazer" com callback de reversao
 - **RF10:** Feedback visual em botoes: loading spinner durante submit, checkmark apos sucesso
 - **RF11:** Sistema de onboarding/tour: coachmarks, tooltips guiados, experiencia first-time, descoberta de features, tracking de progresso do tour
+- **RF12:** Barra de progresso de navegacao (`NavigationProgress`) — feedback visual global durante transicoes entre paginas (ver detalhes na spec [Navegacao, URL & Busca](../d-navegacao/navegacao-url-busca.md))
 
 ## Requisitos Nao-Funcionais
 
@@ -68,7 +69,7 @@ export const toast = {
     sonnerToast.info(message, options),
   promise: <T,>(
     promise: Promise<T>,
-    messages: { loading: string; success: string; error: string }
+    messages: { loading: string; success: string; error: string },
   ) => sonnerToast.promise(promise, messages),
 };
 
@@ -113,13 +114,20 @@ interface EmptyStateProps {
   action?: { label: string; onClick: () => void };
 }
 
-export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+}: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
       {icon && <div className="mb-4 text-muted-foreground">{icon}</div>}
       <h3 className="text-lg font-semibold">{title}</h3>
       {description && (
-        <p className="mt-2 max-w-sm text-sm text-muted-foreground">{description}</p>
+        <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+          {description}
+        </p>
       )}
       {action && (
         <Button className="mt-4" onClick={action.onClick}>
@@ -251,7 +259,11 @@ export function ConfirmDialog({
           <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
-            className={variant === "destructive" ? "bg-destructive text-destructive-foreground" : ""}
+            className={
+              variant === "destructive"
+                ? "bg-destructive text-destructive-foreground"
+                : ""
+            }
           >
             {confirmLabel}
           </AlertDialogAction>
@@ -276,7 +288,13 @@ interface LoadingButtonProps extends React.ComponentProps<typeof Button> {
   success?: boolean;
 }
 
-export function LoadingButton({ loading, success, children, disabled, ...props }: LoadingButtonProps) {
+export function LoadingButton({
+  loading,
+  success,
+  children,
+  disabled,
+  ...props
+}: LoadingButtonProps) {
   return (
     <Button disabled={disabled || loading} {...props}>
       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -306,7 +324,9 @@ interface Notification {
 export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const unreadCount = notifications.filter((n) => !n.read).length;
-  const markAsRead = (id: string) => { /* ... */ };
+  const markAsRead = (id: string) => {
+    /* ... */
+  };
   return { notifications, unreadCount, markAsRead };
 }
 ```
@@ -346,6 +366,7 @@ src/
 │       ├── skeleton-presets.tsx
 │       ├── confirm-dialog.tsx
 │       ├── loading-button.tsx
+│       ├── navigation-progress.tsx  # Barra de progresso global (ver spec Navegacao)
 │       ├── notification-center.tsx
 │       ├── tour.tsx
 │       └── offline-banner.tsx
@@ -385,19 +406,28 @@ import { NotificationCenter } from "@/components/shared";
 import { useNotifications } from "@/hooks";
 
 // Componente: botao com badge + drawer lateral
-<NotificationCenter className="..." />
+<NotificationCenter className="..." />;
 
 // Hook: gerenciamento programatico
-const { notifications, unreadCount, addNotification, markAsRead, markAllAsRead, removeNotification, clearAll } = useNotifications();
+const {
+  notifications,
+  unreadCount,
+  addNotification,
+  markAsRead,
+  markAllAsRead,
+  removeNotification,
+  clearAll,
+} = useNotifications();
 
 addNotification({
-  category: "success",  // "info" | "success" | "warning" | "error"
+  category: "success", // "info" | "success" | "warning" | "error"
   title: "Item salvo",
   message: "Descricao opcional",
 });
 ```
 
 **Comportamento:**
+
 - Botao com icone de sino e badge de nao lidas (contador vermelho)
 - Drawer lateral (Sheet) com filtros por categoria via tabs
 - Persistencia em localStorage (`core-stack:notifications`)
@@ -412,20 +442,31 @@ import { Tour, resetTour, type TourConfig } from "@/components/shared";
 const tourConfig: TourConfig = {
   id: "dashboard-tour",
   steps: [
-    { target: "#step-1", title: "Welcome", content: "This is the first step.", placement: "bottom" },
-    { target: ".sidebar", title: "Navigation", content: "Use the sidebar to navigate.", placement: "right" },
+    {
+      target: "#step-1",
+      title: "Welcome",
+      content: "This is the first step.",
+      placement: "bottom",
+    },
+    {
+      target: ".sidebar",
+      title: "Navigation",
+      content: "Use the sidebar to navigate.",
+      placement: "right",
+    },
   ],
   onComplete: () => console.log("Tour finished"),
 };
 
 // Componente renderiza null (efeito apenas)
-<Tour config={tourConfig} autoStart showOnce />
+<Tour config={tourConfig} autoStart showOnce />;
 
 // Reset manual para permitir re-exibicao
 resetTour("dashboard-tour");
 ```
 
 **Comportamento:**
+
 - Wrapper React para `driver.js` com auto-start apos 500ms (aguarda DOM)
 - `showOnce={true}` (default) persiste conclusao em localStorage (`core-stack:tour:{id}:completed`)
 - `resetTour(id)` limpa a persistencia para re-exibir o tour
@@ -448,6 +489,7 @@ Ambos componentes sao demonstrados na galeria de componentes em `/examples/compo
 - [ ] RF09: Padrao undo via toast.action (Desfazer)
 - [ ] RF10: LoadingButton com loading e success states
 - [x] RF11: Tour/onboarding com coachmarks e progresso persistido
+- [x] RF12: NavigationProgress com barra de progresso global durante navegacao entre paginas
 - [ ] Testes unitarios para EmptyState, ErrorState, ConfirmDialog, LoadingButton e NotificationCenter
 - [ ] Storybook stories para: EmptyState (com/sem CTA), ErrorState (com/sem retry), SkeletonPresets (text, card, table), LoadingButton (idle, loading, success)
 

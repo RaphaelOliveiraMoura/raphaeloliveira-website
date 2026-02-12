@@ -291,6 +291,9 @@
       "utilities": "Utilities",
       "locales": "Languages"
     },
+    "logos": {
+      "title": "Built with the best technologies"
+    },
     "cta": {
       "title": "Ready to get started?",
       "subtitle": "Clone the repository and start building.",

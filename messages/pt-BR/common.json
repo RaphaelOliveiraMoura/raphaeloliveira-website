@@ -54,8 +54,24 @@
   "footer": {
     "product": "Produto",
     "resources": "Recursos",
+    "community": "Comunidade",
     "tagline": "Template base universal para projetos Next.js",
-    "copyright": "© {year} Core Stack. Todos os direitos reservados."
+    "copyright": "© {year} Core Stack. Todos os direitos reservados.",
+    "preferences": "Preferências",
+    "theme": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Escuro",
+    "themeSystem": "Sistema",
+    "toggleTheme": "Alternar tema",
+    "cookiePrefs": "Gerenciar cookies",
+    "blog": "Blog",
+    "changelog": "Changelog",
+    "support": "Suporte",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "status": "Status",
+    "online": "Online",
+    "builtWith": "Feito com Next.js, React e TypeScript"
   },
   "accessibility": {
     "skipToContent": "Pular para o conteúdo principal"

@@ -22,6 +22,7 @@ Animacoes e micro-interacoes bem executadas elevam a percepcao de qualidade de u
 - **RF06:** Page transitions ativadas nos layouts marketing e dashboard via `PageTransition`
 - **RF07:** Micro-interacoes em componentes base: button hover/active scale, card hover lift, tabs content fade-in, skeleton shimmer
 - **RF08:** Scroll-based reveals via `AnimateOnScroll`, scroll progress bar via `ScrollProgress`, back-to-top via `BackToTop`
+- **RF18:** Componentes visuais de marketing: `DotPattern` (padrao de pontos SVG), `AnimatedGradientText` (texto com gradiente animado), `BorderBeam` (feixe de luz na borda), `Marquee` (scroll horizontal infinito), `BentoGrid`/`BentoCard` (grid asimetrico para features)
 - **RF09:** Dark mode crossfade suave via CSS transitions no body
 - **RF10:** Entrada animada em estados: `EmptyState` com bounce-in escalonado, `ErrorState` com wiggle no icone
 - **RF11:** `LoadingButton` com transicoes animadas entre estados (texto → spinner → check)
@@ -138,6 +139,49 @@ import { ScrollProgress, BackToTop } from "@/components/shared";
 <BackToTop threshold={400} className="fixed bottom-6 right-6" />
 ```
 
+### Componentes Visuais de Marketing
+
+```tsx
+import {
+  AnimatedGradientText,
+  BentoCard,
+  BentoGrid,
+  BorderBeam,
+  DotPattern,
+  Marquee,
+} from "@/components/shared";
+
+// DotPattern - Padrao de pontos SVG como background
+<section className="relative">
+  <DotPattern className="-z-10 opacity-40 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black_40%,transparent_100%)]" />
+  <h1>Conteudo sobre o dot pattern</h1>
+</section>
+
+// AnimatedGradientText - Texto com gradiente deslizante
+<h1>
+  <AnimatedGradientText>Titulo Animado</AnimatedGradientText>
+</h1>
+
+// BorderBeam - Feixe de luz na borda (container precisa de relative + overflow-hidden)
+<div className="relative overflow-hidden rounded-xl border">
+  <BorderBeam size={200} duration={10} />
+  <img src="..." alt="..." />
+</div>
+
+// Marquee - Scroll horizontal infinito para logos/social proof
+<Marquee duration={30} className="[--gap:3rem]">
+  {logos.map(logo => <LogoItem key={logo.id} {...logo} />)}
+</Marquee>
+
+// BentoGrid + BentoCard - Layout asimetrico para features
+<BentoGrid>
+  <BentoCard colSpan={2}><Feature1 /></BentoCard>
+  <BentoCard><Feature2 /></BentoCard>
+  <BentoCard><Feature3 /></BentoCard>
+  <BentoCard colSpan={2}><Feature4 /></BentoCard>
+</BentoGrid>
+```
+
 ### Keyframes CSS (via Tailwind)
 
 ```html
@@ -157,6 +201,17 @@ import { ScrollProgress, BackToTop } from "@/components/shared";
 
 <!-- Fade in up -->
 <div class="animate-fade-in-up" />
+
+<!-- Gradient shift (texto animado) -->
+<span
+  class="animate-gradient-shift bg-gradient-to-r bg-clip-text text-transparent"
+/>
+
+<!-- Marquee (scroll infinito) -->
+<div class="animate-marquee" />
+
+<!-- Border beam (borda animada) -->
+<div class="animate-border-beam" />
 ```
 
 ### Tokens de Duracao/Easing
@@ -272,11 +327,16 @@ src/
 │   ├── layouts/
 │   │   └── page-transition.tsx  # Transicao entre paginas
 │   └── shared/
+│       ├── animated-gradient-text.tsx # Texto com gradiente animado
 │       ├── back-to-top.tsx      # Botao voltar ao topo
-│       ├── scroll-progress.tsx  # Barra de progresso de scroll
-│       ├── loading-button.tsx   # Botao com transicoes animadas
+│       ├── bento-grid.tsx       # BentoGrid + BentoCard layout asimetrico
+│       ├── border-beam.tsx      # Feixe de luz animado na borda
+│       ├── dot-pattern.tsx      # Padrao de pontos SVG background
 │       ├── empty-state.tsx      # Estado vazio com entrada animada
-│       └── error-state.tsx      # Estado de erro com shake/wiggle
+│       ├── error-state.tsx      # Estado de erro com shake/wiggle
+│       ├── loading-button.tsx   # Botao com transicoes animadas
+│       ├── marquee.tsx          # Scroll horizontal infinito
+│       └── scroll-progress.tsx  # Barra de progresso de scroll
 ├── styles/
 │   └── animations.css         # Keyframes e tokens CSS
 └── app/
@@ -319,6 +379,10 @@ src/
 - [x] Pagina de exemplo com demos interativas
 - [x] Barrel files atualizados
 - [x] Documentacao completa na spec
+- [x] Componentes visuais de marketing: DotPattern, AnimatedGradientText, BorderBeam, Marquee, BentoGrid/BentoCard
+- [x] Keyframes CSS para gradient-shift, marquee, border-beam
+- [x] Hero sections das landing pages atualizadas com novos efeitos (DotPattern, AnimatedGradientText, BorderBeam, Marquee)
+- [x] Micro-interacoes em CTAs (arrow hover translate) e cards (border glow, icon scale)
 
 ## Referencias
 
@@ -330,3 +394,9 @@ src/
 - [Framer Motion Issue #380 - Children stuck in exit variant](https://github.com/framer/motion/issues/380)
 - [Next.js View Transition API (experimental)](https://nextjs.org/docs/app/api-reference/config/next-config-js/viewTransition)
 - [View Transition API - MDN](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
+
+## Referencias Externas
+
+Catalogo de libs de componentes animados, backgrounds, text effects e tendencias UX/UI: **[docs/UI-REFERENCES.md](../../UI-REFERENCES.md)**.
+
+Libs com maior afinidade com esta spec: Magic UI, Aceternity UI, Motion Primitives, Cult UI (ver secao "Componentes Animados" no catalogo).

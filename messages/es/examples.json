@@ -291,6 +291,9 @@
       "utilities": "Utilidades",
       "locales": "Idiomas"
     },
+    "logos": {
+      "title": "Construido con las mejores tecnologias"
+    },
     "cta": {
       "title": "Listo para comenzar?",
       "subtitle": "Clone el repositorio y empiece a construir.",

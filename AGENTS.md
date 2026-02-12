@@ -34,11 +34,12 @@ Consulte a fonte adequada ao seu contexto de trabalho:
 
 ### Documentacao (`docs/`)
 
-| Assunto                                                      | Fonte                                        |
-| ------------------------------------------------------------ | -------------------------------------------- |
-| Decisoes arquiteturais — o "por que" de cada escolha         | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
-| Guia de contribuicao — fluxo, commits, scripts, git hooks    | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
-| Catalogo de specs — 25 features com referencia rapida da API | [docs/specs/README.md](docs/specs/README.md) |
+| Assunto                                                      | Fonte                                          |
+| ------------------------------------------------------------ | ---------------------------------------------- |
+| Decisoes arquiteturais — o "por que" de cada escolha         | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)   |
+| Guia de contribuicao — fluxo, commits, scripts, git hooks    | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)   |
+| Catalogo de specs — 25 features com referencia rapida da API | [docs/specs/README.md](docs/specs/README.md)   |
+| Referencias UI/UX externas — libs, ferramentas e tendencias  | [docs/UI-REFERENCES.md](docs/UI-REFERENCES.md) |
 
 ### Estrutura do Projeto
 

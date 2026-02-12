@@ -2,7 +2,7 @@
 
 > **Status:** `concluido`
 > **Prioridade:** `alta`
-> **Ultima atualizacao:** 2026-02-11
+> **Ultima atualizacao:** 2026-02-12
 
 ## Resumo
 
@@ -16,7 +16,7 @@ Projetos Next.js variam entre landing pages, dashboards e apps autenticadas. Cad
 
 - **RF01:** Layout Marketing com secoes hero, features e CTA reutilizaveis
 - **RF02:** Layout Dashboard com sidebar fixa/colapsavel e area de conteudo principal
-- **RF03:** Sidebar responsiva: colapsavel em desktop, drawer (Sheet) em mobile
+- **RF03:** Sidebar responsiva: colapsavel em desktop, drawer (Sheet) em mobile. Icones Lucide por item de navegacao, tooltips laterais no estado colapsado, posicionamento `sticky top-0 h-screen`
 - **RF04:** Layout Auth com card centralizado em tela cheia
 - **RF05:** Navbar responsiva com menu hamburguer em mobile
 - **RF06:** Hooks `useMediaQuery` e `useBreakpoint` para deteccao de viewport
@@ -62,32 +62,32 @@ export function useMediaQuery(query: string): boolean {
 type Breakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 
 export function useBreakpoint(): Breakpoint {
-  const is2xl = useMediaQuery("(min-width: 1536px)")
-  const isXl = useMediaQuery("(min-width: 1280px)")
-  const isLg = useMediaQuery("(min-width: 1024px)")
-  const isMd = useMediaQuery("(min-width: 768px)")
-  const isSm = useMediaQuery("(min-width: 640px)")
+  const is2xl = useMediaQuery("(min-width: 1536px)");
+  const isXl = useMediaQuery("(min-width: 1280px)");
+  const isLg = useMediaQuery("(min-width: 1024px)");
+  const isMd = useMediaQuery("(min-width: 768px)");
+  const isSm = useMediaQuery("(min-width: 640px)");
 
-  if (is2xl) return "2xl"
-  if (isXl) return "xl"
-  if (isLg) return "lg"
-  if (isMd) return "md"
-  if (isSm) return "sm"
-  return "xs" // viewport < 640px (mobile)
+  if (is2xl) return "2xl";
+  if (isXl) return "xl";
+  if (isLg) return "lg";
+  if (isMd) return "md";
+  if (isSm) return "sm";
+  return "xs"; // viewport < 640px (mobile)
 }
 
 export function useIsMobile(): boolean {
-  return !useMediaQuery("(min-width: 768px)")
+  return !useMediaQuery("(min-width: 768px)");
 }
 
 export function useIsTablet(): boolean {
-  const md = useMediaQuery("(min-width: 768px)")
-  const lg = useMediaQuery("(min-width: 1024px)")
-  return md && !lg
+  const md = useMediaQuery("(min-width: 768px)");
+  const lg = useMediaQuery("(min-width: 1024px)");
+  return md && !lg;
 }
 
 export function useIsDesktop(): boolean {
-  return useMediaQuery("(min-width: 1024px)")
+  return useMediaQuery("(min-width: 1024px)");
 }
 ```
 
@@ -121,65 +121,62 @@ export default function DashboardLayout({
 
 import { useIsMobile } from "@/hooks/use-breakpoint";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { PanelLeft, ChevronsLeft, ChevronsRight } from "lucide-react";
+import {
+  LayoutDashboard,
+  Database,
+  FileText,
+  Settings,
+  Blocks,
+  ChevronsRight,
+  PanelLeft,
+} from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
+// Cada item possui icone Lucide associado
+const NAV_ITEMS = [
+  { href: "/dashboard", key: "dashboard", icon: LayoutDashboard },
+  { href: "/dashboard/data", key: "data", icon: Database },
+  { href: "/dashboard/forms", key: "forms", icon: FileText },
+  { href: "/dashboard/settings", key: "settings", icon: Settings },
+  { href: "/examples", key: "examples", icon: Blocks },
+];
+
 export function DashboardSidebar() {
   const isMobile = useIsMobile();
-  const [open, setOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const sidebarContent = (
-    <aside
-      className={cn(
-        "flex h-full flex-col border-r bg-background transition-all",
-        isCollapsed ? "w-16" : "w-64"
-      )}
-    >
-      <div className="flex items-center justify-end p-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          aria-label={isCollapsed ? "Expandir sidebar" : "Colapsar sidebar"}
-        >
-          {isCollapsed ? <ChevronsRight /> : <ChevronsLeft />}
-        </Button>
-      </div>
-      {/* Nav items */}
-      <nav className="flex flex-1 flex-col gap-1 p-2">...</nav>
-    </aside>
-  );
+  // Cada link renderiza: Icon + label (expandido) ou Icon + Tooltip (colapsado)
+  // Active indicator com motion layoutId para animacao spring entre itens
+  // ...
 
-  if (isMobile) {
-    return (
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="lg:hidden">
-            <PanelLeft />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-64 p-0">
-          {sidebarContent}
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
+  // Desktop: wrapper com sticky top-0 h-screen para fixar ao scroll
   return (
     <div
       className={cn(
-        "hidden shrink-0 border-r lg:block transition-all",
-        isCollapsed ? "w-16" : "w-64"
+        "hidden shrink-0 lg:block sticky top-0 h-screen transition-all",
+        isCollapsed ? "w-16" : "w-64",
       )}
     >
-      {sidebarContent}
+      {/* aside com nav overflow-y-auto */}
     </div>
   );
 }
 ```
+
+**Comportamento da sidebar:**
+
+- **Expandida:** icone + label de texto para cada item
+- **Colapsada:** apenas icone centralizado, com `Tooltip` (side="right") exibindo o nome completo ao hover
+- **Sticky:** wrapper desktop usa `sticky top-0 h-screen` para permanecer fixa durante scroll da pagina, igual ao comportamento do header (`DashboardNavbar`)
+- **Scroll interno:** `<nav>` usa `overflow-y-auto` para scroll caso os itens excedam a viewport
+- **Active indicator:** `motion.div` com `layoutId` para animacao spring entre itens ativos
 
 ### Layout Auth
 
@@ -192,9 +189,7 @@ export default function AuthLayout({
 }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted p-4">
-      <div className="w-full max-w-md">
-        {children}
-      </div>
+      <div className="w-full max-w-md">{children}</div>
     </div>
   );
 }

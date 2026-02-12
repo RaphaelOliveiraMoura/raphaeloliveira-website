@@ -6,39 +6,44 @@ import {
   Code2,
   FileText,
   Globe,
+  Layers,
   Lock,
   Search,
+  Zap,
 } from "lucide-react";
 
-import { JsonLd } from "@/components/shared";
+import type { LogoItem } from "@/components/shared";
+import {
+  AnimatedGradientText,
+  BentoCard,
+  BentoGrid,
+  DotPattern,
+  JsonLd,
+  LogoCloud,
+} from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import { Link, useTranslations } from "@/lib/i18n";
-import {
-  AnimateOnScroll,
-  CountUp,
-  FadeIn,
-  fadeInUp,
-  StaggerChildren,
-  StaggerItem,
-} from "@/lib/motion";
+import { AnimateOnScroll, CountUp, FadeIn, fadeInUp } from "@/lib/motion";
 import { buildOrganizationJsonLd } from "@/lib/seo";
 
+const LOGOS: LogoItem[] = [
+  { id: "1", name: "Next.js", icon: <Blocks className="size-5" /> },
+  { id: "2", name: "React", icon: <Zap className="size-5" /> },
+  { id: "3", name: "TypeScript", icon: <Code2 className="size-5" /> },
+  { id: "4", name: "Tailwind CSS", icon: <Layers className="size-5" /> },
+  { id: "5", name: "Radix UI", icon: <Blocks className="size-5" /> },
+];
+
 const FEATURES = [
-  { key: "components" as const, icon: Blocks },
-  { key: "hooks" as const, icon: Code2 },
-  { key: "i18n" as const, icon: Globe },
-  { key: "auth" as const, icon: Lock },
-  { key: "forms" as const, icon: FileText },
-  { key: "seo" as const, icon: Search },
+  { key: "components" as const, icon: Blocks, colSpan: 2 as const },
+  { key: "hooks" as const, icon: Code2, colSpan: 1 as const },
+  { key: "i18n" as const, icon: Globe, colSpan: 1 as const },
+  { key: "auth" as const, icon: Lock, colSpan: 2 as const },
+  { key: "forms" as const, icon: FileText, colSpan: 2 as const },
+  { key: "seo" as const, icon: Search, colSpan: 1 as const },
 ];
 
 const STATS = [
@@ -62,7 +67,7 @@ export default function LandingPage() {
       <JsonLd data={jsonLd} />
 
       {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center gap-8 overflow-hidden px-4 py-24 text-center md:py-32">
+      <section className="relative flex flex-col items-center justify-center gap-8 overflow-hidden px-4 py-28 text-center md:py-36">
         {/* Background gradient animado */}
         <div
           className="pointer-events-none absolute inset-0 -z-10 opacity-30"
@@ -71,19 +76,24 @@ export default function LandingPage() {
               "radial-gradient(ellipse 80% 50% at 50% -20%, var(--color-primary, hsl(0 0% 9%)) 0%, transparent 70%)",
           }}
         />
+        {/* Dot pattern sutil para profundidade visual */}
+        <DotPattern className="-z-10 opacity-40 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black_40%,transparent_100%)]" />
 
         <FadeIn delay={0} duration={0.5}>
           <Badge
             variant="secondary"
-            className="animate-glow-pulse px-4 py-1.5 text-sm"
+            className="animate-glow-pulse gap-1.5 px-4 py-1.5 text-sm"
           >
+            <span className="size-2 animate-pulse rounded-full bg-green-500" />
             {t("landing.hero.badge")}
           </Badge>
         </FadeIn>
 
         <FadeIn delay={0.15} duration={0.6}>
           <h1 className="max-w-3xl text-balance text-4xl font-bold tracking-tight md:text-6xl">
-            {t("landing.hero.title")}
+            <AnimatedGradientText>
+              {t("landing.hero.title")}
+            </AnimatedGradientText>
           </h1>
         </FadeIn>
 
@@ -95,14 +105,14 @@ export default function LandingPage() {
 
         <FadeIn delay={0.45} duration={0.5}>
           <div className="flex flex-col gap-4 sm:flex-row">
-            <Button size="lg" asChild>
+            <Button size="lg" className="group" asChild>
               <a
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 {t("landing.hero.cta")}
-                <ArrowRight className="ml-2 size-4" />
+                <ArrowRight className="ml-2 size-4 transition-transform duration-normal group-hover:translate-x-1" />
               </a>
             </Button>
             <Button size="lg" variant="outline" asChild>
@@ -112,9 +122,17 @@ export default function LandingPage() {
         </FadeIn>
       </section>
 
-      <Separator />
+      {/* Logo Cloud */}
+      <section className="border-y bg-muted/20 px-4 py-12">
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-8 text-center text-sm font-medium text-muted-foreground">
+            {t("landing.logos.title")}
+          </p>
+          <LogoCloud logos={LOGOS} />
+        </div>
+      </section>
 
-      {/* Features */}
+      {/* Features - BentoGrid */}
       <section className="px-4 py-24 md:py-32">
         <div className="mx-auto max-w-6xl">
           <AnimateOnScroll variants={fadeInUp} threshold={0.1}>
@@ -128,41 +146,39 @@ export default function LandingPage() {
             </div>
           </AnimateOnScroll>
 
-          <StaggerChildren
-            staggerDelay={0.1}
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {FEATURES.map((feature) => (
-              <StaggerItem key={feature.key}>
-                <AnimateOnScroll
-                  variants={fadeInUp}
-                  threshold={0.1}
-                  duration={0.4}
+          <AnimateOnScroll variants={fadeInUp} threshold={0.1}>
+            <BentoGrid>
+              {FEATURES.map((feature) => (
+                <BentoCard
+                  key={feature.key}
+                  colSpan={feature.colSpan}
+                  className="hover:-translate-y-1 hover:border-primary/20"
                 >
-                  <Card className="group transition-all duration-normal hover:-translate-y-1 hover:shadow-lg">
-                    <CardHeader>
-                      <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10 transition-colors duration-normal group-hover:bg-primary/20">
-                        <feature.icon className="size-5 text-primary transition-transform duration-normal group-hover:scale-110" />
+                  <div className="flex h-full flex-col justify-between gap-4">
+                    <div>
+                      <div className="mb-3 flex size-10 items-center justify-center rounded-lg bg-primary/10 transition-all duration-normal group-hover:bg-primary/20 group-hover:scale-110">
+                        <feature.icon className="size-5 text-primary" />
                       </div>
-                      <CardTitle className="text-lg">
+                      <h3 className="text-lg font-semibold">
                         {t(`landing.features.${feature.key}`)}
-                      </CardTitle>
-                      <CardDescription>
+                      </h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {t(`landing.features.${feature.key}Desc`)}
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                </AnimateOnScroll>
-              </StaggerItem>
-            ))}
-          </StaggerChildren>
+                      </p>
+                    </div>
+                  </div>
+                </BentoCard>
+              ))}
+            </BentoGrid>
+          </AnimateOnScroll>
         </div>
       </section>
 
       <Separator />
 
       {/* Stats */}
-      <section className="px-4 py-24 md:py-32">
+      <section className="relative overflow-hidden px-4 py-24 md:py-32">
+        <DotPattern className="-z-10 opacity-30 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_50%,black_20%,transparent_100%)]" />
         <div className="mx-auto grid max-w-4xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {STATS.map((stat) => (
             <AnimateOnScroll
@@ -188,6 +204,13 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="relative overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 -z-10 opacity-10"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 40% at 50% 100%, var(--color-primary) 0%, transparent 70%)",
+          }}
+        />
         <AnimateOnScroll variants={fadeInUp} threshold={0.2} duration={0.6}>
           <div className="flex flex-col items-center gap-6 px-4 py-24 text-center md:py-32">
             <h2 className="text-balance text-3xl font-bold tracking-tight md:text-4xl">
@@ -196,14 +219,14 @@ export default function LandingPage() {
             <p className="max-w-xl text-lg text-muted-foreground">
               {t("landing.cta.subtitle")}
             </p>
-            <Button size="lg" className="animate-glow-pulse" asChild>
+            <Button size="lg" className="group animate-glow-pulse" asChild>
               <a
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 {t("landing.cta.button")}
-                <ArrowRight className="ml-2 size-4" />
+                <ArrowRight className="ml-2 size-4 transition-transform duration-normal group-hover:translate-x-1" />
               </a>
             </Button>
           </div>

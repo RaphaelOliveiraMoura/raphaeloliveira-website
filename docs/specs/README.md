@@ -25,7 +25,7 @@ Indice central de todas as funcionalidades do Core Stack, documentadas seguindo 
 
 **04 — Acessibilidade:** WCAG 2.1 AA: `SkipLink`, `LiveRegion`, focus trap em modais, ARIA patterns, `meetsContrastRatio` (`@/lib/utils/contrast`).
 
-**25 — Animacoes & Micro-Interacoes:** Primitivos Framer Motion (`@/lib/motion`): `FadeIn`, `SlideIn`, `StaggerChildren`, `AnimateOnScroll`, `CountUp`, `TypeWriter`. `ScrollProgress`, `BackToTop`, `MotionProvider`. Keyframes CSS: `shimmer`, `shake`, `wiggle`.
+**25 — Animacoes & Micro-Interacoes:** Primitivos Framer Motion (`@/lib/motion`): `FadeIn`, `SlideIn`, `StaggerChildren`, `AnimateOnScroll`, `CountUp`, `TypeWriter`. `ScrollProgress`, `BackToTop`, `MotionProvider`. Keyframes CSS: `shimmer`, `shake`, `wiggle`, `gradient-shift`, `marquee`, `border-beam`. Componentes visuais de marketing (`@/components/shared`): `DotPattern`, `AnimatedGradientText`, `BorderBeam`, `Marquee`, `BentoGrid`/`BentoCard`.
 
 ## B. Dados & Formularios
 
@@ -131,6 +131,12 @@ Indice central de todas as funcionalidades do Core Stack, documentadas seguindo 
 | 24  | [Paginas de Exemplo](j-paginas-exemplo/paginas-exemplo.md) | 🟢 concluido |
 
 **24 — Paginas de Exemplo:** Landing page, dashboard, dados (DataTable + filtros + export), formularios, configuracoes, galeria de componentes, playground de hooks, animacoes. Rotas: `/[locale]/(marketing)/`, `/[locale]/(dashboard)/dashboard/*`, `/[locale]/(examples)/examples/*`.
+
+---
+
+## Referencias Externas
+
+Catalogo de libs, ferramentas e tendencias UI/UX para inspiracao e referencia: **[docs/UI-REFERENCES.md](../UI-REFERENCES.md)**.
 
 ---
 

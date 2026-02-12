@@ -51,6 +51,7 @@ interface UseCookieConsentReturn {
   accept: () => void;
   decline: () => void;
   updateConsent: (consent: Partial<CookieConsent>) => void;
+  reset: () => void;
 }
 
 export function useCookieConsent(): UseCookieConsentReturn {
@@ -84,5 +85,14 @@ export function useCookieConsent(): UseCookieConsentReturn {
     [consent, saveConsent],
   );
 
-  return { consent, shouldShow, accept, decline, updateConsent };
+  const reset = useCallback(() => {
+    try {
+      localStorage.removeItem(CONSENT_KEY);
+      dispatchConsentEvent();
+    } catch {
+      // localStorage indisponivel
+    }
+  }, []);
+
+  return { consent, shouldShow, accept, decline, updateConsent, reset };
 }

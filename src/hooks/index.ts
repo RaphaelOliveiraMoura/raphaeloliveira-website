@@ -26,6 +26,7 @@ export { usePrevious } from "./use-previous";
 export { usePWAInstall } from "./use-pwa-install";
 export { useReducedMotion } from "./use-reduced-motion";
 export { useScrollPosition } from "./use-scroll-position";
+export { useScrollSpy } from "./use-scroll-spy";
 export { useSessionStorage } from "./use-session-storage";
 export { useShare } from "./use-share";
 export { useStorageSync } from "./use-storage-sync";

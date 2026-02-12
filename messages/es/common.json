@@ -54,8 +54,24 @@
   "footer": {
     "product": "Producto",
     "resources": "Recursos",
+    "community": "Comunidad",
     "tagline": "Plantilla base universal para proyectos Next.js",
-    "copyright": "© {year} Core Stack. Todos los derechos reservados."
+    "copyright": "© {year} Core Stack. Todos los derechos reservados.",
+    "preferences": "Preferencias",
+    "theme": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "themeSystem": "Sistema",
+    "toggleTheme": "Cambiar tema",
+    "cookiePrefs": "Gestionar cookies",
+    "blog": "Blog",
+    "changelog": "Changelog",
+    "support": "Soporte",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "status": "Estado",
+    "online": "Online",
+    "builtWith": "Hecho con Next.js, React y TypeScript"
   },
   "accessibility": {
     "skipToContent": "Saltar al contenido principal"

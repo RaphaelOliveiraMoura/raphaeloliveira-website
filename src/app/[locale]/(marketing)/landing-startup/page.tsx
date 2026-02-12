@@ -19,6 +19,7 @@ import type { LogoItem } from "@/components/shared";
 import type { TestimonialItem } from "@/components/shared";
 import {
   BackToTop,
+  BorderBeam,
   JsonLd,
   LogoCloud,
   Testimonials,
@@ -56,22 +57,22 @@ const FEATURES = [
   {
     key: "f1" as const,
     icon: BarChart3,
-    image: "https://placehold.co/600x400/1a1a2e/e0e0e0?text=Dashboards",
+    image: "https://placehold.co/600x400/f0f0f5/4a4a5a?text=Dashboards",
   },
   {
     key: "f2" as const,
     icon: MessageSquare,
-    image: "https://placehold.co/600x400/1a1a2e/e0e0e0?text=Collaboration",
+    image: "https://placehold.co/600x400/eef0f5/4a4a5a?text=Collaboration",
   },
   {
     key: "f3" as const,
     icon: Zap,
-    image: "https://placehold.co/600x400/1a1a2e/e0e0e0?text=Automations",
+    image: "https://placehold.co/600x400/f0eef5/4a4a5a?text=Automations",
   },
   {
     key: "f4" as const,
     icon: Lock,
-    image: "https://placehold.co/600x400/1a1a2e/e0e0e0?text=Security",
+    image: "https://placehold.co/600x400/eef2f0/4a4a5a?text=Security",
   },
 ];
 
@@ -123,11 +124,29 @@ export default function LandingStartupPage() {
 
       {/* Hero */}
       <section className="relative flex flex-col items-center justify-center gap-8 overflow-hidden px-4 py-24 text-center md:py-36">
+        {/* Camada de gradiente principal — brilho suave irradiando do centro-topo */}
         <div
-          className="pointer-events-none absolute inset-0 -z-10 opacity-20"
+          className="pointer-events-none absolute inset-0 -z-10"
           style={{
             background:
-              "conic-gradient(from 180deg at 50% 50%, var(--color-primary) 0deg, transparent 120deg, var(--color-primary) 240deg, transparent 360deg)",
+              "radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.65 0.05 260 / 0.15) 0%, transparent 70%)",
+          }}
+        />
+        {/* Segundo brilho sutil no canto inferior para dar profundidade */}
+        <div
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 40% at 70% 100%, oklch(0.7 0.04 300 / 0.08) 0%, transparent 60%)",
+          }}
+        />
+        {/* Grid sutil de fundo */}
+        <div
+          className="pointer-events-none absolute inset-0 -z-10 opacity-[0.03] dark:opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(var(--color-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--color-foreground) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
           }}
         />
 
@@ -152,9 +171,9 @@ export default function LandingStartupPage() {
 
         <FadeIn delay={0.45} duration={0.5}>
           <div className="flex flex-col gap-4 sm:flex-row">
-            <Button size="lg">
+            <Button size="lg" className="group">
               {t("landings.startup.hero.cta")}
-              <ArrowRight className="ml-2 size-4" />
+              <ArrowRight className="ml-2 size-4 transition-transform duration-normal group-hover:translate-x-1" />
             </Button>
             <Button size="lg" variant="outline">
               {t("landings.startup.hero.secondary")}
@@ -162,12 +181,13 @@ export default function LandingStartupPage() {
           </div>
         </FadeIn>
 
-        {/* Hero mockup image */}
+        {/* Hero mockup image com BorderBeam */}
         <FadeIn delay={0.6} duration={0.8}>
-          <div className="mt-8 w-full max-w-4xl overflow-hidden rounded-xl border bg-card shadow-2xl">
+          <div className="relative mt-8 w-full max-w-4xl overflow-hidden rounded-xl border border-border/60 bg-muted/30 shadow-2xl ring-1 ring-black/[0.03] dark:ring-white/[0.05]">
+            <BorderBeam size={250} duration={10} />
             {/* eslint-disable-next-line @next/next/no-img-element -- placeholder demo image */}
             <img
-              src="https://placehold.co/1200x600/1a1a2e/e0e0e0?text=App+Dashboard"
+              src="https://placehold.co/1200x600/f4f4f8/5a5a6a?text=App+Dashboard"
               alt="App Dashboard Preview"
               className="w-full"
             />
@@ -177,7 +197,7 @@ export default function LandingStartupPage() {
 
       {/* Logo Cloud */}
       <section className="border-y bg-muted/20 px-4 py-12">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-4xl">
           <p className="mb-8 text-center text-sm font-medium text-muted-foreground">
             {t("landings.startup.logos.title")}
           </p>
@@ -186,7 +206,15 @@ export default function LandingStartupPage() {
       </section>
 
       {/* Alternating Features */}
-      <section className="px-4 py-24 md:py-32">
+      <section className="relative px-4 py-24 md:py-32">
+        {/* Brilho de fundo sutil na secao de features */}
+        <div
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(ellipse 50% 60% at 50% 50%, oklch(0.65 0.04 260 / 0.06) 0%, transparent 70%)",
+          }}
+        />
         <div className="mx-auto max-w-6xl">
           <AnimateOnScroll variants={fadeInUp} threshold={0.1}>
             <div className="mb-20 text-center">
@@ -214,7 +242,7 @@ export default function LandingStartupPage() {
                     distance={40}
                     className="flex-1"
                   >
-                    <div className="overflow-hidden rounded-xl border bg-card shadow-lg">
+                    <div className="overflow-hidden rounded-xl border border-border/50 bg-muted/40 shadow-md ring-1 ring-black/[0.02] dark:bg-muted/20 dark:ring-white/[0.03]">
                       {/* eslint-disable-next-line @next/next/no-img-element -- placeholder demo image */}
                       <img
                         src={feature.image}
@@ -228,13 +256,13 @@ export default function LandingStartupPage() {
                     distance={40}
                     className="flex flex-1 flex-col justify-center"
                   >
-                    <div className="mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10">
+                    <div className="mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/5">
                       <feature.icon className="size-6 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold">
                       {t(`landings.startup.features.${feature.key}Title`)}
                     </h3>
-                    <p className="mt-3 text-lg text-muted-foreground">
+                    <p className="mt-3 text-lg leading-relaxed text-muted-foreground">
                       {t(`landings.startup.features.${feature.key}Desc`)}
                     </p>
                   </SlideIn>

@@ -169,6 +169,30 @@
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes border-beam {
+  0% {
+    --border-beam-angle: 0;
+  }
+  100% {
+    --border-beam-angle: 360;
+  }
+}
+
+@property --border-beam-angle {
+  syntax: "<number>";
+  initial-value: 0;
+  inherits: false;
+}
+
 /* ===========================
    Utilitarios de transicao global
    =========================== */

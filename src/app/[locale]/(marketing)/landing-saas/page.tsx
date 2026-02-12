@@ -24,6 +24,7 @@ import type { PricingTier } from "@/components/shared";
 import type { TestimonialItem } from "@/components/shared";
 import {
   BackToTop,
+  DotPattern,
   FAQ,
   JsonLd,
   LogoCloud,
@@ -211,7 +212,7 @@ export default function LandingSaaSPage() {
       <ScrollProgress />
 
       {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center gap-8 overflow-hidden px-4 py-24 text-center md:py-32">
+      <section className="relative flex flex-col items-center justify-center gap-8 overflow-hidden px-4 py-28 text-center md:py-36">
         <div
           className="pointer-events-none absolute inset-0 -z-10 opacity-30"
           style={{
@@ -219,6 +220,7 @@ export default function LandingSaaSPage() {
               "radial-gradient(ellipse 80% 50% at 50% -20%, var(--color-primary, hsl(0 0% 9%)) 0%, transparent 70%)",
           }}
         />
+        <DotPattern className="-z-10 opacity-30 [mask-image:radial-gradient(ellipse_50%_40%_at_50%_30%,black_30%,transparent_100%)]" />
 
         <FadeIn delay={0} duration={0.5}>
           <Badge
@@ -251,21 +253,21 @@ export default function LandingSaaSPage() {
 
         <FadeIn delay={0.45} duration={0.5}>
           <div className="flex flex-col gap-4 sm:flex-row">
-            <Button size="lg">
+            <Button size="lg" className="group">
               {t("landings.saas.pricing.freeCta")}
-              <ArrowRight className="ml-2 size-4" />
+              <ArrowRight className="ml-2 size-4 transition-transform duration-normal group-hover:translate-x-1" />
             </Button>
           </div>
         </FadeIn>
       </section>
 
-      {/* Logo Cloud */}
+      {/* Logo Cloud com Marquee */}
       <section className="border-y bg-muted/20 px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-5xl">
           <p className="mb-8 text-center text-sm font-medium text-muted-foreground">
             {t("landings.saas.logos.title")}
           </p>
-          <LogoCloud logos={LOGOS} />
+          <LogoCloud logos={LOGOS} marquee marqueeDuration={30} />
         </div>
       </section>
 
@@ -311,9 +313,9 @@ export default function LandingSaaSPage() {
                   >
                     {TAB_FEATURES[tab].map((feature) => (
                       <StaggerItem key={feature.key}>
-                        <Card className="group transition-all duration-normal hover:-translate-y-1 hover:shadow-lg">
+                        <Card className="group transition-all duration-normal hover:-translate-y-1 hover:shadow-lg hover:border-primary/20">
                           <CardHeader>
-                            <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10 transition-colors duration-normal group-hover:bg-primary/20">
+                            <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10 transition-all duration-normal group-hover:bg-primary/20 group-hover:scale-110">
                               <feature.icon className="size-5 text-primary" />
                             </div>
                             <CardTitle className="text-base">

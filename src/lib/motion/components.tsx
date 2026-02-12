@@ -364,10 +364,15 @@ export function TypeWriter({
 }: TypeWriterProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const { ref, isInView } = useInViewOnce({ threshold: 0.5 });
+  // Ref para evitar re-entradas: setIsTyping causa re-render, e se isTyping
+  // estivesse nos deps do useEffect, o cleanup cancelaria o setTimeout antes
+  // de typeChar executar (o timer de 600ms era limpo pelo cleanup).
+  const hasStartedRef = useRef(false);
+  const { ref, isInView } = useInViewOnce({ threshold: 0 });
 
   useEffect(() => {
-    if (!isInView || isTyping || displayedText.length > 0) return;
+    if (!isInView || hasStartedRef.current) return;
+    hasStartedRef.current = true;
 
     setIsTyping(true);
     let index = 0;
@@ -386,11 +391,14 @@ export function TypeWriter({
     timer = setTimeout(typeChar, delay);
 
     return () => clearTimeout(timer);
-  }, [isInView, isTyping, displayedText.length, text, speed, delay]);
+  }, [isInView, text, speed, delay]);
 
   return (
     <span ref={ref as React.RefObject<HTMLSpanElement>} className={className}>
-      {displayedText}
+      {/* Zero-width space garante dimensoes reais para o IntersectionObserver
+          quando displayedText esta vazio. Sem isso, o span tem area zero e
+          o observer nunca dispara. */}
+      {displayedText || "\u200B"}
       {cursor && isTyping && (
         <motion.span
           animate={{ opacity: [1, 0] }}

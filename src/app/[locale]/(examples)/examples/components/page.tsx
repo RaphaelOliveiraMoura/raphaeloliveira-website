@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { motion } from "framer-motion";
 import {
   AlertTriangle,
   Bell,
@@ -136,7 +137,12 @@ import {
   StaggerChildren,
   StaggerItem,
 } from "@/lib/motion";
-import { useNotifications as useNotificationsHook, useToggle } from "@/hooks";
+import { cn } from "@/lib/utils";
+import {
+  useNotifications as useNotificationsHook,
+  useScrollSpy,
+  useToggle,
+} from "@/hooks";
 
 const NAV_SECTIONS = [
   "basic",
@@ -255,20 +261,44 @@ export default function ComponentsGalleryPage() {
   const [sortableItems, setSortableItems] = useState(INITIAL_SORTABLE_ITEMS);
   const [kanbanColumns, setKanbanColumns] = useState(INITIAL_KANBAN_COLUMNS);
 
+  const activeSection = useScrollSpy(NAV_SECTIONS);
+
   return (
     <div className="flex gap-8">
       {/* Sidebar Nav */}
       <nav className="hidden w-48 shrink-0 lg:block">
-        <div className="sticky top-20 space-y-1">
-          {NAV_SECTIONS.map((section) => (
-            <a
-              key={section}
-              href={`#${section}`}
-              className="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {t(`components.${section}`)}
-            </a>
-          ))}
+        <div className="sticky top-20 space-y-0.5">
+          {NAV_SECTIONS.map((section) => {
+            const isActive = activeSection === section;
+
+            return (
+              <a
+                key={section}
+                href={`#${section}`}
+                className={cn(
+                  "relative block rounded-md px-3 py-1.5 text-sm transition-colors",
+                  isActive
+                    ? "font-medium text-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="scroll-spy-indicator"
+                    className="absolute inset-0 rounded-md bg-accent"
+                    transition={{
+                      type: "spring",
+                      stiffness: 380,
+                      damping: 30,
+                    }}
+                  />
+                )}
+                <span className="relative z-10">
+                  {t(`components.${section}`)}
+                </span>
+              </a>
+            );
+          })}
         </div>
       </nav>
 

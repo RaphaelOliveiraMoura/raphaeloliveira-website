@@ -2,7 +2,11 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 
-import { ErrorBoundary, SkipLink } from "@/components/shared";
+import {
+  ErrorBoundary,
+  NavigationProgress,
+  SkipLink,
+} from "@/components/shared";
 import { WebVitalsReporter } from "@/components/telemetry/web-vitals-reporter";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -40,6 +44,7 @@ export default async function LocaleLayout({
           <TooltipProvider>
             <NextIntlClientProvider messages={messages}>
               <ErrorBoundary>
+                <NavigationProgress />
                 <SkipLink />
                 <main id="main-content" tabIndex={-1}>
                   {children}

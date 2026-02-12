@@ -250,3 +250,9 @@ Para primitivos de animacao Framer Motion, variantes e componentes reutilizaveis
 - [prefers-reduced-motion - MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion)
 - [Geist Font - Vercel](https://vercel.com/font)
 - [shadcn/ui - Theming](https://ui.shadcn.com/docs/theming)
+
+## Referencias Externas
+
+Catalogo de libs UI/UX, design systems e tendencias: **[docs/UI-REFERENCES.md](../../UI-REFERENCES.md)**.
+
+Libs com maior afinidade com esta spec: shadcn/ui Blocks, Shadcnblocks, Blocks.so (ver secao "Blocos de Marketing" no catalogo).

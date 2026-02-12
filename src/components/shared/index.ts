@@ -1,10 +1,14 @@
+export { AnimatedGradientText } from "./animated-gradient-text";
 export { BackToTop } from "./back-to-top";
+export { BentoCard, BentoGrid } from "./bento-grid";
+export { BorderBeam } from "./border-beam";
 export { BulkActionBar } from "./bulk-action-bar";
 export { ConfirmDialog } from "./confirm-dialog";
 export { CookieConsentBanner } from "./cookie-consent-banner";
 export type { CountdownLabels } from "./countdown";
 export { Countdown } from "./countdown";
 export { DataTable } from "./data-table";
+export { DotPattern } from "./dot-pattern";
 export { EmptyState } from "./empty-state";
 export { ErrorBoundary } from "./error-boundary";
 export { ErrorState } from "./error-state";
@@ -26,7 +30,13 @@ export { LoadingButton } from "./loading-button";
 export { LoadingFallback } from "./loading-fallback";
 export type { LogoItem } from "./logo-cloud";
 export { LogoCloud } from "./logo-cloud";
+export { Marquee } from "./marquee";
 export { MaskedInput } from "./masked-input";
+export {
+  completeNavigation,
+  NavigationProgress,
+  startNavigation,
+} from "./navigation-progress";
 export { NotificationCenter } from "./notification-center";
 export { OfflineBanner } from "./offline-banner";
 export type { PricingFeature, PricingTier } from "./pricing-table";

@@ -3,6 +3,7 @@ import {
   MarketingNavbar,
   PageTransition,
 } from "@/components/layouts";
+import { CookieConsentBanner } from "@/components/shared";
 
 import { generateMetadata as generateSeoMetadata } from "@/lib/seo";
 
@@ -25,6 +26,7 @@ export default function MarketingLayout({
         <PageTransition>{children}</PageTransition>
       </main>
       <MarketingFooter />
+      <CookieConsentBanner />
     </div>
   );
 }

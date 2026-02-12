@@ -19,6 +19,7 @@ import type { FAQItem } from "@/components/shared";
 import {
   BackToTop,
   Countdown,
+  DotPattern,
   FAQ,
   JsonLd,
   Lightbox,
@@ -184,6 +185,7 @@ export default function LandingPortfolioPage() {
               "radial-gradient(ellipse 60% 60% at 30% 10%, oklch(0.6 0.2 280) 0%, transparent 50%), radial-gradient(ellipse 50% 50% at 70% 80%, oklch(0.5 0.15 200) 0%, transparent 50%)",
           }}
         />
+        <DotPattern className="-z-10 opacity-30 [mask-image:radial-gradient(ellipse_50%_40%_at_50%_50%,black_20%,transparent_100%)]" />
 
         <FadeIn delay={0} duration={0.5}>
           <Badge variant="secondary" className="gap-1.5 px-4 py-1.5 text-sm">

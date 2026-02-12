@@ -22,6 +22,7 @@ Antes de documentar qualquer informacao, consultar este mapa para saber onde ela
 | Fluxo de contribuicao (para humanos) | `docs/CONTRIBUTING.md` | doc |
 | Catalogo de specs (indice, status e referencia rapida da API) | `docs/specs/README.md` | doc |
 | Requisitos e design de features | `docs/specs/*.md` | doc |
+| Referencias UI/UX externas (libs, ferramentas, tendencias) | `docs/UI-REFERENCES.md` | doc |
 | Convencoes gerais (naming, imports, TS, logging, estrutura de pastas) | `.cursor/rules/general.mdc` | rule |
 | Internacionalizacao (i18n) | `.cursor/rules/i18n.mdc` | rule |
 | Fluxo spec-driven e checklist de conclusao | `.cursor/rules/specs.mdc` | rule |

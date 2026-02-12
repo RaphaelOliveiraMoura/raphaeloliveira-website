@@ -3,21 +3,34 @@
 import { useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronsRight, PanelLeft } from "lucide-react";
+import {
+  Blocks,
+  ChevronsRight,
+  Database,
+  FileText,
+  LayoutDashboard,
+  PanelLeft,
+  Settings,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { Link, usePathname, useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-breakpoint";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", key: "dashboard" as const },
-  { href: "/dashboard/data", key: "data" as const },
-  { href: "/dashboard/forms", key: "forms" as const },
-  { href: "/dashboard/settings", key: "settings" as const },
-  { href: "/examples", key: "examples" as const },
+  { href: "/dashboard", key: "dashboard" as const, icon: LayoutDashboard },
+  { href: "/dashboard/data", key: "data" as const, icon: Database },
+  { href: "/dashboard/forms", key: "forms" as const, icon: FileText },
+  { href: "/dashboard/settings", key: "settings" as const, icon: Settings },
+  { href: "/examples", key: "examples" as const, icon: Blocks },
 ];
 
 export function DashboardSidebar() {
@@ -52,7 +65,7 @@ export function DashboardSidebar() {
         </Button>
       </div>
       <nav
-        className="relative flex flex-1 flex-col gap-1 p-2"
+        className="relative flex flex-1 flex-col gap-1 overflow-y-auto p-2"
         aria-label={t("nav.primary")}
       >
         {NAV_ITEMS.map((item, index) => {
@@ -64,7 +77,10 @@ export function DashboardSidebar() {
                 pathname === "/es/dashboard"
               : pathname.includes(item.href);
 
-          return (
+          const Icon = item.icon;
+          const label = t(`nav.${item.key}`);
+
+          const linkContent = (
             <motion.div
               key={item.key}
               initial={false}
@@ -89,12 +105,14 @@ export function DashboardSidebar() {
               <Link
                 href={item.href}
                 className={cn(
-                  "relative z-10 flex items-center rounded-md px-3 py-2 text-sm transition-colors duration-fast",
+                  "relative z-10 flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors duration-fast",
+                  isCollapsed && "justify-center px-0",
                   isActive
                     ? "font-medium text-accent-foreground"
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
+                <Icon className="size-4 shrink-0" />
                 <AnimatePresence mode="wait">
                   {!isCollapsed && (
                     <motion.span
@@ -105,18 +123,26 @@ export function DashboardSidebar() {
                       transition={{ duration: 0.15 }}
                       className="overflow-hidden whitespace-nowrap"
                     >
-                      {t(`nav.${item.key}`)}
+                      {label}
                     </motion.span>
                   )}
                 </AnimatePresence>
-                {isCollapsed && (
-                  <span className="text-xs font-medium">
-                    {t(`nav.${item.key}`).charAt(0).toUpperCase()}
-                  </span>
-                )}
               </Link>
             </motion.div>
           );
+
+          if (isCollapsed) {
+            return (
+              <Tooltip key={item.key}>
+                <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
+                <TooltipContent side="right" sideOffset={8}>
+                  {label}
+                </TooltipContent>
+              </Tooltip>
+            );
+          }
+
+          return linkContent;
         })}
       </nav>
     </aside>
@@ -145,7 +171,8 @@ export function DashboardSidebar() {
   return (
     <div
       className={cn(
-        "hidden shrink-0 border-r transition-all duration-normal lg:block",
+        "hidden shrink-0 transition-all duration-normal lg:block",
+        "sticky top-0 h-screen",
         isCollapsed ? "w-16" : "w-64",
       )}
     >

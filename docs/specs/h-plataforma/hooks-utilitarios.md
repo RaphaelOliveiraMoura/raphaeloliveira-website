@@ -2,7 +2,7 @@
 
 > **Status:** `concluido`
 > **Prioridade:** `alta`
-> **Ultima atualizacao:** 2026-02-11
+> **Ultima atualizacao:** 2026-02-12
 
 ## Resumo
 
@@ -29,6 +29,7 @@ Projetos Next.js frequentemente precisam de hooks reutilizáveis para UX (deboun
 - **RF13:** `useWindowSize()` — `{ width, height }` das dimensões do viewport
 - **RF14:** `useScrollPosition()` — posição de scroll (x, y) ou elemento específico
 - **RF15:** `useEventListener(event, handler, element)` — event listener tipado com cleanup
+- **RF20:** `useScrollSpy(sectionIds, rootMargin?)` — observa multiplas secoes e retorna o ID da secao atualmente visivel no topo do viewport (scroll spy). Usa `useSyncExternalStore` + `IntersectionObserver`
 - **RF16:** Wrapper localStorage com suporte a expiração (TTL)
 - **RF17:** Utilitários de sessionStorage tipados
 - **RF18:** Cookie management: `get`, `set`, `delete`, `parse` com tipagem
@@ -47,10 +48,10 @@ Projetos Next.js frequentemente precisam de hooks reutilizáveis para UX (deboun
 
 ```tsx
 // useDebounce - atrasa atualização do valor
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from "@/hooks/use-debounce";
 
 function SearchInput() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
 
   useEffect(() => {
@@ -61,46 +62,48 @@ function SearchInput() {
 }
 
 // useThrottle - limita frequência de execução
-import { useThrottle } from '@/hooks/use-throttle';
+import { useThrottle } from "@/hooks/use-throttle";
 
 function ScrollLogger() {
   const handleScroll = useThrottle(() => {
-    console.log('scroll', window.scrollY);
+    console.log("scroll", window.scrollY);
   }, 100);
 
-  useEventListener('scroll', handleScroll, window);
+  useEventListener("scroll", handleScroll, window);
 }
 
 // useMediaQuery - breakpoint responsive
-import { useMediaQuery } from '@/hooks/use-media-query';
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 function ResponsiveNav() {
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery("(max-width: 768px)");
   return isMobile ? <MobileNav /> : <DesktopNav />;
 }
 
 // useLocalStorage - persistência tipada com SSR safety
-import { useLocalStorage } from '@/hooks/use-local-storage';
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 function ThemeToggle() {
-  const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'light');
-  return <button onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}>{theme}</button>;
-}
-
-// useClipboard
-import { useClipboard } from '@/hooks/use-clipboard';
-
-function CopyButton({ text }: { text: string }) {
-  const { copy, copied } = useClipboard();
+  const [theme, setTheme] = useLocalStorage<"light" | "dark">("theme", "light");
   return (
-    <button onClick={() => copy(text)}>
-      {copied ? 'Copiado!' : 'Copiar'}
+    <button onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}>
+      {theme}
     </button>
   );
 }
 
+// useClipboard
+import { useClipboard } from "@/hooks/use-clipboard";
+
+function CopyButton({ text }: { text: string }) {
+  const { copy, copied } = useClipboard();
+  return (
+    <button onClick={() => copy(text)}>{copied ? "Copiado!" : "Copiar"}</button>
+  );
+}
+
 // useOnClickOutside - fechar modal/dropdown
-import { useOnClickOutside } from '@/hooks/use-on-click-outside';
+import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 
 function Dropdown() {
   const ref = useRef<HTMLDivElement>(null);
@@ -110,35 +113,42 @@ function Dropdown() {
 }
 
 // useIntersectionObserver - lazy load, infinite scroll
-import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 
 function LazyImage({ src }: { src: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const { isIntersecting } = useIntersectionObserver(ref, { threshold: 0.1 });
-  return isIntersecting ? <img src={src} /> : <div ref={ref} style={{ minHeight: 200 }} />;
+  return isIntersecting ? (
+    <img src={src} />
+  ) : (
+    <div ref={ref} style={{ minHeight: 200 }} />
+  );
 }
 
 // useKeyboardShortcut
-import { useKeyboardShortcut } from '@/hooks/use-keyboard-shortcut';
+import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
 
 function CommandPalette() {
   const [open, setOpen] = useState(false);
-  useKeyboardShortcut('ctrl+k', (e) => { e.preventDefault(); setOpen(true); });
-  useKeyboardShortcut('escape', () => setOpen(false));
+  useKeyboardShortcut("ctrl+k", (e) => {
+    e.preventDefault();
+    setOpen(true);
+  });
+  useKeyboardShortcut("escape", () => setOpen(false));
 }
 
 // useToggle - retorna [value, toggle, setTrue, setFalse]
-import { useToggle } from '@/hooks/use-toggle';
+import { useToggle } from "@/hooks/use-toggle";
 
 function Accordion() {
-  const [isOpen, toggle, setTrue, setFalse] = useToggle(false)
+  const [isOpen, toggle, setTrue, setFalse] = useToggle(false);
   // Ou desestruture com nomes customizados:
-  const [expanded, toggleExpanded, expand, collapse] = useToggle(false)
-  return <div onClick={toggleExpanded}>{expanded ? '▼' : '▶'}</div>;
+  const [expanded, toggleExpanded, expand, collapse] = useToggle(false);
+  return <div onClick={toggleExpanded}>{expanded ? "▼" : "▶"}</div>;
 }
 
 // useOnlineStatus
-import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 
 function OfflineBanner() {
   const isOnline = useOnlineStatus();
@@ -146,43 +156,57 @@ function OfflineBanner() {
 }
 
 // useWindowSize
-import { useWindowSize } from '@/hooks/useWindowSize';
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 function BreakpointDebug() {
   const { width, height } = useWindowSize();
-  return <span>{width}×{height}</span>;
+  return (
+    <span>
+      {width}×{height}
+    </span>
+  );
 }
 
 // usePrevious
-import { usePrevious } from '@/hooks/usePrevious';
+import { usePrevious } from "@/hooks/usePrevious";
 
 function Counter() {
   const [count, setCount] = useState(0);
   const prevCount = usePrevious(count);
-  return <span>Atual: {count}, Anterior: {prevCount ?? '-'}</span>;
+  return (
+    <span>
+      Atual: {count}, Anterior: {prevCount ?? "-"}
+    </span>
+  );
 }
 
 // useScrollPosition
-import { useScrollPosition } from '@/hooks/useScrollPosition';
+import { useScrollPosition } from "@/hooks/useScrollPosition";
 
 function BackToTopButton() {
-  const { x, y } = useScrollPosition()
+  const { x, y } = useScrollPosition();
 
   // Exemplo: mostrar botao "voltar ao topo" quando scrollou mais de 500px
-  const showBackToTop = y > 500
+  const showBackToTop = y > 500;
 
-  return showBackToTop
-    ? <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑ Topo</button>
-    : null;
+  return showBackToTop ? (
+    <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+      ↑ Topo
+    </button>
+  ) : null;
 }
 
 // useEventListener
-import { useEventListener } from '@/hooks/useEventListener';
+import { useEventListener } from "@/hooks/useEventListener";
 
 function KeyHandler() {
-  useEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Enter') doSomething();
-  }, typeof window !== 'undefined' ? window : null);
+  useEventListener(
+    "keydown",
+    (e: KeyboardEvent) => {
+      if (e.key === "Enter") doSomething();
+    },
+    typeof window !== "undefined" ? window : null,
+  );
 }
 ```
 
@@ -192,23 +216,23 @@ function KeyHandler() {
 
 ```ts
 // localStorage com expiração
-import { storage } from '@/lib/storage';
+import { storage } from "@/lib/storage";
 
 const typedStorage = storage.local<{ theme: string }>();
 
-typedStorage.set('theme', 'dark');
-typedStorage.get('theme'); // 'dark'
+typedStorage.set("theme", "dark");
+typedStorage.get("theme"); // 'dark'
 
 // Com TTL (time-to-live em ms)
-typedStorage.setWithExpiry('session', data, 1000 * 60 * 30); // 30 min
-typedStorage.getWithExpiry('session'); // null se expirado
+typedStorage.setWithExpiry("session", data, 1000 * 60 * 30); // 30 min
+typedStorage.getWithExpiry("session"); // null se expirado
 
 // Cookies
-import { cookies } from '@/lib/storage/cookies';
+import { cookies } from "@/lib/storage/cookies";
 
-cookies.set('consent', 'accepted', { maxAge: 365 * 24 * 60 * 60, path: '/' });
-cookies.get('consent'); // 'accepted' | undefined
-cookies.delete('consent');
+cookies.set("consent", "accepted", { maxAge: 365 * 24 * 60 * 60, path: "/" });
+cookies.get("consent"); // 'accepted' | undefined
+cookies.delete("consent");
 cookies.parse(document.cookie); // Record<string, string>
 ```
 
@@ -218,7 +242,7 @@ Cookie consent banner em conformidade com LGPD (Lei Geral de Protecao de Dados).
 
 ```tsx
 // src/components/shared/CookieConsentBanner.tsx
-import { useCookieConsent } from '@/hooks/useCookieConsent';
+import { useCookieConsent } from "@/hooks/useCookieConsent";
 
 export function CookieConsentBanner() {
   const { consent, accept, decline, shouldShow } = useCookieConsent();
@@ -303,6 +327,7 @@ src/
   - `useKeyboardShortcut` → usado em [Interacoes Avancadas](../f-padroes-ux/interacoes-avancadas.md)
   - `useLocalStorage` → usado em [Navegacao, URL & Busca](../d-navegacao/navegacao-url-busca.md) para buscas recentes
   - `useOnlineStatus` → usado em [Feedback & Orientacao](../f-padroes-ux/feedback-orientacao.md) para offline detection
+  - `useScrollSpy` → usado em [Navegacao, URL & Busca](../d-navegacao/navegacao-url-busca.md) para indicador de secao ativa em navegacao lateral
 
 ## Referencias
 
