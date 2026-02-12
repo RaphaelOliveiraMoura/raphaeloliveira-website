@@ -18,46 +18,19 @@ Como contribuir para o Core Stack seguindo o fluxo spec-driven.
 
 ## 1. Criando uma Nova Spec
 
-Antes de implementar qualquer funcionalidade:
-
-1. Copie o template: `docs/specs/_TEMPLATE.md`
-2. Crie o arquivo na pasta apropriada em `docs/specs/`
-3. Preencha todos os campos obrigatorios:
-   - Status: `rascunho`
-   - Resumo e motivacao
-   - Requisitos funcionais e nao-funcionais
-   - Design da API com exemplos de codigo
-   - Dependencias
-   - Criterios de aceite
-4. Adicione a entrada no indice `docs/specs/README.md`
+Antes de implementar qualquer funcionalidade, crie uma spec usando o [template padrao](specs/_TEMPLATE.md) e adicione-a ao [indice](specs/README.md). Fluxo completo e checklist: `.cursor/rules/specs.mdc` (fonte canonica).
 
 ## 2. Implementando uma Feature
 
-### Pre-requisitos
-
 1. Leia a spec completa em `docs/specs/`
 2. Atualize o status da spec para `em-desenvolvimento`
-3. Crie uma branch a partir de `main`:
+3. Crie uma branch: `git checkout -b feat/nome-da-feature`
 
-```bash
-git checkout -b feat/nome-da-feature
-```
-
-### Estrutura de Codigo
-
-Siga a estrutura de pastas definida em [ARCHITECTURE.md](ARCHITECTURE.md):
-
-- **Componentes UI primitivos** → `src/components/ui/` (via shadcn/ui)
-- **Componentes compostos** → `src/components/shared/`
-- **Layouts** → `src/components/layouts/`
-- **Logica de negocio** → `src/lib/<dominio>/`
-- **Hooks** → `src/hooks/`
-- **Providers** → `src/providers/`
-- **Tipos globais** → `src/types/`
+> Estrutura de pastas: `.cursor/rules/general.mdc`. Decisoes arquiteturais: [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ### Checklist de Implementacao
 
-- [ ] Codigo segue as convencoes de nomenclatura (ver [ARCHITECTURE.md](ARCHITECTURE.md))
+- [ ] Codigo segue as convencoes de nomenclatura (ver `.cursor/rules/general.mdc`)
 - [ ] TypeScript strict (sem `any`, tipos completos)
 - [ ] Componentes acessiveis (ARIA, keyboard nav)
 - [ ] Testes escritos (unit e/ou component)
@@ -67,42 +40,19 @@ Siga a estrutura de pastas definida em [ARCHITECTURE.md](ARCHITECTURE.md):
 
 ## 3. Adicionando Componentes shadcn/ui
 
-```bash
-# Adicionar um componente
-npx shadcn@latest add button
+> Regras completas de componentes (estrutura, shadcn, a11y, composicao): `.cursor/rules/components.mdc`.
 
-# Adicionar multiplos
-npx shadcn@latest add button input dialog toast
+```bash
+npx shadcn@latest add <component>
 ```
 
 Os componentes sao instalados em `src/components/ui/`. Customize conforme necessario - sao seus, nao sao dependencias externas.
 
 ## 4. Criando Custom Hooks
 
-Hooks ficam em `src/hooks/` e seguem o padrao:
+> Catalogo completo de hooks, quando usar cada um, e regras de criacao: `.cursor/rules/hooks.mdc`.
 
-```tsx
-// src/hooks/use-debounce.ts
-import { useState, useEffect } from "react";
-
-export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(timer);
-  }, [value, delay]);
-
-  return debouncedValue;
-}
-```
-
-Regras:
-
-- Prefixo `use` obrigatorio
-- Um hook por arquivo
-- Exportar via barrel file `src/hooks/index.ts`
-- Tipos genericos quando aplicavel
+Resumo: criar em `src/hooks/use-nome.ts`, export nomeado, adicionar no barrel `src/hooks/index.ts`.
 
 ## 5. Conventional Commits
 
@@ -220,7 +170,7 @@ npm run typecheck      # TypeScript type-check completo
 Executado antes de cada push. Roda a suite completa de verificacoes:
 
 ```bash
-npm run lint:staged    # lint-staged
+npm run lint           # ESLint (todos os arquivos)
 npm run typecheck      # TypeScript type-check
 npm run test           # Vitest (todos os testes)
 npm run build          # Build de producao (garante que compila)

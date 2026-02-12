@@ -1,7 +1,7 @@
 ---
 description: Regras de internacionalizacao - imports centralizados e zero textos hardcoded
-globs:
-alwaysApply: true
+globs: src/**/*.tsx, src/lib/i18n/**, src/i18n/**, messages/**, src/types/i18n.ts
+alwaysApply: false
 ---
 
 # Internacionalizacao (i18n) - Regras

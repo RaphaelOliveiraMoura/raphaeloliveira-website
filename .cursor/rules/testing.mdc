@@ -11,6 +11,8 @@ globs:
 
 ## Ferramentas
 
+> Decisao arquitetural e niveis de teste: [ARCHITECTURE.md](../../docs/ARCHITECTURE.md) (secao "Testes").
+
 - **Testes unitarios/integracao**: Vitest + Testing Library
 - **Testes E2E**: Playwright
 - **Mocks HTTP**: MSW (Mock Service Worker)
@@ -94,11 +96,7 @@ export const handlers = [
 
 ## Scripts
 
-- `npm test` - Vitest (execucao unica)
-- `npm run test:debug` - Vitest em modo watch (desenvolvimento)
-- `npm run test:coverage` - Com cobertura (v8)
-- `npm run test:e2e` - Playwright
-- `npm run test:e2e:ui` - Playwright com UI
+Todos os scripts de teste e qualidade estao documentados em [CONTRIBUTING.md](../../docs/CONTRIBUTING.md) (secao "Scripts Disponiveis").
 
 ## Boas Praticas
 

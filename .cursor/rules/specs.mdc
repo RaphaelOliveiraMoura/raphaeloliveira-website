@@ -91,10 +91,7 @@ Para cada novo exemplo:
 
 ### Barrel files (OBRIGATORIO)
 
-Ao criar novo componente ou hook, **sempre** adicionar o export no barrel file correspondente:
-- Componentes shared: `src/components/shared/index.ts`
-- Hooks: `src/hooks/index.ts`
-- Libs: `src/lib/{modulo}/index.ts`
+Ao criar novo componente ou hook, atualizar o barrel file correspondente (`src/components/shared/index.ts`, `src/hooks/index.ts`, `src/lib/{modulo}/index.ts`). Ver `general.mdc` para padroes de export.
 
 ## Criando uma Nova Spec
 

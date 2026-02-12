@@ -9,78 +9,128 @@ Indice central de todas as funcionalidades do Core Stack, documentadas seguindo 
 
 ## A. Fundacao Visual
 
-| #   | Spec                                                                            | Descricao                                                                                 | Status       |
-| --- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------ |
-| 01  | [Design System](a-fundacao-visual/design-system.md)                             | Tokens de cores, tipografia, espacamento, tema dark/light, animacoes e motion             | 🟢 concluido |
-| 02  | [Componentes & Storybook](a-fundacao-visual/componentes-storybook.md)           | Catalogo de ~30 componentes shadcn/ui + setup e organizacao do Storybook                  | 🟢 concluido |
-| 03  | [Layouts & Responsividade](a-fundacao-visual/layouts-responsividade.md)         | Patterns de layout (marketing, dashboard, auth), sidebar, navbar, breakpoints             | 🟢 concluido |
-| 04  | [Acessibilidade](a-fundacao-visual/acessibilidade.md)                           | ARIA, focus management, keyboard nav, reduced-motion, WCAG 2.1 AA                         | 🟢 concluido |
-| 25  | [Animacoes & Micro-Interacoes](a-fundacao-visual/animacoes-micro-interacoes.md) | Primitivos Framer Motion, keyframes CSS, MotionProvider, scroll reveals, micro-interacoes | 🟢 concluido |
+| #   | Spec                                                                            | Status       |
+| --- | ------------------------------------------------------------------------------- | ------------ |
+| 01  | [Design System](a-fundacao-visual/design-system.md)                             | 🟢 concluido |
+| 02  | [Componentes & Storybook](a-fundacao-visual/componentes-storybook.md)           | 🟢 concluido |
+| 03  | [Layouts & Responsividade](a-fundacao-visual/layouts-responsividade.md)         | 🟢 concluido |
+| 04  | [Acessibilidade](a-fundacao-visual/acessibilidade.md)                           | 🟢 concluido |
+| 25  | [Animacoes & Micro-Interacoes](a-fundacao-visual/animacoes-micro-interacoes.md) | 🟢 concluido |
+
+**01 — Design System:** CSS variables + Tailwind v4 `@theme` (cores, tipografia Geist, espacamento, radius, sombras), tema dark/light via `ThemeProvider`, tokens de animacao (`duration-fast`, `ease-in-out`), `PageTransition`, `useReducedMotion`.
+
+**02 — Componentes & Storybook:** ~30 componentes shadcn/ui (`@/components/ui/*`) organizados por categoria (Basic, Form, Feedback, Overlay, Navigation, Data, Layout). Storybook 10 com stories em `stories/`.
+
+**03 — Layouts & Responsividade:** Layouts Marketing, Dashboard e Auth. Sidebar colapsavel/drawer mobile (`@/components/layouts/dashboard-sidebar`), navbar, footer. Hooks: `useMediaQuery`, `useBreakpoint`, `useIsMobile`, `useIsDesktop`.
+
+**04 — Acessibilidade:** WCAG 2.1 AA: `SkipLink`, `LiveRegion`, focus trap em modais, ARIA patterns, `meetsContrastRatio` (`@/lib/utils/contrast`).
+
+**25 — Animacoes & Micro-Interacoes:** Primitivos Framer Motion (`@/lib/motion`): `FadeIn`, `SlideIn`, `StaggerChildren`, `AnimateOnScroll`, `CountUp`, `TypeWriter`. `ScrollProgress`, `BackToTop`, `MotionProvider`. Keyframes CSS: `shimmer`, `shake`, `wiggle`.
 
 ## B. Dados & Formularios
 
-| #   | Spec                                                                       | Descricao                                                                   | Status       |
-| --- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------ |
-| 05  | [Formularios](b-dados-formularios/formularios.md)                          | react-hook-form + Zod, mascaras de input, multi-step wizards, form patterns | 🟢 concluido |
-| 06  | [Formatadores & Date/Time](b-dados-formularios/formatadores-datetime.md)   | Moeda, numeros, documentos BR, strings, datas, timezones, tempo relativo    | 🟢 concluido |
-| 07  | [Exibicao & Gestao de Dados](b-dados-formularios/exibicao-gestao-dados.md) | DataTable avancada, listas/grids, export CSV/Excel/PDF, CRUD patterns       | 🟢 concluido |
+| #   | Spec                                                                       | Status       |
+| --- | -------------------------------------------------------------------------- | ------------ |
+| 05  | [Formularios](b-dados-formularios/formularios.md)                          | 🟢 concluido |
+| 06  | [Formatadores & Date/Time](b-dados-formularios/formatadores-datetime.md)   | 🟢 concluido |
+| 07  | [Exibicao & Gestao de Dados](b-dados-formularios/exibicao-gestao-dados.md) | 🟢 concluido |
+
+**05 — Formularios:** react-hook-form + Zod. `Form`, `FormWizard`, `MaskedInput` (`@/components/shared`). Schemas compartilhados (`@/lib/validation/schemas/shared`). Mascaras: CPF, CNPJ, CEP, telefone, moeda (`@/lib/masks`).
+
+**06 — Formatadores & Date/Time:** `@/lib/formatters`: `formatCurrency`, `abbreviateNumber`, `formatCpf`, `formatCnpj`, `formatCep`, `truncate`, `capitalize`, `slugify`, `pluralize`. `@/lib/datetime`: `formatDate`, `formatRelativeTime`, `formatDateRange`, `formatInUserTimezone`.
+
+**07 — Exibicao & Gestao de Dados:** `DataTable`, `VirtualizedDataTable`, `TableFilters`, `BulkActionBar`, `EditableCell`, `InfiniteList`, `EmptyState`, `GridListViewToggle` (`@/components/shared`). Export CSV/Excel/JSON/PDF (`@/lib/data/export`). Padroes CRUD.
 
 ## C. API & Servidor
 
-| #   | Spec                                                        | Descricao                                                        | Status       |
-| --- | ----------------------------------------------------------- | ---------------------------------------------------------------- | ------------ |
-| 08  | [Cliente API & Erros](c-api-servidor/cliente-api-erros.md)  | HTTP wrapper, interceptors, React Query, error boundaries, retry | 🟢 concluido |
-| 09  | [Servidor & Real-time](c-api-servidor/servidor-realtime.md) | Server Actions, API Routes, Middleware, ISR, WebSocket, SSE      | 🟢 concluido |
+| #   | Spec                                                        | Status       |
+| --- | ----------------------------------------------------------- | ------------ |
+| 08  | [Cliente API & Erros](c-api-servidor/cliente-api-erros.md)  | 🟢 concluido |
+| 09  | [Servidor & Real-time](c-api-servidor/servidor-realtime.md) | 🟢 concluido |
+
+**08 — Cliente API & Erros:** `createApiClient`, `apiClient` (`@/lib/api/client`), `ApiError`, `normalizeApiError` (`@/lib/api/errors`). `QueryProvider` (`@/providers/query-provider`). `ErrorBoundary`, `ErrorState`, `LoadingFallback` (`@/components/shared`).
+
+**09 — Servidor & Real-time:** Server Actions com Zod, API Routes, middleware, ISR. `useWebSocket`, `useSSE`, `usePolling` (`@/lib/realtime`).
 
 ## D. Navegacao
 
-| #   | Spec                                                         | Descricao                                                           | Status       |
-| --- | ------------------------------------------------------------ | ------------------------------------------------------------------- | ------------ |
-| 10  | [Navegacao, URL & Busca](d-navegacao/navegacao-url-busca.md) | URL state, breadcrumbs, command palette, busca global, route guards | 🟢 concluido |
+| #   | Spec                                                         | Status       |
+| --- | ------------------------------------------------------------ | ------------ |
+| 10  | [Navegacao, URL & Busca](d-navegacao/navegacao-url-busca.md) | 🟢 concluido |
+
+**10 — Navegacao, URL & Busca:** `useUrlState`, `useUrlStateMulti`, `useUrlPagination` (`@/hooks`). `Breadcrumbs`, `CommandPalette` (`@/components/navigation`). `GlobalSearch`, `HighlightMatch`, `SearchResultItem` (`@/components/search`). `useSearchResults`, `useRecentSearches`.
 
 ## E. Infraestrutura
 
-| #   | Spec                                                                       | Descricao                                                        | Status       |
-| --- | -------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------ |
-| 11  | [Internacionalizacao](e-infraestrutura/internacionalizacao.md)             | next-intl, arquivos de traducao, formatacao locale, pluralizacao | 🟢 concluido |
-| 12  | [SEO](e-infraestrutura/seo.md)                                             | Metadata API, Open Graph, JSON-LD, sitemap, robots.txt           | 🟢 concluido |
-| 13  | [Autenticacao & Autorizacao](e-infraestrutura/autenticacao-autorizacao.md) | Login/logout, tokens, RBAC, componente Can, usePermissions       | 🟢 concluido |
-| 14  | [Seguranca & Configuracao](e-infraestrutura/seguranca-configuracao.md)     | XSS, CSRF, CSP, env vars tipadas (t3-env/zod)                    | 🟢 concluido |
-| 15  | [Logging & Telemetria](e-infraestrutura/logging-telemetria.md)             | Logger com niveis, error tracking, analytics, Web Vitals         | 🟢 concluido |
+| #   | Spec                                                                       | Status       |
+| --- | -------------------------------------------------------------------------- | ------------ |
+| 11  | [Internacionalizacao](e-infraestrutura/internacionalizacao.md)             | 🟢 concluido |
+| 12  | [SEO](e-infraestrutura/seo.md)                                             | 🟢 concluido |
+| 13  | [Autenticacao & Autorizacao](e-infraestrutura/autenticacao-autorizacao.md) | 🟢 concluido |
+| 14  | [Seguranca & Configuracao](e-infraestrutura/seguranca-configuracao.md)     | 🟢 concluido |
+| 15  | [Logging & Telemetria](e-infraestrutura/logging-telemetria.md)             | 🟢 concluido |
+
+**11 — Internacionalizacao:** next-intl com App Router. `Link`, `useRouter`, `usePathname`, `useTranslations`, `useLocale`, `useDateFormatter`, `useNumberFormatter` (`@/lib/i18n`). `LanguageSwitcher` (`@/components/shared`). Locales: pt-BR, en, es.
+
+**12 — SEO:** `generateMetadataBase` (`@/lib/seo/metadata`). JSON-LD: `buildOrganizationJsonLd`, `buildProductJsonLd`, `buildArticleJsonLd`, `buildBreadcrumbJsonLd` (`@/lib/seo/json-ld`). `JsonLd` component. `sitemap.ts`, `robots.ts`.
+
+**13 — Autenticacao & Autorizacao:** `useAuth`, `usePermissions` (`@/hooks`). `Can`, `PermissionButton`, `RequirePermission` (`@/components/auth`). `AuthProvider` (`@/providers`). RBAC, `getSession` (`@/lib/auth/session`). Middleware de protecao.
+
+**14 — Seguranca & Configuracao:** `env` tipado via t3-env/zod (`@/config/env`). `sanitizeHtml` (`@/lib/security/sanitize`). `getSecurityHeaders`, `generateCsrfToken`, `validateCsrfToken`, `createClientRateLimiter` (`@/lib/security`). `useThrottle`.
+
+**15 — Logging & Telemetria:** `logger` com niveis debug/info/warn/error (`@/lib/telemetry/logger`). `track` analytics (`@/lib/telemetry/analytics`). `reportWebVitals` (`@/lib/telemetry/web-vitals`). `WebVitalsReporter`, `PageViewTracker` (`@/components/telemetry`). `useTrackEvent`.
 
 ## F. Padroes de UX
 
-| #   | Spec                                                         | Descricao                                                               | Status       |
-| --- | ------------------------------------------------------------ | ----------------------------------------------------------------------- | ------------ |
-| 16  | [Feedback & Orientacao](f-padroes-ux/feedback-orientacao.md) | Notifications, empty/error/loading states, confirmacao, onboarding/tour | 🟢 concluido |
-| 17  | [Interacoes Avancadas](f-padroes-ux/interacoes-avancadas.md) | Clipboard/share, keyboard shortcuts, drag & drop                        | 🟢 concluido |
+| #   | Spec                                                         | Status       |
+| --- | ------------------------------------------------------------ | ------------ |
+| 16  | [Feedback & Orientacao](f-padroes-ux/feedback-orientacao.md) | 🟢 concluido |
+| 17  | [Interacoes Avancadas](f-padroes-ux/interacoes-avancadas.md) | 🟢 concluido |
+
+**16 — Feedback & Orientacao:** `toast` (success, error, warning, info, promise) (`@/lib/feedback/toast`). `EmptyState`, `ErrorState`, `SkeletonPresets`, `ConfirmDialog`, `LoadingButton`, `NotificationCenter`, `Tour`, `OfflineBanner` (`@/components/shared`). `useNotifications`, `useOnlineStatus`.
+
+**17 — Interacoes Avancadas:** `useClipboard`, `useShare`, `useKeyboardShortcut` (`@/hooks`). `ShortcutProvider`, `CheatSheet`. `SortableList`, `KanbanBoard` (`@/components/shared`) via @dnd-kit.
 
 ## G. Media & Conteudo
 
-| #   | Spec                                                   | Descricao                                                          | Status       |
-| --- | ------------------------------------------------------ | ------------------------------------------------------------------ | ------------ |
-| 18  | [Arquivos & Media](g-media-conteudo/arquivos-media.md) | Upload drag & drop, galeria/lightbox, avatars, video player        | 🟢 concluido |
-| 19  | [Conteudo Rico](g-media-conteudo/conteudo-rico.md)     | Markdown rendering, syntax highlight, WYSIWYG editor, prose styles | 🟢 concluido |
+| #   | Spec                                                   | Status       |
+| --- | ------------------------------------------------------ | ------------ |
+| 18  | [Arquivos & Media](g-media-conteudo/arquivos-media.md) | 🟢 concluido |
+| 19  | [Conteudo Rico](g-media-conteudo/conteudo-rico.md)     | 🟢 concluido |
+
+**18 — Arquivos & Media:** `FileUpload`, `ImageCropUpload`, `Lightbox`, `Avatar`, `ResponsiveImage`, `VideoPlayer` (`@/components/shared`). `downloadWithProgress` (`@/lib/media`).
+
+**19 — Conteudo Rico:** `MarkdownContent`, `CodeBlock`, `RichTextEditor`, `ResponsiveEmbed`, `TableOfContents` (`@/components/content`). Sanitizacao via `@/lib/security/sanitize`. Prose styles em `prose.css`.
 
 ## H. Plataforma
 
-| #   | Spec                                                     | Descricao                                                            | Status       |
-| --- | -------------------------------------------------------- | -------------------------------------------------------------------- | ------------ |
-| 20  | [Hooks & Utilitarios](h-plataforma/hooks-utilitarios.md) | 13+ custom hooks + wrappers de storage (localStorage, cookies)       | 🟢 concluido |
-| 21  | [Performance & PWA](h-plataforma/performance-pwa.md)     | Code splitting, bundle analysis, Web Vitals, service worker, offline | 🟢 concluido |
+| #   | Spec                                                     | Status       |
+| --- | -------------------------------------------------------- | ------------ |
+| 20  | [Hooks & Utilitarios](h-plataforma/hooks-utilitarios.md) | 🟢 concluido |
+| 21  | [Performance & PWA](h-plataforma/performance-pwa.md)     | 🟢 concluido |
+
+**20 — Hooks & Utilitarios:** 25+ hooks (`@/hooks`): `useDebounce`, `useThrottle`, `useMediaQuery`, `useLocalStorage`, `useSessionStorage`, `useClipboard`, `useOnClickOutside`, `useIntersectionObserver`, `useKeyboardShortcut`, `usePrevious`, `useToggle`, `useOnlineStatus`, `useWindowSize`, `useScrollPosition`, `useEventListener`, `useCookieConsent`. Storage wrappers (`@/lib/storage`). `CookieConsentBanner`.
+
+**21 — Performance & PWA:** Code splitting via `next/dynamic`. `VirtualList`, `WebVitalsReporter`, `InstallPWAButton` (`@/components/shared`). `usePWAInstall` (`@/hooks`). Service worker, manifest, pagina `/offline`.
 
 ## I. Experiencia do Desenvolvedor
 
-| #   | Spec                                                                     | Descricao                                            | Status       |
-| --- | ------------------------------------------------------------------------ | ---------------------------------------------------- | ------------ |
-| 22  | [Estrategia de Testes](i-experiencia-desenvolvedor/estrategia-testes.md) | Vitest, Testing Library, Playwright, MSW, factories  | 🟢 concluido |
-| 23  | [Pipeline de Entrega](i-experiencia-desenvolvedor/pipeline-entrega.md)   | GitHub Actions CI/CD, feature flags, preview deploys | 🟢 concluido |
+| #   | Spec                                                                     | Status       |
+| --- | ------------------------------------------------------------------------ | ------------ |
+| 22  | [Estrategia de Testes](i-experiencia-desenvolvedor/estrategia-testes.md) | 🟢 concluido |
+| 23  | [Pipeline de Entrega](i-experiencia-desenvolvedor/pipeline-entrega.md)   | 🟢 concluido |
+
+**22 — Estrategia de Testes:** Vitest + Testing Library + MSW + Playwright. `customRender` (`@/tests/utils/render`), factories (`tests/factories`), mock server (`tests/mocks/server`). Setup em `tests/setup.ts`.
+
+**23 — Pipeline de Entrega:** GitHub Actions CI (lint, type-check, test, build). `useFeatureFlag`, `Feature` component (`@/hooks`, `@/components/shared`). Config: `@/config/feature-flags`.
 
 ## J. Paginas de Exemplo
 
-| #   | Spec                                                       | Descricao                                                                                               | Status       |
-| --- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------ |
-| 24  | [Paginas de Exemplo](j-paginas-exemplo/paginas-exemplo.md) | Landing page, dashboard, dados, formularios, configuracoes, galeria de componentes, playground de hooks | 🟢 concluido |
+| #   | Spec                                                       | Status       |
+| --- | ---------------------------------------------------------- | ------------ |
+| 24  | [Paginas de Exemplo](j-paginas-exemplo/paginas-exemplo.md) | 🟢 concluido |
+
+**24 — Paginas de Exemplo:** Landing page, dashboard, dados (DataTable + filtros + export), formularios, configuracoes, galeria de componentes, playground de hooks, animacoes. Rotas: `/[locale]/(marketing)/`, `/[locale]/(dashboard)/dashboard/*`, `/[locale]/(examples)/examples/*`.
 
 ---
 

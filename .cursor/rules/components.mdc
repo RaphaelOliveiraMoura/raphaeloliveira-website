@@ -67,7 +67,7 @@ export function Button({ variant = "primary", isLoading, children, ...props }: B
    - Preferir composicao sobre heranca
    - Usar compound components para componentes complexos
    - Aceitar `children` quando fizer sentido
-   - Usar `forwardRef` quando o componente precisa expor a ref do DOM
+   - Componentes que precisam expor ref do DOM devem aceitar `ref` como prop (React 19 — `forwardRef` nao e mais necessario)
 
 4. **Estilizacao**
    - Tailwind CSS para estilos
@@ -76,7 +76,7 @@ export function Button({ variant = "primary", isLoading, children, ...props }: B
    - Nunca usar `style` inline exceto para valores realmente dinamicos
 
 5. **Performance**
-   - React Compiler esta habilitado - evitar `useMemo`/`useCallback` manuais
+   - React Compiler esta habilitado - evitar `useMemo`/`useCallback` manuais (quando necessario, seguir as regras de `linting.mdc`)
    - Extrair componentes pesados com `dynamic()` para lazy loading
    - Evitar re-renders desnecessarios (elevar estado so quando necessario)
 
@@ -163,9 +163,4 @@ export const Default: Story = {
 
 ## Barrel Files
 
-Cada pasta de componente deve ter um `index.ts`:
-
-```ts
-export { Button } from "./button"
-export type { ButtonProps } from "./button"
-```
+Cada pasta de componente deve ter um `index.ts` com re-exports (ver `general.mdc` para regras gerais de barrel files e padroes de export).

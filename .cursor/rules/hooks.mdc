@@ -22,69 +22,17 @@ import { useDebounce, useToggle, useLocalStorage } from "@/hooks";
 
 ## Quando Usar Cada Hook
 
-### Estado booleano: `useToggle`
+Preferir hooks centralizados ao inves de implementacoes ad-hoc:
 
-Preferir `useToggle` ao inves de `useState(false)` + toggle manual:
-
-```ts
-// Ruim
-const [open, setOpen] = useState(false);
-const toggle = () => setOpen((o) => !o);
-
-// Bom
-const [open, toggle] = useToggle(false);
-```
-
-**Excecao**: quando o estado precisa ser setado explicitamente (`setOpen(true)` ou `setOpen(false)`) alem de toggle, manter `useState`.
-
-### Debounce: `useDebounce`
-
-Preferir `useDebounce` ao inves de implementacoes ad-hoc com `setTimeout`:
-
-```ts
-const debouncedSearch = useDebounce(searchTerm, 300);
-```
-
-### Click fora: `useOnClickOutside`
-
-Preferir `useOnClickOutside` ao inves de `onBlur` + `setTimeout` para fechar dropdowns/menus:
-
-```ts
-useOnClickOutside(ref, () => setOpen(false));
-```
-
-### Storage: `useLocalStorage` / `useSessionStorage`
-
-Nunca acessar `localStorage` ou `sessionStorage` diretamente em componentes. Usar os hooks centralizados:
-
-```ts
-const [value, setValue] = useLocalStorage("key", defaultValue);
-```
-
-### Acessibilidade: `useReducedMotion`
-
-Usar `useReducedMotion` para respeitar preferencias de acessibilidade em animacoes:
-
-```ts
-const prefersReducedMotion = useReducedMotion();
-```
-
-### Responsividade: `useIsMobile` / `useBreakpoint`
-
-Usar hooks de breakpoint para logica responsiva (nao apenas media queries CSS):
-
-```ts
-import { useIsMobile } from "@/hooks";
-const isMobile = useIsMobile();
-```
-
-### Permissoes: `usePermissions`
-
-Usar `usePermissions` para verificar permissoes do usuario (requer `AuthProvider`):
-
-```ts
-const { hasPermission, hasAllPermissions, hasAnyPermission } = usePermissions();
-```
+| Em vez de | Usar | Motivo |
+|-----------|------|--------|
+| `useState(false)` + toggle manual | `useToggle` | API mais limpa (excecao: quando precisa de `setOpen(true/false)` explicito) |
+| `setTimeout` para debounce | `useDebounce` | Cleanup automatico, sem memory leaks |
+| `onBlur` + timeout para click fora | `useOnClickOutside` | Mais confiavel com refs |
+| `localStorage`/`sessionStorage` direto | `useLocalStorage`/`useSessionStorage` | SSR-safe, reativo, tipado |
+| `window.matchMedia` para responsividade | `useIsMobile`/`useBreakpoint` | SSR-safe, reativo |
+| Animacao sem checar acessibilidade | `useReducedMotion` | Respeita `prefers-reduced-motion` |
+| Verificacao manual de permissoes | `usePermissions` | API consistente (requer `AuthProvider`) |
 
 ## Hooks Disponiveis
 
@@ -121,7 +69,7 @@ const { hasPermission, hasAllPermissions, hasAnyPermission } = usePermissions();
 
 ## Criando Novos Hooks
 
-1. Criar em `src/hooks/` com nome `use-nome-do-hook.ts`
-2. Exportar como funcao nomeada: `export function useNomeDoHook()`
+1. Criar em `src/hooks/` com nome `use-nome-do-hook.ts` (kebab-case, ver `general.mdc`)
+2. Exportar como funcao nomeada: `export function useNomeDoHook()` (ver `general.mdc` para padroes de export)
 3. Adicionar no barrel file `src/hooks/index.ts`
 4. Se for hook de uso geral, adicionar nesta tabela

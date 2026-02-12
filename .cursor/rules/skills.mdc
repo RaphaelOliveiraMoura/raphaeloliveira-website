@@ -1,7 +1,7 @@
 ---
-description: Regras de gestao de AI Skills - instalacao, criacao, manutencao e boas praticas
+description: Regras de gestao de AI Skills - instalacao, criacao, manutencao e boas praticas. Consultar ao criar, instalar ou atualizar skills.
 globs:
-alwaysApply: true
+alwaysApply: false
 ---
 
 # AI Skills - Regras de Gestao

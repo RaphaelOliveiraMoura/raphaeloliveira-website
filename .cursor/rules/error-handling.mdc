@@ -55,13 +55,7 @@ import { ErrorBoundary } from "@/components/shared";
 
 ## Logging de Erros
 
-Usar `logger.error()` para registrar erros (ver `general.mdc` para regra geral de logging):
-
-```ts
-import { logger } from "@/lib/telemetry/logger";
-
-logger.error("Descricao do erro", error, { contexto: "adicional" });
-```
+Logar erros com `logger.error()` (ver `general.mdc` para regra e import). Aceita mensagem, erro e contexto adicional como parametros.
 
 ## Erros de API
 

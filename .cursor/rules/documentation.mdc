@@ -1,7 +1,7 @@
 ---
-description: Regras de governanca de documentacao - fonte unica de verdade e nao-duplicacao
-globs:
-alwaysApply: true
+description: Regras de governanca de documentacao - fonte unica de verdade e nao-duplicacao. Consultar ao criar ou editar docs, specs ou cursor rules.
+globs: docs/**, .cursor/rules/**, AGENTS.md, README.md
+alwaysApply: false
 ---
 
 # Documentacao - Regras de Governanca
@@ -16,8 +16,11 @@ Antes de documentar qualquer informacao, consultar este mapa para saber onde ela
 
 | Assunto | Fonte de verdade | Tipo |
 |---------|-----------------|------|
+| Visao geral do projeto, tech stack e inicio rapido | `README.md` | doc |
+| Indice de navegacao para agentes de IA | `AGENTS.md` | indice |
 | Decisoes arquiteturais (o "por que") | `docs/ARCHITECTURE.md` | doc |
 | Fluxo de contribuicao (para humanos) | `docs/CONTRIBUTING.md` | doc |
+| Catalogo de specs (indice, status e referencia rapida da API) | `docs/specs/README.md` | doc |
 | Requisitos e design de features | `docs/specs/*.md` | doc |
 | Convencoes gerais (naming, imports, TS, logging, estrutura de pastas) | `.cursor/rules/general.mdc` | rule |
 | Internacionalizacao (i18n) | `.cursor/rules/i18n.mdc` | rule |
@@ -31,37 +34,21 @@ Antes de documentar qualquer informacao, consultar este mapa para saber onde ela
 
 ## Regras de Nao-Duplicacao
 
-1. **Nunca repetir** uma regra que ja existe em outro documento. Em vez disso, referenciar:
-   - Em cursor rules: `(ver general.mdc)` ou `(ver specs.mdc)`
-   - Em docs: `[ver ARCHITECTURE.md](docs/ARCHITECTURE.md)` ou link relativo
+1. **Nunca repetir** uma regra que ja existe em outro documento — referenciar com `(ver general.mdc)` ou `[ver ARCHITECTURE.md](docs/ARCHITECTURE.md)`.
 
-2. **Cada cursor rule deve cobrir apenas seu escopo** — nao repetir regras de `general.mdc` (TypeScript strict, logging, naming) em rules especificas como `components.mdc` ou `linting.mdc`.
+2. **Cada cursor rule deve cobrir apenas seu escopo** — nao repetir regras de `general.mdc` em rules especificas.
 
-3. **docs/ vs cursor rules**:
-   - `docs/` = documentacao para humanos (decisoes, guias, specs)
-   - `.cursor/rules/` = diretivas operacionais para agentes de IA
-   - Quando ambos precisam mencionar o mesmo tema, `docs/` explica o "por que" e cursor rules define o "como"
+3. **docs/ vs cursor rules**: `docs/` explica o "por que" (decisoes, guias). `.cursor/rules/` define o "como" (diretivas operacionais). Quando ambos mencionam o mesmo tema, respeitar essa divisao.
 
-## Processo: Antes de Documentar
+4. **Proibido**: sincronizacao bidirecional entre docs, listas completas fora da fonte canonica, regras operacionais duplicadas, arvores de diretorio sobrepostas.
 
-Ao criar ou editar qualquer documentacao (docs ou cursor rules):
+5. **Indices** (`AGENTS.md`, `README.md`) podem conter resumos de 1 linha com link para a fonte canonica, mas **nao** exemplos de codigo, regras operacionais ou listas completas.
+
+## Processo: Antes de Criar ou Editar Documentacao
 
 1. **Consultar o mapa de autoridade** acima para identificar a fonte canonica
-2. **Verificar se o conteudo ja existe** em outro documento (buscar termos-chave)
+2. **Verificar se o conteudo ja existe** em outro documento
 3. **Se ja existe**: referenciar em vez de duplicar
 4. **Se nao existe**: adicionar na fonte canonica correta conforme o mapa
-5. **Se o conteudo pertence a mais de um escopo**: definir o canonico (geralmente o mais especifico) e referenciar nos demais
-
-## Processo: Ao Criar Nova Cursor Rule
-
-1. Definir escopo claro via `globs` ou `alwaysApply`
-2. Verificar se o conteudo nao se sobrepoe a rules existentes
-3. Adicionar entrada no mapa de autoridade acima
-4. Nao repetir regras de `general.mdc` — referenciar
-
-## Processo: Ao Criar Nova Spec
-
-1. Seguir o fluxo definido em `specs.mdc` (fonte canonica do fluxo spec-driven)
-2. Nao duplicar decisoes arquiteturais que ja estao em `ARCHITECTURE.md`
-3. Nao duplicar convencoes de codigo que ja estao em cursor rules
-4. Referenciar documentos existentes quando necessario
+5. **Ao criar nova cursor rule**: definir escopo via `globs`/`alwaysApply`, verificar sobreposicao, adicionar entrada no mapa acima
+6. **Ao criar nova spec**: seguir fluxo de `specs.mdc`, nao duplicar decisoes de `ARCHITECTURE.md` nem convencoes de cursor rules

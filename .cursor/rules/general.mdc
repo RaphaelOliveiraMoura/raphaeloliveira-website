@@ -6,10 +6,6 @@ alwaysApply: true
 
 # Core Stack - Regras Gerais
 
-## Sobre o Projeto
-
-Core Stack e um template base universal para projetos Next.js. Serve como referencia para iniciar qualquer novo projeto com uma base solida de utilitarios, componentes e padroes.
-
 ## Idioma
 
 - **Codigo** (variaveis, funcoes, componentes, commits, branch names): ingles
@@ -18,12 +14,9 @@ Core Stack e um template base universal para projetos Next.js. Serve como refere
 
 ## Tech Stack
 
-- Next.js 16 (App Router)
-- React 19
-- TypeScript 5 (strict mode)
-- Tailwind CSS v4
-- shadcn/ui (Radix UI + Tailwind)
-- React Compiler (habilitado)
+> Fonte canonica com versoes e propositos: [README.md](../../README.md) (secao "Tech Stack").
+
+Tecnologias-chave: Next.js 16 (App Router), React 19, TypeScript 5 (strict), Tailwind CSS v4, shadcn/ui (Radix UI + Tailwind), React Compiler.
 
 ## Estrutura de Pastas
 
@@ -59,7 +52,7 @@ src/
 ## Convencoes de Nomenclatura
 
 - **Todos os arquivos:** kebab-case (`button.tsx`, `user-card.tsx`, `use-debounce.ts`, `format-currency.ts`)
-- **Pastas:** kebab-case (`feature-flags/`, `date-time/`)
+- **Pastas:** kebab-case (`feature-flags/`, `datetime/`)
 - **Tipos/Interfaces:** PascalCase com prefixo descritivo (`UserProfile`, `ApiResponse<T>`)
 - **Constantes:** UPPER_SNAKE_CASE (`MAX_RETRY_COUNT`, `API_BASE_URL`)
 - **Enums:** PascalCase (`UserRole`, `HttpStatus`)
@@ -115,12 +108,9 @@ logger.info("Evento importante", { userId });
 
 ## Spec-Driven Development
 
-As specs em `docs/specs/` sao a fonte de verdade do projeto. **Toda mudanca no projeto deve manter as specs sincronizadas.**
+As specs em `docs/specs/` sao a fonte de verdade do projeto. Toda mudanca no projeto deve manter as specs sincronizadas.
 
-- **Antes de implementar**: consultar a spec, seguir o design da API, verificar criterios de aceite
-- **Apos implementar**: atualizar specs, status, regras de uso, paginas de exemplo e barrel files
-
-> O fluxo completo, checklist de conclusao e regras detalhadas estao em `specs.mdc` (fonte canonica do fluxo spec-driven). As specs estao indexadas em `docs/specs/README.md`.
+> Fluxo completo, regras e checklists: `specs.mdc` (fonte canonica). Indice: [docs/specs/README.md](../../docs/specs/README.md).
 
 ## Padroes de Export
 
