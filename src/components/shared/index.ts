@@ -3,6 +3,7 @@ export { BackToTop } from "./back-to-top";
 export { BentoCard, BentoGrid } from "./bento-grid";
 export { BorderBeam } from "./border-beam";
 export { BulkActionBar } from "./bulk-action-bar";
+export { CometCard } from "./comet-card";
 export { ConfirmDialog } from "./confirm-dialog";
 export { CookieConsentBanner } from "./cookie-consent-banner";
 export type { CountdownLabels } from "./countdown";

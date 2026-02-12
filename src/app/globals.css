@@ -96,8 +96,7 @@
   --animate-bounce-in: bounce-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   --animate-gradient-shift: gradient-shift 3s ease-in-out infinite;
   --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
-  --animate-border-beam: border-beam var(--border-beam-duration, 12s) linear
-    infinite;
+  --animate-border-beam-rotate: border-beam-rotate 6s linear infinite;
 }
 
 body {

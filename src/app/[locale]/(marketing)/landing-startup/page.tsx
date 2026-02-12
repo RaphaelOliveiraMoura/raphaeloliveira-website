@@ -184,12 +184,12 @@ export default function LandingStartupPage() {
         {/* Hero mockup image com BorderBeam */}
         <FadeIn delay={0.6} duration={0.8}>
           <div className="relative mt-8 w-full max-w-4xl overflow-hidden rounded-xl border border-border/60 bg-muted/30 shadow-2xl ring-1 ring-black/[0.03] dark:ring-white/[0.05]">
-            <BorderBeam size={250} duration={10} />
+            <BorderBeam size={600} duration={8} borderWidth={3} />
             {/* eslint-disable-next-line @next/next/no-img-element -- placeholder demo image */}
             <img
               src="https://placehold.co/1200x600/f4f4f8/5a5a6a?text=App+Dashboard"
               alt="App Dashboard Preview"
-              className="w-full"
+              className="w-full rounded-[inherit]"
             />
           </div>
         </FadeIn>

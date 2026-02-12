@@ -178,19 +178,13 @@
   }
 }
 
-@keyframes border-beam {
-  0% {
-    --border-beam-angle: 0;
+@keyframes border-beam-rotate {
+  from {
+    transform: rotate(0deg);
   }
-  100% {
-    --border-beam-angle: 360;
+  to {
+    transform: rotate(360deg);
   }
-}
-
-@property --border-beam-angle {
-  syntax: "<number>";
-  initial-value: 0;
-  inherits: false;
 }
 
 /* ===========================

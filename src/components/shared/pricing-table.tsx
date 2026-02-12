@@ -16,6 +16,8 @@ import {
 import { ScaleOnHover } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
+import { CometCard } from "./comet-card";
+
 export interface PricingFeature {
   text: string;
   included: boolean;
@@ -47,7 +49,7 @@ export function PricingTable({
   return (
     <div
       className={cn(
-        "grid gap-6",
+        "grid items-start gap-6",
         tiers.length === 2 && "md:grid-cols-2",
         tiers.length >= 3 && "md:grid-cols-2 lg:grid-cols-3",
         className,
@@ -55,8 +57,13 @@ export function PricingTable({
     >
       {tiers.map((tier) => {
         const isHighlighted = tier.id === highlightedTier;
+        const Wrapper = isHighlighted ? CometCard : ScaleOnHover;
+        const wrapperProps = isHighlighted
+          ? { rotateDepth: 12, translateDepth: 10, className: "z-10" }
+          : { scale: 1.02 };
+
         return (
-          <ScaleOnHover key={tier.id} scale={1.02}>
+          <Wrapper key={tier.id} {...wrapperProps}>
             <Card
               className={cn(
                 "relative flex h-full flex-col transition-shadow duration-normal",
@@ -119,7 +126,7 @@ export function PricingTable({
                 </Button>
               </CardFooter>
             </Card>
-          </ScaleOnHover>
+          </Wrapper>
         );
       })}
     </div>

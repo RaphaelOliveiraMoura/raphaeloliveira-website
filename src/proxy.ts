@@ -18,9 +18,7 @@ const authMiddleware = createAuthMiddleware(
   [...locales],
 );
 
-export default function middleware(
-  request: Parameters<typeof intlMiddleware>[0],
-) {
+export default function proxy(request: Parameters<typeof intlMiddleware>[0]) {
   const response = intlMiddleware(request);
 
   // Security headers
