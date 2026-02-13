@@ -6,3 +6,5 @@ coverage
 storybook-static
 package-lock.json
 *.tsbuildinfo
+backend/dist
+backend/node_modules

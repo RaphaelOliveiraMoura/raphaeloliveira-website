@@ -1,2 +1,2 @@
-npm run lint:staged
-npm run typecheck
+npm run pre-commit
+cd backend && npm run pre-commit

@@ -33,6 +33,7 @@
   ],
   "exclude": [
     "node_modules",
+    "backend",
     "tests",
     "e2e",
     "stories",

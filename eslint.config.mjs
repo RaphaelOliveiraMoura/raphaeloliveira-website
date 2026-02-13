@@ -19,6 +19,9 @@ const eslintConfig = defineConfig([
     "docs/**",
     "coverage/**",
     "tests/**",
+    // Backend build artifacts
+    "backend/dist/**",
+    "backend/node_modules/**",
   ]),
   // Prettier integration (desabilita regras conflitantes e reporta erros de formatacao)
   eslintPluginPrettierRecommended,
@@ -87,6 +90,38 @@ const eslintConfig = defineConfig([
         },
       ],
       "simple-import-sort/exports": "error",
+    },
+  },
+  // ---- Backend-specific config (no Next.js/React rules) ----
+  {
+    files: ["backend/**/*.ts"],
+    rules: {
+      // Disable Next.js and React rules that don't apply to the backend
+      "@next/next/no-html-link-for-pages": "off",
+      "@next/next/no-img-element": "off",
+      "@next/next/no-head-element": "off",
+      "react/no-unescaped-entities": "off",
+      "react/jsx-no-target-blank": "off",
+      "react-hooks/rules-of-hooks": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "jsx-a11y/alt-text": "off",
+
+      // Override import-sort groups for backend (no React/Next groups)
+      "simple-import-sort/imports": [
+        "error",
+        {
+          groups: [
+            // 1. Node built-ins
+            ["^node:"],
+            // 2. External packages
+            ["^@?(?!/)\\w"],
+            // 3. Internal aliases (@/*)
+            ["^@/"],
+            // 4. Relative imports
+            ["^\\."],
+          ],
+        },
+      ],
     },
   },
 ]);
