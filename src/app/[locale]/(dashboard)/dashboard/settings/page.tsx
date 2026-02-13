@@ -42,6 +42,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 
+import { useSettings, useUpdateSettings } from "@/lib/api/hooks";
 import { toast } from "@/lib/feedback";
 import { useTranslations } from "@/lib/i18n";
 import {
@@ -126,6 +127,18 @@ export default function SettingsPage() {
     );
   };
 
+  const { data: backendSettings, isLoading: settingsLoading } = useSettings();
+  const updateSettings = useUpdateSettings();
+
+  const handleSaveSettings = async (key: string, value: unknown) => {
+    try {
+      await updateSettings.mutateAsync([{ key, value }]);
+      toast.success("Setting saved!");
+    } catch {
+      toast.error("Failed to save setting");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Breadcrumbs />
@@ -136,6 +149,68 @@ export default function SettingsPage() {
         </h1>
         <p className="text-muted-foreground">{t("settings.subtitle")}</p>
       </div>
+
+      {/* Backend Synced Settings */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Globe className="size-4" />
+            <CardTitle>Synced Settings (Backend)</CardTitle>
+          </div>
+          <CardDescription>
+            Settings persisted on the backend via GET/PUT /settings
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {settingsLoading ? (
+            <p className="text-sm text-muted-foreground">Loading settings...</p>
+          ) : backendSettings && backendSettings.length > 0 ? (
+            <div className="space-y-3">
+              {backendSettings.map((setting) => (
+                <div
+                  key={setting.key}
+                  className="flex items-center justify-between rounded-md border p-3"
+                >
+                  <div>
+                    <p className="text-sm font-medium">{setting.key}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Source: {setting.source} | Updated:{" "}
+                      {new Date(setting.updatedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <Badge variant="outline">
+                    {typeof setting.value === "object"
+                      ? JSON.stringify(setting.value)
+                      : String(setting.value)}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              No backend settings found. Try saving a setting.
+            </p>
+          )}
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleSaveSettings("theme", theme)}
+              disabled={updateSettings.isPending}
+            >
+              Sync Theme to Backend
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleSaveSettings("language", navigator.language)}
+              disabled={updateSettings.isPending}
+            >
+              Sync Language to Backend
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Appearance */}

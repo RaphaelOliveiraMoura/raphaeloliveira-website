@@ -1,6 +1,7 @@
 import type { FastifyInstance } from "fastify";
 
 import { buildApp } from "../../src/app";
+import { domainEvents } from "../../src/lib/events";
 
 /**
  * Create a test Fastify instance. Call `.close()` in afterAll.
@@ -13,6 +14,10 @@ import { buildApp } from "../../src/app";
  * ```
  */
 export async function createTestServer(): Promise<FastifyInstance> {
+  // Limpa listeners acumulados de test files anteriores
+  // para evitar handlers duplicados no singleton domainEvents
+  domainEvents.removeAllListeners();
+
   const app = await buildApp();
   await app.ready();
   return app;

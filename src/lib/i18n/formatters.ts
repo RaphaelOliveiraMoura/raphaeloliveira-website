@@ -6,7 +6,7 @@ export function useDateFormatter() {
     date: (d: Date) => format.dateTime(d, { dateStyle: "medium" }),
     dateTime: (d: Date) =>
       format.dateTime(d, { dateStyle: "short", timeStyle: "short" }),
-    relative: (d: Date) => format.relativeTime(d),
+    relative: (d: Date) => format.relativeTime(d, new Date()),
   };
 }
 

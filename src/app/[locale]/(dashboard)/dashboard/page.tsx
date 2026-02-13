@@ -1,22 +1,21 @@
 "use client";
 
-import { useState } from "react";
-
 import {
   Activity,
-  DollarSign,
+  CheckCircle,
   FileText,
   Info,
-  TrendingUp,
+  MessageSquare,
   Users,
+  XCircle,
 } from "lucide-react";
 
 import { Breadcrumbs } from "@/components/navigation";
 import {
   EmptyState,
+  ErrorState,
   Feature,
   SkeletonCard,
-  SkeletonText,
 } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -34,54 +33,80 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { useFeedbackStats, useHealth, useUsers } from "@/lib/api/hooks";
 import {
   useDateFormatter,
   useNumberFormatter,
   useTranslations,
 } from "@/lib/i18n";
-import { MOCK_DASHBOARD_STATS } from "@/lib/utils/mock-data";
 import { useFeatureFlag, useIsMobile } from "@/hooks";
 
 import { useAuth } from "@/providers/auth-provider";
 
-const STAT_ICONS = {
-  totalUsers: Users,
-  totalPosts: FileText,
-  activeNow: Activity,
-  revenue: DollarSign,
-} as const;
-
-const STAT_PROGRESS = {
-  totalUsers: 78,
-  totalPosts: 62,
-  activeNow: 45,
-  revenue: 89,
-} as const;
-
-function calculateChange(current: number, previous: number): string {
-  const change = ((current - previous) / previous) * 100;
-  return `+${change.toFixed(1)}%`;
-}
-
 export default function DashboardPage() {
   const t = useTranslations("common");
-  const te = useTranslations("examples");
   const { user } = useAuth();
-  const { currency, number } = useNumberFormatter();
+  const { number: formatNumber } = useNumberFormatter();
   const { relative } = useDateFormatter();
   const isMobile = useIsMobile();
   const showBeta = useFeatureFlag("betaFeatures");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSimulateLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 2000);
-  };
+  const {
+    data: usersData,
+    isLoading: usersLoading,
+    error: usersError,
+    refetch: refetchUsers,
+  } = useUsers({ page: 1, limit: 1 });
 
-  const formatStatValue = (key: string, value: number) => {
-    if (key === "revenue") return currency(value);
-    return number(value);
-  };
+  const { data: feedbackStats, isLoading: feedbackLoading } =
+    useFeedbackStats();
+
+  const { data: healthData, isLoading: healthLoading } = useHealth();
+
+  const isLoading = usersLoading || healthLoading;
+  const hasFatalError = !!usersError;
+
+  const totalUsers = usersData?.meta?.total ?? 0;
+  const totalFeedback = feedbackStats?.total ?? 0;
+  const openFeedback = feedbackStats?.byStatus?.open ?? 0;
+  const resolvedFeedback = feedbackStats?.byStatus?.resolved ?? 0;
+
+  const stats = [
+    {
+      key: "totalUsers",
+      label: t("dashboard.totalUsers"),
+      value: formatNumber(totalUsers),
+      icon: Users,
+      progress: Math.min((totalUsers / 100) * 100, 100),
+    },
+    {
+      key: "totalFeedback",
+      label: "Total Feedback",
+      value: formatNumber(totalFeedback),
+      icon: MessageSquare,
+      progress: Math.min((totalFeedback / 50) * 100, 100),
+    },
+    {
+      key: "openIssues",
+      label: "Open Issues",
+      value: formatNumber(openFeedback),
+      icon: FileText,
+      progress:
+        totalFeedback > 0
+          ? Math.round((openFeedback / totalFeedback) * 100)
+          : 0,
+    },
+    {
+      key: "resolved",
+      label: "Resolved",
+      value: formatNumber(resolvedFeedback),
+      icon: CheckCircle,
+      progress:
+        totalFeedback > 0
+          ? Math.round((resolvedFeedback / totalFeedback) * 100)
+          : 0,
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -98,6 +123,14 @@ export default function DashboardPage() {
           <Feature flag="betaFeatures" fallback={null}>
             <Badge variant="secondary">Beta</Badge>
           </Feature>
+          {healthData && (
+            <Badge
+              variant={healthData.status === "ok" ? "default" : "destructive"}
+              className="hidden sm:inline-flex"
+            >
+              {healthData.status === "ok" ? "API Online" : "API Degraded"}
+            </Badge>
+          )}
           <Badge variant="outline" className="hidden sm:inline-flex">
             {relative(new Date())}
           </Badge>
@@ -113,8 +146,16 @@ export default function DashboardPage() {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 pt-4">
-          {/* Stats Cards */}
-          {isLoading ? (
+          {hasFatalError ? (
+            <ErrorState
+              title="Erro ao carregar dados"
+              message="Nao foi possivel carregar as estatisticas do dashboard."
+              error={usersError ?? undefined}
+              onRetry={() => {
+                void refetchUsers();
+              }}
+            />
+          ) : isLoading ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <SkeletonCard key={i} />
@@ -122,50 +163,24 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {MOCK_DASHBOARD_STATS.map((stat) => {
-                const Icon =
-                  STAT_ICONS[stat.key as keyof typeof STAT_ICONS] ?? Activity;
-                const progress =
-                  STAT_PROGRESS[stat.key as keyof typeof STAT_PROGRESS] ?? 50;
-
+              {stats.map((stat) => {
+                const Icon = stat.icon;
                 return (
                   <Card key={stat.key}>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                       <CardTitle className="text-sm font-medium">
-                        {t(
-                          `dashboard.${stat.key}` as
-                            | "dashboard.totalUsers"
-                            | "dashboard.totalPosts"
-                            | "dashboard.activeNow"
-                            | "dashboard.revenue",
-                        )}
+                        {stat.label}
                       </CardTitle>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Icon className="size-4 text-muted-foreground" />
                         </TooltipTrigger>
-                        <TooltipContent>
-                          {t(
-                            `dashboard.${stat.key}` as
-                              | "dashboard.totalUsers"
-                              | "dashboard.totalPosts"
-                              | "dashboard.activeNow"
-                              | "dashboard.revenue",
-                          )}
-                        </TooltipContent>
+                        <TooltipContent>{stat.label}</TooltipContent>
                       </Tooltip>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                      <div className="text-2xl font-bold">
-                        {formatStatValue(stat.key, stat.value)}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <TrendingUp className="size-3 text-green-600" />
-                        <span className="text-xs text-green-600">
-                          {calculateChange(stat.value, stat.previousValue)}
-                        </span>
-                      </div>
-                      <Progress value={progress} className="h-1.5" />
+                      <div className="text-2xl font-bold">{stat.value}</div>
+                      <Progress value={stat.progress} className="h-1.5" />
                     </CardContent>
                   </Card>
                 );
@@ -173,73 +188,89 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Quick Info */}
+          {/* Health & System Info */}
           <div className="grid gap-4 lg:grid-cols-2">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">{te("data.title")}</CardTitle>
+                  <CardTitle className="text-lg">System Health</CardTitle>
                   <Badge variant="outline">
                     {isMobile ? "Mobile" : "Desktop"}
                   </Badge>
                 </div>
-                <CardDescription>{te("data.subtitle")}</CardDescription>
+                <CardDescription>Backend API status</CardDescription>
               </CardHeader>
               <CardContent>
-                {isLoading ? (
-                  <SkeletonText lines={3} />
-                ) : (
+                {healthData ? (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        {te("data.name")}
-                      </span>
-                      <span className="font-medium">
-                        20{" "}
-                        {t("itemsCount", { count: 20 })
-                          .split(" ")
-                          .slice(1)
-                          .join(" ")}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        {te("data.role")}
-                      </span>
-                      <span className="font-medium">admin, editor, viewer</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        {te("data.status")}
-                      </span>
-                      <div className="flex gap-1">
-                        <Badge variant="default">active</Badge>
-                        <Badge variant="secondary">inactive</Badge>
-                        <Badge variant="outline">pending</Badge>
+                      <span className="text-muted-foreground">Status</span>
+                      <div className="flex items-center gap-1.5">
+                        {healthData.status === "ok" ? (
+                          <CheckCircle className="size-3.5 text-green-600" />
+                        ) : (
+                          <XCircle className="size-3.5 text-red-600" />
+                        )}
+                        <span className="font-medium capitalize">
+                          {healthData.status}
+                        </span>
                       </div>
                     </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Database</span>
+                      <span className="font-medium capitalize">
+                        {healthData.database}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Uptime</span>
+                      <span className="font-medium">
+                        {Math.floor(healthData.uptime / 3600)}h{" "}
+                        {Math.floor((healthData.uptime % 3600) / 60)}m
+                      </span>
+                    </div>
                   </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    {t("loading")}
+                  </p>
                 )}
               </CardContent>
             </Card>
 
-            <Card
-              className="cursor-pointer transition-colors hover:bg-accent/50"
-              onClick={handleSimulateLoading}
-            >
+            <Card>
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Info className="size-4 text-muted-foreground" />
                   <CardTitle className="text-lg">
-                    {showBeta ? "Beta Features Enabled" : "Simulate Loading"}
+                    {showBeta ? "Beta Features Enabled" : "Feedback Summary"}
                   </CardTitle>
                 </div>
                 <CardDescription>
-                  {isLoading
-                    ? t("loading")
-                    : "Click to simulate skeleton loading state"}
+                  {feedbackStats && !feedbackLoading
+                    ? `${totalFeedback} total, ${openFeedback} open`
+                    : t("loading")}
                 </CardDescription>
               </CardHeader>
+              {feedbackStats && (
+                <CardContent>
+                  <div className="space-y-2">
+                    {Object.entries(feedbackStats.byStatus).map(
+                      ([status, count]) => (
+                        <div
+                          key={status}
+                          className="flex items-center justify-between text-sm"
+                        >
+                          <span className="capitalize text-muted-foreground">
+                            {status.replace("_", " ")}
+                          </span>
+                          <Badge variant="outline">{count as number}</Badge>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </CardContent>
+              )}
             </Card>
           </div>
         </TabsContent>

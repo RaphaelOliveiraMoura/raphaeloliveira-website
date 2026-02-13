@@ -1,6 +1,3 @@
-import { isClient } from "@/lib/utils/environment";
-
-const TOKEN_KEY = "core-stack-access-token";
 const REFRESH_BUFFER_MS = 60_000; // Renovar 60s antes de expirar
 
 interface TokenPayload {
@@ -27,7 +24,9 @@ function decodeJwtPayload(token: string): TokenPayload | null {
 }
 
 /**
- * Gerenciador de tokens de acesso com suporte a expiracao e auto-refresh.
+ * Gerenciador de tokens de acesso in-memory.
+ * O access token vive apenas em memoria (variavel JS) -- nao persiste em storage.
+ * Nova aba ou refresh de pagina reobtem o token via refresh-token cookie.
  */
 export const tokenManager = {
   _token: null as string | null,
@@ -35,33 +34,17 @@ export const tokenManager = {
   _refreshFn: null as (() => Promise<string | null>) | null,
 
   get(): string | null {
-    if (this._token) return this._token;
-    if (!isClient()) return null;
-    const stored = sessionStorage.getItem(TOKEN_KEY);
-    if (stored) {
-      if (this.isExpired(stored)) {
-        this.clear();
-        return null;
-      }
-      this._token = stored;
-    }
     return this._token;
   },
 
   set(token: string): void {
     this._token = token;
-    if (isClient()) {
-      sessionStorage.setItem(TOKEN_KEY, token);
-    }
     this._scheduleRefresh(token);
   },
 
   clear(): void {
     this._token = null;
     this._clearRefreshTimer();
-    if (isClient()) {
-      sessionStorage.removeItem(TOKEN_KEY);
-    }
   },
 
   getAuthHeader(): Record<string, string> {
@@ -104,7 +87,6 @@ export const tokenManager = {
    */
   setRefreshHandler(fn: () => Promise<string | null>): void {
     this._refreshFn = fn;
-    // Se ja tem token, agendar refresh
     const token = this.get();
     if (token) this._scheduleRefresh(token);
   },
@@ -120,7 +102,6 @@ export const tokenManager = {
     const refreshIn = expiresIn - REFRESH_BUFFER_MS;
 
     if (refreshIn <= 0) {
-      // Token ja esta proximo de expirar, renovar agora
       void this._doRefresh();
       return;
     }

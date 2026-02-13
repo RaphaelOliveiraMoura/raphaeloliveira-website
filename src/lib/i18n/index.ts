@@ -1,5 +1,6 @@
 export { useDateFormatter, useNumberFormatter } from "./formatters";
 export { Link, redirect, usePathname, useRouter } from "./navigation";
+export { stripLocalePrefix } from "./utils";
 
 /**
  * Re-exports de next-intl para uso em componentes.

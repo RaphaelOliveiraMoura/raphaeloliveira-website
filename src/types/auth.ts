@@ -26,6 +26,16 @@ export interface AuthState {
   isLoading: boolean;
 }
 
+/** Resposta do backend para refresh de token */
+export interface AuthTokenResponse {
+  accessToken: string;
+}
+
+/** Resposta do backend para login, register e social login */
+export interface AuthLoginResponse extends AuthTokenResponse {
+  user: User;
+}
+
 export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   admin: [
     "users:read",

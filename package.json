@@ -45,6 +45,7 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "driver.js": "^1.4.0",
+    "firebase": "^12.9.0",
     "framer-motion": "^12.34.0",
     "isomorphic-dompurify": "^3.0.0-rc.2",
     "lucide-react": "^0.563.0",

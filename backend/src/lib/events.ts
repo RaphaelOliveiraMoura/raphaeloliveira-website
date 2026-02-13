@@ -27,6 +27,7 @@ export interface DomainEventMap {
   "auth.password.reset.completed": { userId: string };
   "auth.email.verified": { userId: string; email: string };
   "auth.account.locked": { userId: string; email: string; attempts: number };
+  "auth.register": { userId: string; email: string; ip: string };
 
   // Users
   "user.created": { userId: string; email: string; role: string };

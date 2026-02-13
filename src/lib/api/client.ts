@@ -1,5 +1,6 @@
 import { ApiError, NetworkError, TimeoutError } from "@/lib/errors";
 
+import { notifyRefreshFailure, refreshWithMutex } from "./auth-interceptor";
 import type {
   ApiRequestConfig,
   ApiResponse,
@@ -64,6 +65,54 @@ export function createApiClient(baseUrl: string) {
     };
   };
 
+  /**
+   * Executa um fetch unico com timeout e abort signal.
+   * Retorna a Response crua para o caller processar.
+   */
+  async function executeFetch(
+    finalUrl: string,
+    init: RequestInit,
+    timeout: number,
+    callerSignal?: AbortSignal | null,
+  ): Promise<Response> {
+    const controller = new AbortController();
+
+    if (callerSignal) {
+      if (callerSignal.aborted) {
+        controller.abort(callerSignal.reason);
+      } else {
+        callerSignal.addEventListener("abort", () => {
+          controller.abort(callerSignal.reason);
+        });
+      }
+    }
+
+    const timeoutId = setTimeout(() => {
+      controller.abort(new TimeoutError(timeout));
+    }, timeout);
+
+    try {
+      const response = await fetch(finalUrl, {
+        ...init,
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      return response;
+    } catch (err) {
+      clearTimeout(timeoutId);
+
+      if (err instanceof DOMException && err.name === "AbortError") {
+        const reason = controller.signal.reason;
+        if (reason instanceof TimeoutError) throw reason;
+        throw reason instanceof Error
+          ? reason
+          : new TimeoutError(timeout, { cause: err });
+      }
+
+      throw err;
+    }
+  }
+
   async function request<T>(
     url: string,
     options: ApiRequestConfig = {},
@@ -86,40 +135,81 @@ export function createApiClient(baseUrl: string) {
 
     const { url: finalUrl, ...init } = config;
     const method = (init.method ?? "GET").toUpperCase();
+    const callerSignal = init.signal;
 
     const maxAttempts = retryConfig ? retryConfig.maxRetries + 1 : 1;
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      const controller = new AbortController();
-      const callerSignal = init.signal;
-
-      // Propagar abort do caller para o controller interno
-      if (callerSignal) {
-        if (callerSignal.aborted) {
-          controller.abort(callerSignal.reason);
-        } else {
-          callerSignal.addEventListener("abort", () => {
-            controller.abort(callerSignal.reason);
-          });
-        }
-      }
-
-      const timeoutId = setTimeout(() => {
-        controller.abort(new TimeoutError(timeout));
-      }, timeout);
-
       try {
-        const response = await fetch(finalUrl, {
-          ...init,
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
+        const response = await executeFetch(
+          finalUrl,
+          init,
+          timeout,
+          callerSignal,
+        );
 
         let data = (await response.json().catch(() => ({}))) as T;
 
         for (const fn of responseInterceptors) {
           data = await fn(response, data);
+        }
+
+        // 401: tentar refresh + retry da request original (uma unica vez)
+        if (response.status === 401) {
+          const newToken = await refreshWithMutex();
+          if (newToken) {
+            // Re-executar a request com o novo token
+            const retryInit = {
+              ...init,
+              headers: {
+                ...init.headers,
+                Authorization: `Bearer ${newToken}`,
+              },
+            };
+
+            const retryResponse = await executeFetch(
+              finalUrl,
+              retryInit,
+              timeout,
+              callerSignal,
+            );
+
+            let retryData = (await retryResponse.json().catch(() => ({}))) as T;
+
+            for (const fn of responseInterceptors) {
+              retryData = await fn(retryResponse, retryData);
+            }
+
+            if (!retryResponse.ok) {
+              throw new ApiError(
+                `HTTP ${retryResponse.status}`,
+                retryResponse.status,
+                {
+                  details:
+                    typeof retryData === "object" && retryData !== null
+                      ? (retryData as Record<string, unknown>)
+                      : undefined,
+                },
+              );
+            }
+
+            return {
+              data: retryData,
+              status: retryResponse.status,
+              headers: retryResponse.headers,
+            };
+          }
+
+          // Refresh falhou -- sessao expirada
+          notifyRefreshFailure();
+          throw new ApiError("Authentication required", 401, {
+            details: {
+              message:
+                typeof data === "object" && data !== null
+                  ? ((data as Record<string, unknown>).message as string)
+                  : undefined,
+            },
+          });
         }
 
         if (!response.ok) {
@@ -143,18 +233,11 @@ export function createApiClient(baseUrl: string) {
 
         return { data, status: response.status, headers: response.headers };
       } catch (err) {
-        clearTimeout(timeoutId);
-
-        // Se ja e um ApiError com retry pendente, ele foi re-thrown — nao retenta
+        // Se ja e um ApiError, propagar diretamente
         if (err instanceof ApiError) throw err;
 
-        if (err instanceof DOMException && err.name === "AbortError") {
-          const reason = controller.signal.reason;
-          if (reason instanceof TimeoutError) throw reason;
-          throw reason instanceof Error
-            ? reason
-            : new TimeoutError(timeout, { cause: err });
-        }
+        // Timeouts ja foram tratados no executeFetch
+        if (err instanceof TimeoutError) throw err;
 
         // Erro de rede - retentar se possivel
         if (retryConfig && attempt < maxAttempts - 1) {
@@ -171,6 +254,24 @@ export function createApiClient(baseUrl: string) {
     throw new NetworkError("Request failed after all retries");
   }
 
+  /**
+   * Monta body e headers para requests com JSON body.
+   * Quando body e undefined, nao envia Content-Type nem body,
+   * evitando FST_ERR_CTP_EMPTY_JSON_BODY no Fastify.
+   */
+  function withJsonBody(
+    body: unknown,
+    options?: ApiRequestConfig,
+  ): Pick<ApiRequestConfig, "body" | "headers"> {
+    if (body === undefined) {
+      return options?.headers ? { headers: options.headers } : {};
+    }
+    return {
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json", ...options?.headers },
+    };
+  }
+
   const get = <T>(url: string, options?: ApiRequestConfig) =>
     request<T>(url, { ...options, method: "GET" });
 
@@ -178,24 +279,21 @@ export function createApiClient(baseUrl: string) {
     request<T>(url, {
       ...options,
       method: "POST",
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json", ...options?.headers },
+      ...withJsonBody(body, options),
     });
 
   const put = <T>(url: string, body?: unknown, options?: ApiRequestConfig) =>
     request<T>(url, {
       ...options,
       method: "PUT",
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json", ...options?.headers },
+      ...withJsonBody(body, options),
     });
 
   const patch = <T>(url: string, body?: unknown, options?: ApiRequestConfig) =>
     request<T>(url, {
       ...options,
       method: "PATCH",
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json", ...options?.headers },
+      ...withJsonBody(body, options),
     });
 
   const del = <T>(url: string, options?: ApiRequestConfig) =>

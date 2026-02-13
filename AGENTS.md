@@ -102,6 +102,7 @@ O frontend consome a API via `apiClient` (`@/lib/api/client`) configurado com `N
 | ----------------------------------------------------------- | ---------------------------------------------- |
 | Guia de contribuicao — commits, scripts, CI, git hooks      | [CONTRIBUTING.md](CONTRIBUTING.md)             |
 | Catalogo de features — 25 features com API surface e paths  | [docs/FEATURES.md](docs/FEATURES.md)           |
+| Autenticacao — fluxo ponta a ponta, JWT, refresh, guards    | [docs/AUTH.md](docs/AUTH.md)                   |
 | Referencias UI/UX externas — libs, ferramentas e tendencias | [docs/UI-REFERENCES.md](docs/UI-REFERENCES.md) |
 | Backend — endpoints, modulos, como adicionar modulos        | [backend/README.md](backend/README.md)         |
 

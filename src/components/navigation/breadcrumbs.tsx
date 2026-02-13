@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -49,16 +51,18 @@ export function Breadcrumbs() {
           </BreadcrumbLink>
         </BreadcrumbItem>
         {crumbs.map((c, i) => (
-          <BreadcrumbItem key={c.href}>
+          <React.Fragment key={c.href}>
             <BreadcrumbSeparator />
-            {i === crumbs.length - 1 ? (
-              <BreadcrumbPage>{c.label}</BreadcrumbPage>
-            ) : (
-              <BreadcrumbLink asChild>
-                <Link href={c.href}>{c.label}</Link>
-              </BreadcrumbLink>
-            )}
-          </BreadcrumbItem>
+            <BreadcrumbItem>
+              {i === crumbs.length - 1 ? (
+                <BreadcrumbPage>{c.label}</BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink asChild>
+                  <Link href={c.href}>{c.label}</Link>
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
+          </React.Fragment>
         ))}
       </BreadcrumbList>
     </Breadcrumb>

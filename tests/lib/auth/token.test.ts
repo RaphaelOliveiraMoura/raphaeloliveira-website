@@ -13,7 +13,6 @@ function createFakeJwt(payload: Record<string, unknown>): string {
 describe("tokenManager", () => {
   beforeEach(() => {
     tokenManager.clear();
-    sessionStorage.clear();
   });
 
   afterEach(() => {
@@ -24,7 +23,7 @@ describe("tokenManager", () => {
     expect(tokenManager.get()).toBeNull();
   });
 
-  it("stores and retrieves a token", () => {
+  it("stores and retrieves a token in memory", () => {
     const token = createFakeJwt({
       sub: "user1",
       exp: Date.now() / 1000 + 3600,
@@ -33,11 +32,10 @@ describe("tokenManager", () => {
     expect(tokenManager.get()).toBe(token);
   });
 
-  it("clears the token", () => {
+  it("clears the token from memory", () => {
     tokenManager.set(createFakeJwt({ sub: "1" }));
     tokenManager.clear();
     expect(tokenManager.get()).toBeNull();
-    expect(sessionStorage.getItem("core-stack-access-token")).toBeNull();
   });
 
   it("returns auth header with token", () => {
@@ -81,17 +79,18 @@ describe("tokenManager", () => {
     expect(tokenManager.getTimeToExpiry()).toBeGreaterThan(0);
   });
 
-  it("rejects expired tokens on get from storage", () => {
-    const expired = createFakeJwt({ exp: Date.now() / 1000 - 100 });
-    sessionStorage.setItem("core-stack-access-token", expired);
-    // Reset in-memory
-    tokenManager._token = null;
-    expect(tokenManager.get()).toBeNull();
-  });
-
-  it("persists to sessionStorage", () => {
+  it("does not persist to sessionStorage (in-memory only)", () => {
     const token = createFakeJwt({ sub: "1" });
     tokenManager.set(token);
-    expect(sessionStorage.getItem("core-stack-access-token")).toBe(token);
+    expect(sessionStorage.getItem("core-stack-access-token")).toBeNull();
+  });
+
+  it("returns null after clear even if set was called before", () => {
+    tokenManager.set(
+      createFakeJwt({ sub: "1", exp: Date.now() / 1000 + 3600 }),
+    );
+    tokenManager.clear();
+    expect(tokenManager.get()).toBeNull();
+    expect(tokenManager.getPayload()).toBeNull();
   });
 });

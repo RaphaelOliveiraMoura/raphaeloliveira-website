@@ -67,6 +67,7 @@ export interface DataTableProps<TData> {
   bulkActions?: DataTableBulkAction<TData>[];
   emptyMessage?: string;
   enableSorting?: boolean;
+  isLoading?: boolean;
 }
 
 function withSelectionColumn<TData>(
@@ -113,6 +114,7 @@ export function DataTable<TData extends { id?: string }>({
   bulkActions = [],
   emptyMessage,
   enableSorting = true,
+  isLoading: _isLoading = false,
 }: DataTableProps<TData>) {
   const t = useTranslations("common");
   const manualPagination = !!pagination;
@@ -133,15 +135,19 @@ export function DataTable<TData extends { id?: string }>({
     manualSorting: !!onSortChange,
     pageCount: manualPagination ? pageCount : undefined,
     state: {
-      pagination: manualPagination
+      ...(manualPagination && pagination
         ? {
-            pageIndex: (pagination?.page ?? 1) - 1,
-            pageSize: pagination?.pageSize ?? 10,
+            pagination: {
+              pageIndex: (pagination.page ?? 1) - 1,
+              pageSize: pagination.pageSize ?? 10,
+            },
           }
-        : undefined,
-      sorting: sorting
-        ? [{ id: sorting.field, desc: sorting.dir === "desc" }]
-        : undefined,
+        : {}),
+      ...(sorting
+        ? {
+            sorting: [{ id: sorting.field, desc: sorting.dir === "desc" }],
+          }
+        : {}),
     },
     onPaginationChange: manualPagination
       ? (updater) => {

@@ -11,6 +11,8 @@ import {
   loginSchema,
   meResponseSchema,
   refreshResponseSchema,
+  registerResponseSchema,
+  registerSchema,
   resetPasswordSchema,
   socialLoginResponseSchema,
   socialLoginSchema,
@@ -78,6 +80,45 @@ export async function authRoutes(app: FastifyInstance) {
       });
 
       return reply.send({
+        accessToken: result.accessToken,
+        user: result.user,
+      });
+    },
+  );
+
+  // ---- POST /auth/register ----
+  server.post(
+    "/register",
+    {
+      schema: {
+        tags: ["Auth"],
+        summary: "Register a new user with email and password",
+        body: registerSchema,
+        response: {
+          201: registerResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      request.ctx.action = "auth.register";
+      request.ctx.authEmail = request.body.email;
+
+      const result = await authService.register(request.body, request.ip);
+
+      // Enrich ctx with the new user
+      request.ctx.userId = result.user.id;
+      request.ctx.userRole = result.user.role;
+
+      // Set refresh token as httpOnly cookie
+      reply.setCookie(REFRESH_COOKIE, result.refreshToken, {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: getRefreshCookieMaxAge(),
+      });
+
+      return reply.status(201).send({
         accessToken: result.accessToken,
         user: result.user,
       });

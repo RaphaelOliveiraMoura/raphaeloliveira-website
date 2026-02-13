@@ -8,15 +8,20 @@ import {
   useState,
 } from "react";
 
+import { apiClient } from "@/lib/api";
+import { setupAuthInterceptors } from "@/lib/api/auth-interceptor";
+import type { SocialProvider } from "@/lib/auth/social-login";
 import { tokenManager } from "@/lib/auth/token";
 
-import type { User } from "@/types/auth";
+import type { AuthLoginResponse, AuthTokenResponse, User } from "@/types/auth";
 
 interface AuthContextValue {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
+  socialLogin: (idToken: string, provider: SocialProvider) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: User | null) => void;
 }
@@ -29,15 +34,22 @@ export function useAuth(): AuthContextValue {
   return ctx;
 }
 
+// Auth routes via proxy Next.js (mesma origin, para cookie handling)
 const AUTH_ME_URL = "/api/auth/me";
 const AUTH_LOGIN_URL = "/api/auth/login";
 const AUTH_LOGOUT_URL = "/api/auth/logout";
 const AUTH_REFRESH_URL = "/api/auth/refresh";
+const AUTH_REGISTER_URL = "/api/auth/register";
+const AUTH_SOCIAL_URL = "/api/auth/social";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  /**
+   * Chama o proxy de refresh e retorna o novo access token.
+   * O refresh-token cookie e enviado automaticamente pelo browser.
+   */
   const refreshAccessToken = useCallback(async (): Promise<string | null> => {
     try {
       const res = await fetch(AUTH_REFRESH_URL, {
@@ -45,19 +57,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         credentials: "include",
       });
       if (!res.ok) return null;
-      const data = (await res.json()) as {
-        token?: string;
-        accessToken?: string;
-      };
-      const token = data.token ?? data.accessToken ?? null;
-      if (token) tokenManager.set(token);
-      return token;
+      const data = (await res.json()) as AuthTokenResponse;
+      if (data.accessToken) tokenManager.set(data.accessToken);
+      return data.accessToken ?? null;
     } catch {
       return null;
     }
   }, []);
 
   useEffect(() => {
+    // Configurar auth interceptors do apiClient (idempotente a nivel do modulo)
+    setupAuthInterceptors(apiClient, {
+      getToken: () => tokenManager.get(),
+      refreshToken: refreshAccessToken,
+      onRefreshFailure: () => {
+        tokenManager.clear();
+        setUser(null);
+      },
+    });
+
     // Registrar handler de refresh para auto-refresh proativo
     tokenManager.setRefreshHandler(refreshAccessToken);
 
@@ -67,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         let token = tokenManager.get();
 
-        // Se token expirado ou ausente, tentar refresh
+        // Sem token em memoria (nova aba, refresh de pagina) → tentar refresh via cookie
         if (!token || tokenManager.isExpired(token)) {
           token = await refreshAccessToken();
         }
@@ -78,6 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
+        // Buscar dados do usuario via proxy /api/auth/me
         const res = await fetch(AUTH_ME_URL, {
           headers: { Authorization: `Bearer ${token}` },
           credentials: "include",
@@ -114,15 +133,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       body: JSON.stringify({ email, password }),
     });
     if (!res.ok) throw new Error("Login failed");
-    const data = (await res.json()) as {
-      user: User;
-      token?: string;
-      accessToken?: string;
-    };
-    const token = data.token ?? data.accessToken ?? null;
-    if (token) tokenManager.set(token);
+    const data = (await res.json()) as AuthLoginResponse;
+    if (data.accessToken) tokenManager.set(data.accessToken);
     setUser(data.user);
   }, []);
+
+  const register = useCallback(
+    async (name: string, email: string, password: string) => {
+      const res = await fetch(AUTH_REGISTER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ name, email, password }),
+      });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as {
+          message?: string;
+        };
+        throw new Error(data.message ?? "Registration failed");
+      }
+      const data = (await res.json()) as AuthLoginResponse;
+      if (data.accessToken) tokenManager.set(data.accessToken);
+      setUser(data.user);
+    },
+    [],
+  );
+
+  const socialLogin = useCallback(
+    async (idToken: string, provider: SocialProvider) => {
+      const res = await fetch(AUTH_SOCIAL_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ idToken, provider }),
+      });
+      if (!res.ok) throw new Error("Social login failed");
+      const data = (await res.json()) as AuthLoginResponse;
+      if (data.accessToken) tokenManager.set(data.accessToken);
+      setUser(data.user);
+    },
+    [],
+  );
 
   const logout = useCallback(async () => {
     try {
@@ -142,6 +193,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
     isLoading,
     login,
+    register,
+    socialLogin,
     logout,
     setUser: setUserState,
   };

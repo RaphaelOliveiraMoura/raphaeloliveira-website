@@ -46,6 +46,7 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
+import { useCreateFeedback, useUploadFile } from "@/lib/api/hooks";
 import { toast } from "@/lib/feedback";
 import { useTranslations } from "@/lib/i18n";
 import {
@@ -399,22 +400,39 @@ function WizardStepFields({ stepIndex }: { stepIndex: number }) {
 export default function FormsPage() {
   const t = useTranslations("examples");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const createFeedback = useCreateFeedback();
+  const uploadFile = useUploadFile();
 
-  const handleContactSubmit = (data: ContactFormValues) => {
-    toast.success(t("forms.submitted"));
-    // eslint-disable-next-line no-console -- Demo page: showing form data in console for development
-    console.log("Contact form:", data);
+  const handleContactSubmit = async (data: ContactFormValues) => {
+    try {
+      await createFeedback.mutateAsync({
+        type: "improvement",
+        title: `Contact from ${data.fullName}`,
+        description: `Email: ${data.email}\nPhone: ${data.phone}\nBio: ${data.bio ?? "N/A"}\nRole: ${data.role}`,
+        metadata: { source: "contact-form", experience: data.experience },
+      });
+      toast.success("Feedback submitted to backend!");
+    } catch {
+      toast.error("Failed to submit feedback");
+    }
   };
 
   const handleMaskedSubmit = (data: MaskedFormValues) => {
     toast.success(t("forms.submitted"));
-    // eslint-disable-next-line no-console -- Demo page: showing form data in console for development
+    // eslint-disable-next-line no-console -- Demo: masked form nao tem endpoint dedicado
     console.log("Masked form:", data);
   };
 
-  const handleFileUpload = (files: File[]) => {
+  const handleFileUpload = async (files: File[]) => {
     setUploadedFiles(files);
-    toast.success(`${files.length} file(s) uploaded`);
+    for (const file of files) {
+      try {
+        await uploadFile.mutateAsync(file);
+        toast.success(`${file.name} uploaded to backend!`);
+      } catch {
+        toast.error(`Failed to upload ${file.name}`);
+      }
+    }
   };
 
   return (

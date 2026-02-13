@@ -63,7 +63,7 @@ export function createAuthMiddleware(
     // Rota protegida sem sessao → redirect para login
     if (isProtected && !isPublic && !hasSession) {
       const loginUrl = new URL(cfg.loginPath, request.url);
-      loginUrl.searchParams.set("callbackUrl", request.nextUrl.pathname);
+      loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
 

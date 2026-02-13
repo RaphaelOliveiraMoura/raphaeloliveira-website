@@ -5,3 +5,4 @@ dist/
 coverage/
 test-uploads/
 test-tmp-fixtures/
+uploads/

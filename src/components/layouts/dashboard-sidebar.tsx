@@ -4,13 +4,23 @@ import { useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  Bell,
   Blocks,
   ChevronsRight,
   Database,
+  FileSearch,
   FileText,
+  Flag,
+  Key,
   LayoutDashboard,
+  MessageSquare,
+  Monitor,
   PanelLeft,
+  Search,
   Settings,
+  Shield,
+  Upload,
+  Webhook,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,12 +35,82 @@ import { Link, usePathname, useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-breakpoint";
 
-const NAV_ITEMS = [
-  { href: "/dashboard", key: "dashboard" as const, icon: LayoutDashboard },
-  { href: "/dashboard/data", key: "data" as const, icon: Database },
-  { href: "/dashboard/forms", key: "forms" as const, icon: FileText },
-  { href: "/dashboard/settings", key: "settings" as const, icon: Settings },
-  { href: "/examples", key: "examples" as const, icon: Blocks },
+type NavKey =
+  | "dashboard"
+  | "data"
+  | "feedback"
+  | "uploads"
+  | "search"
+  | "forms"
+  | "roles"
+  | "audit"
+  | "featureFlags"
+  | "webhooks"
+  | "apiKeys"
+  | "notifications"
+  | "sessions"
+  | "settings"
+  | "examples";
+
+interface NavItem {
+  href: string;
+  key: NavKey;
+  icon: typeof LayoutDashboard;
+  group?: string;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  // Principal
+  { href: "/dashboard", key: "dashboard", icon: LayoutDashboard },
+  // Dados
+  { href: "/dashboard/data", key: "data", icon: Database, group: "data" },
+  {
+    href: "/dashboard/feedback",
+    key: "feedback",
+    icon: MessageSquare,
+    group: "data",
+  },
+  { href: "/dashboard/uploads", key: "uploads", icon: Upload, group: "data" },
+  { href: "/dashboard/search", key: "search", icon: Search, group: "data" },
+  // Formularios
+  { href: "/dashboard/forms", key: "forms", icon: FileText },
+  // Administracao
+  { href: "/dashboard/roles", key: "roles", icon: Shield, group: "admin" },
+  { href: "/dashboard/audit", key: "audit", icon: FileSearch, group: "admin" },
+  {
+    href: "/dashboard/feature-flags",
+    key: "featureFlags",
+    icon: Flag,
+    group: "admin",
+  },
+  {
+    href: "/dashboard/webhooks",
+    key: "webhooks",
+    icon: Webhook,
+    group: "admin",
+  },
+  { href: "/dashboard/api-keys", key: "apiKeys", icon: Key, group: "admin" },
+  // Conta
+  {
+    href: "/dashboard/notifications",
+    key: "notifications",
+    icon: Bell,
+    group: "account",
+  },
+  {
+    href: "/dashboard/sessions",
+    key: "sessions",
+    icon: Monitor,
+    group: "account",
+  },
+  {
+    href: "/dashboard/settings",
+    key: "settings",
+    icon: Settings,
+    group: "account",
+  },
+  // Exemplos
+  { href: "/examples", key: "examples", icon: Blocks },
 ];
 
 export function DashboardSidebar() {

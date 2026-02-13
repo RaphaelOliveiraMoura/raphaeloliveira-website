@@ -1,33 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-import type { User } from "@/types/auth";
+import { proxyToBackend } from "@/app/api/backend-proxy";
 
 /**
  * GET /api/auth/me
- * Retorna o usuario autenticado com base no token Bearer.
- * Implementacao mock para demonstracao do template.
+ * Proxy para o backend Fastify: GET /auth/me
  */
 export async function GET(request: NextRequest) {
-  const authorization = request.headers.get("Authorization");
-
-  if (!authorization?.startsWith("Bearer ")) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const token = authorization.slice(7);
-
-  if (!token || token === "invalid") {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-  }
-
-  // Mock: retorna um usuario baseado no token
-  const user: User = {
-    id: "1",
-    name: "Demo User",
-    email: "demo@corestack.dev",
-    role: "admin",
-    avatar: undefined,
-  };
-
-  return NextResponse.json(user);
+  return proxyToBackend({
+    path: "/auth/me",
+    method: "GET",
+    request,
+    forwardBody: false,
+  });
 }

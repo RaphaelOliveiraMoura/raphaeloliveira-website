@@ -1,3 +1,4 @@
+import { RequireAuth } from "@/components/auth";
 import {
   DashboardNavbar,
   DashboardSidebar,
@@ -6,8 +7,6 @@ import {
 import { CommandPalette } from "@/components/navigation";
 
 import { generateMetadata as generateSeoMetadata } from "@/lib/seo";
-
-import { AuthProvider } from "@/providers/auth-provider";
 
 export const metadata = generateSeoMetadata({
   title: "Dashboard — Core Stack",
@@ -22,7 +21,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthProvider>
+    <RequireAuth>
       <div className="flex min-h-screen">
         <DashboardSidebar />
         <div className="flex flex-1 flex-col">
@@ -33,6 +32,6 @@ export default function DashboardLayout({
         </div>
       </div>
       <CommandPalette />
-    </AuthProvider>
+    </RequireAuth>
   );
 }

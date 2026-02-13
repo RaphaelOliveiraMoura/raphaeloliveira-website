@@ -27,6 +27,7 @@ import { renderTemplate } from "../../services/mail/templates";
 import type {
   ForgotPasswordInput,
   LoginInput,
+  RegisterInput,
   ResetPasswordInput,
   SocialLoginInput,
   VerifyEmailInput,
@@ -176,6 +177,82 @@ export class AuthService {
     });
 
     domainEvents.emit("auth.login", {
+      userId: user.id,
+      email: user.email,
+      ip,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    };
+  }
+
+  /**
+   * Register a new user with email and password.
+   * Creates the user, signs tokens, and returns the same shape as login (auto-login).
+   */
+  async register(
+    input: RegisterInput,
+    ip = "unknown",
+  ): Promise<TokenPair & { user: AuthenticatedUser }> {
+    // Check if email is already taken
+    const [existing] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.email, input.email), isNull(users.deletedAt)))
+      .limit(1);
+
+    if (existing) {
+      throw new ValidationError({
+        email: "A user with this email already exists",
+      });
+    }
+
+    const passwordHash = await hashPassword(input.password);
+
+    const [user] = await db
+      .insert(users)
+      .values({
+        name: input.name,
+        email: input.email,
+        passwordHash,
+        role: "user",
+      })
+      .returning();
+
+    if (!user) {
+      throw new Error("Failed to create user");
+    }
+
+    domainEvents.emit("user.created", {
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+    });
+
+    // Auto-login: sign tokens
+    const payload = { id: user.id, email: user.email, role: user.role };
+    const accessToken = this.app.jwt.sign(payload);
+
+    const refreshToken = randomUUID();
+    const expiresAt = new Date(
+      Date.now() + parseDuration(env.JWT_REFRESH_EXPIRATION),
+    );
+
+    await db.insert(refreshTokens).values({
+      token: refreshToken,
+      userId: user.id,
+      expiresAt,
+    });
+
+    domainEvents.emit("auth.register", {
       userId: user.id,
       email: user.email,
       ip,

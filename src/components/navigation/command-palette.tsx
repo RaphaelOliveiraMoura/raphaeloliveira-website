@@ -16,13 +16,20 @@ import { useKeyboardShortcut } from "@/hooks";
 
 type CommandLabelKey =
   | "nav.goToDashboard"
-  | "nav.users"
-  | "nav.posts"
-  | "nav.settings"
   | "nav.goToData"
   | "nav.goToForms"
   | "nav.goToSettings"
-  | "nav.goToExamples";
+  | "nav.goToExamples"
+  | "nav.goToFeedback"
+  | "nav.goToUploads"
+  | "nav.goToSearch"
+  | "nav.goToRoles"
+  | "nav.goToAudit"
+  | "nav.goToFeatureFlags"
+  | "nav.goToWebhooks"
+  | "nav.goToApiKeys"
+  | "nav.goToNotifications"
+  | "nav.goToSessions";
 
 interface Command {
   id: string;
@@ -42,13 +49,73 @@ const COMMANDS: Command[] = [
     id: "data",
     labelKey: "nav.goToData",
     href: "/dashboard/data",
-    keywords: ["table", "list", "export"],
+    keywords: ["table", "list", "export", "users"],
+  },
+  {
+    id: "feedback",
+    labelKey: "nav.goToFeedback",
+    href: "/dashboard/feedback",
+    keywords: ["bug", "feature", "request", "vote"],
+  },
+  {
+    id: "uploads",
+    labelKey: "nav.goToUploads",
+    href: "/dashboard/uploads",
+    keywords: ["files", "images", "documents"],
+  },
+  {
+    id: "search",
+    labelKey: "nav.goToSearch",
+    href: "/dashboard/search",
+    keywords: ["find", "query"],
   },
   {
     id: "forms",
     labelKey: "nav.goToForms",
     href: "/dashboard/forms",
     keywords: ["input", "validation", "upload"],
+  },
+  {
+    id: "roles",
+    labelKey: "nav.goToRoles",
+    href: "/dashboard/roles",
+    keywords: ["permissions", "access", "rbac"],
+  },
+  {
+    id: "audit",
+    labelKey: "nav.goToAudit",
+    href: "/dashboard/audit",
+    keywords: ["logs", "activity", "tracking"],
+  },
+  {
+    id: "featureFlags",
+    labelKey: "nav.goToFeatureFlags",
+    href: "/dashboard/feature-flags",
+    keywords: ["toggle", "rollout", "flags"],
+  },
+  {
+    id: "webhooks",
+    labelKey: "nav.goToWebhooks",
+    href: "/dashboard/webhooks",
+    keywords: ["events", "hooks", "endpoints"],
+  },
+  {
+    id: "apiKeys",
+    labelKey: "nav.goToApiKeys",
+    href: "/dashboard/api-keys",
+    keywords: ["tokens", "keys", "authentication"],
+  },
+  {
+    id: "notifications",
+    labelKey: "nav.goToNotifications",
+    href: "/dashboard/notifications",
+    keywords: ["alerts", "messages", "inbox"],
+  },
+  {
+    id: "sessions",
+    labelKey: "nav.goToSessions",
+    href: "/dashboard/sessions",
+    keywords: ["devices", "login", "revoke"],
   },
   {
     id: "settings",
@@ -61,18 +128,6 @@ const COMMANDS: Command[] = [
     labelKey: "nav.goToExamples",
     href: "/examples",
     keywords: ["components", "hooks", "demo"],
-  },
-  {
-    id: "users",
-    labelKey: "nav.users",
-    href: "/users",
-    keywords: ["people"],
-  },
-  {
-    id: "posts",
-    labelKey: "nav.posts",
-    href: "/posts",
-    keywords: ["blog", "content"],
   },
 ];
 

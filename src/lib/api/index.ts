@@ -1,4 +1,3 @@
-export { setupAuthInterceptors } from "./auth-interceptor";
 export { apiClient, createApiClient } from "./client";
 export { normalizeApiError } from "./errors";
 export type {
@@ -8,3 +7,6 @@ export type {
   ResponseInterceptor,
   RetryConfig,
 } from "./types";
+
+// React Query hooks
+export * from "./hooks";

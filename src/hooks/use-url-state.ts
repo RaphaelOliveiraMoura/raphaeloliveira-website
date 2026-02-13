@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+
+import { usePathname, useRouter } from "@/lib/i18n";
 
 export function useUrlState<T extends string>(
   key: string,

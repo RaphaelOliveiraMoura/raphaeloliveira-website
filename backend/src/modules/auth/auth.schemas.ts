@@ -27,6 +27,24 @@ export const meResponseSchema = z.object({
   createdAt: z.string(),
 });
 
+// ---- Registration ----
+
+export const registerSchema = z.object({
+  name: z.string().min(2).max(255),
+  email: z.string().email(),
+  password: z.string().min(6).max(128),
+});
+
+export const registerResponseSchema = z.object({
+  accessToken: z.string(),
+  user: z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    email: z.string().email(),
+    role: z.string(),
+  }),
+});
+
 // ---- Password Reset ----
 
 export const forgotPasswordSchema = z.object({
@@ -66,6 +84,7 @@ export const socialLoginResponseSchema = z.object({
 // ---- Inferred types ----
 
 export type LoginInput = z.infer<typeof loginSchema>;
+export type RegisterInput = z.infer<typeof registerSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
