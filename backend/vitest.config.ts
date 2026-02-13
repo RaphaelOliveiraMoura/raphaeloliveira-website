@@ -6,10 +6,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
-    fileParallelism: false,
-    globalSetup: ["./tests/global-setup.ts"],
-    setupFiles: ["./tests/setup.ts"],
-    include: ["tests/**/*.test.ts"],
     env: {
       NODE_ENV: "test",
       PORT: "0",
@@ -43,6 +39,31 @@ export default defineConfig({
         lines: 70,
       },
     },
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: "unit",
+          include: ["tests/lib/**/*.test.ts", "tests/services/**/*.test.ts"],
+          setupFiles: ["./tests/setup.ts"],
+          sequence: { groupOrder: 1 },
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "integration",
+          include: ["tests/modules/**/*.test.ts"],
+          globalSetup: ["./tests/global-setup.ts"],
+          setupFiles: ["./tests/setup.ts", "./tests/setup-integration.ts"],
+          pool: "forks",
+          maxWorkers: 3,
+          testTimeout: 15_000,
+          hookTimeout: 15_000,
+          sequence: { groupOrder: 2 },
+        },
+      },
+    ],
   },
   resolve: {
     alias: {

@@ -12,7 +12,7 @@ const log = logger.child({ module: "db" });
  * Max 10 connections for the app; 1 for tests.
  */
 const client = postgres(env.DATABASE_URL, {
-  max: env.NODE_ENV === "test" ? 1 : 10,
+  max: env.NODE_ENV === "test" ? 5 : 10,
 });
 
 /**

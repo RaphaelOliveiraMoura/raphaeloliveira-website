@@ -1,24 +1,68 @@
 /**
- * Vitest global setup — runs once before all test files.
+ * Vitest global setup — runs once before all integration test files.
  *
- * Pushes the Drizzle schema to the test database so tables
- * are always in sync with the current schema definitions.
+ * 1. Pushes the Drizzle schema to the template test database.
+ * 2. Creates per-worker databases from the template so each fork
+ *    process has its own isolated database for parallel execution.
  */
 
 import { execSync } from "node:child_process";
 
-const TEST_DATABASE_URL =
-  "postgresql://corestack:corestack@localhost:5433/corestack_test";
+import postgres from "postgres";
 
-export function setup() {
+const BASE_URL = "postgresql://corestack:corestack@localhost:5433";
+const TEMPLATE_DB = "corestack_test";
+
+/**
+ * VITEST_POOL_ID vai de 0 ate maxWorkers (inclusive), entao
+ * precisamos de maxWorkers + 1 databases. Com maxWorkers=3
+ * no vitest.config.ts, precisamos de 4 databases (IDs 0-3).
+ */
+const MAX_POOL_ID = 3;
+
+export async function setup() {
   // eslint-disable-next-line no-console
-  console.log("\n🗄️  Pushing schema to test database...");
+  console.log("\n🗄️  Pushing schema to template database...");
 
   execSync("npx drizzle-kit push --force", {
-    env: { ...process.env, DATABASE_URL: TEST_DATABASE_URL },
+    env: { ...process.env, DATABASE_URL: `${BASE_URL}/${TEMPLATE_DB}` },
     stdio: "inherit",
   });
 
   // eslint-disable-next-line no-console
-  console.log("✅ Test database schema is up to date\n");
+  console.log("✅ Template database schema is up to date");
+
+  // eslint-disable-next-line no-console
+  console.log("🔄 Creating per-worker databases...");
+
+  const client = postgres(`${BASE_URL}/postgres`, {
+    onnotice: () => {}, // Suppress PostgreSQL NOTICE messages
+  });
+
+  for (let i = 0; i <= MAX_POOL_ID; i++) {
+    const dbName = `corestack_test_${i}`;
+    await client.unsafe(`DROP DATABASE IF EXISTS "${dbName}" WITH (FORCE)`);
+    await client.unsafe(
+      `CREATE DATABASE "${dbName}" TEMPLATE "${TEMPLATE_DB}"`,
+    );
+  }
+
+  await client.end();
+
+  // eslint-disable-next-line no-console
+  console.log(`✅ Created ${MAX_POOL_ID + 1} worker databases\n`);
+}
+
+export async function teardown() {
+  const client = postgres(`${BASE_URL}/postgres`, {
+    onnotice: () => {},
+  });
+
+  for (let i = 0; i <= MAX_POOL_ID; i++) {
+    await client.unsafe(
+      `DROP DATABASE IF EXISTS "corestack_test_${i}" WITH (FORCE)`,
+    );
+  }
+
+  await client.end();
 }

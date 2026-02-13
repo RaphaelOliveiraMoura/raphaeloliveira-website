@@ -1,29 +1,9 @@
 import { randomUUID } from "node:crypto";
 
+import { sql } from "drizzle-orm";
+
 import { db } from "../../src/db/index";
-import {
-  apiKeys,
-  auditLogs,
-  emailVerificationTokens,
-  featureFlags,
-  feedbackResponses,
-  feedbacks,
-  feedbackVotes,
-  idempotencyKeys,
-  notificationPreferences,
-  notifications,
-  passwordResetTokens,
-  permissions,
-  refreshTokens,
-  rolePermissions,
-  roles,
-  sessions,
-  settings,
-  uploads,
-  users,
-  webhookDeliveries,
-  webhooks,
-} from "../../src/db/schema/index";
+import { users } from "../../src/db/schema/index";
 import { hashPassword } from "../../src/lib/hash";
 
 export interface TestUser {
@@ -96,28 +76,20 @@ export async function loginTestUser(
 
 /**
  * Clean up all test data. Call in afterAll/afterEach.
- * Order matters due to foreign key constraints.
+ * Uses a single TRUNCATE CASCADE instead of individual DELETEs
+ * for significantly faster cleanup (~1 roundtrip vs ~20).
  */
 export async function cleanupTestData(): Promise<void> {
-  await db.delete(feedbackVotes);
-  await db.delete(feedbackResponses);
-  await db.delete(feedbacks);
-  await db.delete(webhookDeliveries);
-  await db.delete(webhooks);
-  await db.delete(settings);
-  await db.delete(notificationPreferences);
-  await db.delete(notifications);
-  await db.delete(idempotencyKeys);
-  await db.delete(featureFlags);
-  await db.delete(rolePermissions);
-  await db.delete(permissions);
-  await db.delete(roles);
-  await db.delete(apiKeys);
-  await db.delete(sessions);
-  await db.delete(auditLogs);
-  await db.delete(uploads);
-  await db.delete(emailVerificationTokens);
-  await db.delete(passwordResetTokens);
-  await db.delete(refreshTokens);
-  await db.delete(users);
+  await db.execute(sql`
+    TRUNCATE TABLE
+      feedback_votes, feedback_responses, feedbacks,
+      webhook_deliveries, webhooks,
+      settings, notification_preferences, notifications,
+      idempotency_keys, feature_flags,
+      role_permissions, permissions, roles,
+      api_keys, sessions, audit_logs, uploads,
+      email_verification_tokens, password_reset_tokens, refresh_tokens,
+      users
+    CASCADE
+  `);
 }
