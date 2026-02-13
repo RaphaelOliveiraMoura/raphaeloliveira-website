@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { createTestServer, injectRequest } from "../helpers/test-server.js";
+import { createTestServer, injectRequest } from "../helpers/test-server";
 
 describe("Health routes", () => {
   let app: FastifyInstance;

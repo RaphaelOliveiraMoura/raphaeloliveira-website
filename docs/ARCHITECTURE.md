@@ -2,14 +2,17 @@
 
 Documento descrevendo as decisoes arquiteturais, padroes e convencoes do Core Stack.
 
-> **Escopo:** Este documento cobre o "por que" das escolhas arquiteturais. Regras operacionais para agentes de IA estao em `.cursor/rules/`. Guia de contribuicao para humanos esta em [CONTRIBUTING.md](CONTRIBUTING.md).
+> **Escopo:** Este documento cobre o "por que" das escolhas arquiteturais. Regras operacionais para agentes de IA estao em `.cursor/rules/`. Guia de contribuicao para humanos esta em [CONTRIBUTING.md](CONTRIBUTING.md). Documentacao detalhada da API: [`backend/README.md`](../backend/README.md).
 
 ## Visao Geral
 
-Core Stack e construido sobre o **Next.js App Router**, utilizando React Server Components como padrao e Client Components apenas quando necessario (interatividade, hooks de estado, eventos de browser).
+Core Stack e um template **full-stack** composto por dois projetos independentes:
+
+- **Frontend:** Next.js App Router com React Server Components
+- **Backend:** Fastify API REST com Drizzle ORM e PostgreSQL
 
 ```
-[Browser] → [Next.js App Router]
+[Browser] → [Next.js App Router (porta 3000)]
                   │
         ┌─────────┼─────────┐
         │         │         │
@@ -18,10 +21,14 @@ Core Stack e construido sobre o **Next.js App Router**, utilizando React Server 
         │         │         │
         └─────────┼─────────┘
                   │
-           [API / Database]
+      [Fastify API REST (porta 3001)]
+                  │
+         [Drizzle ORM + PostgreSQL]
 ```
 
-## Decisoes Arquiteturais
+O frontend e o backend sao independentes: cada um tem seu proprio `package.json`, scripts, testes e pipeline de build. O frontend consome a API via `apiClient` configurado em `@/lib/api/client`.
+
+## Decisoes Arquiteturais — Frontend
 
 ### 1. App Router (vs Pages Router)
 
@@ -111,34 +118,158 @@ O estado e dividido em tres camadas:
 | Integration | Testing Library + MSW | Fluxos com API mockada      |
 | E2E         | Playwright            | Fluxos completos no browser |
 
+## Decisoes Arquiteturais — Backend
+
+> Documentacao detalhada de endpoints, logging e como adicionar modulos: [`backend/README.md`](../backend/README.md).
+
+### 8. Fastify (vs Express/Hono)
+
+**Escolha:** Fastify v5 como framework HTTP do backend.
+
+**Motivo:**
+
+- Performance superior ao Express (schema-based serialization, compilacao JIT de JSON)
+- Sistema de plugins robusto com encapsulamento de contexto
+- Suporte nativo a JSON Schema / Swagger via decorators
+- Ecossistema maduro (`@fastify/jwt`, `@fastify/cors`, `@fastify/rate-limit`, `@fastify/cookie`)
+- TypeScript first-class com type providers
+
+### 9. Drizzle ORM (vs Prisma/TypeORM)
+
+**Escolha:** Drizzle ORM com driver `postgres.js`.
+
+**Motivo:**
+
+- Queries type-safe que mapeiam 1:1 com SQL (sem abstractions magicas)
+- Zero overhead em runtime (nao gera query engine como o Prisma)
+- Migrations SQL puras (transparentes, auditaveis)
+- Drizzle Studio para exploracao visual do banco
+- Excelente inferencia de tipos TypeScript (schema = types)
+
+### 10. Arquitetura Modular por Feature
+
+**Escolha:** Modulos organizados por dominio (`auth/`, `users/`, `health/`) com camadas internas.
+
+**Motivo:**
+
+- Cada modulo e auto-contido (routes, service, repository, schemas, types)
+- Facilita adicionar novos modulos sem afetar existentes
+- Separacao clara de responsabilidades entre camadas
+
+**Fluxo de uma request:**
+
+```
+Request → Route → [Hooks/Guards] → Service → Repository → Drizzle/DB
+```
+
+| Camada         | Responsabilidade                                              |
+| -------------- | ------------------------------------------------------------- |
+| **Routes**     | Definir endpoints, validar input (Zod), serializar output     |
+| **Services**   | Logica de negocio, sem acesso direto ao banco                 |
+| **Repository** | Encapsular queries Drizzle, retornar entidades de dominio     |
+| **Plugins**    | Concerns transversais (auth, CORS, rate limiting, docs, logs) |
+| **Hooks**      | Pre-handlers reutilizaveis (authenticate, authorize)          |
+
+### 11. JWT com Access + Refresh Tokens
+
+**Escolha:** Access token curto (15min) + Refresh token longo (7d) em cookie httpOnly.
+
+**Motivo:**
+
+- Access token curto limita a janela de exposicao em caso de vazamento
+- Refresh token em cookie httpOnly impede acesso via JavaScript (protecao XSS)
+- Rotacao de refresh token a cada uso (token antigo e revogado)
+- Compativel com o fluxo de auth do frontend (`apiClient` + interceptor de refresh)
+
+### 12. Wide Events / Canonical Log Lines
+
+**Escolha:** Pino com padrao de uma unica linha de log por request.
+
+**Motivo:**
+
+- Um unico log line por request com todo o contexto (userId, action, resource, duration, status)
+- Facilita busca e correlacao em ferramentas de observabilidade (Datadog, Grafana, etc.)
+- Campos enriquecidos ao longo do ciclo da request via `request.ctx`
+- JSON estruturado em producao, formato legivel em desenvolvimento (`pino-pretty`)
+- Nao polui logs com multiplas linhas por request
+
+### 13. Validacao de Env com Zod
+
+**Escolha:** Validar todas as variaveis de ambiente na inicializacao com Zod.
+
+**Motivo:**
+
+- Fail fast: servidor nao inicia se faltar variavel obrigatoria ou tipo estiver errado
+- Schema Zod serve como documentacao viva das env vars
+- Inferencia TypeScript automatica (`env.DATABASE_URL` e tipado como string URL)
+- Valores default para desenvolvimento, sem default em producao para variaveis criticas
+
+### 14. Testes com Banco Real (vs mocks)
+
+**Escolha:** Testes de integracao usando PostgreSQL real (container dedicado na porta 5433).
+
+**Motivo:**
+
+- Testes refletem comportamento real do banco (constraints, tipos, etc.)
+- Drizzle `db:push` recria o schema no banco de teste antes da suite
+- Container isolado para testes (`postgres-test` no docker-compose)
+- CI usa service container do GitHub Actions com a mesma imagem
+- Sem mocks de banco que podem divergir do comportamento real
+
 ## Fluxo de Dados
+
+### Frontend → Backend (mutacoes)
 
 ```
 [Evento do Usuario]
         │
         ▼
-[Client Component] ──→ [Server Action / API Call]
+[Client Component] ──→ [apiClient (fetch wrapper)]
         │                       │
         ▼                       ▼
-[React Query Cache] ←── [API Response]
-        │
-        ▼
-[UI Atualizada]
+[React Query Cache] ←── [Fastify API (porta 3001)]
+        │                       │
+        ▼                       ▼
+[UI Atualizada]          [Drizzle → PostgreSQL]
 ```
 
-Para leitura de dados:
+### Frontend (leitura com SSR)
 
 ```
 [Server Component]
         │
         ▼
-[fetch() com cache] ──→ [API / Database]
+[fetch() com cache] ──→ [Fastify API / Database]
         │
         ▼
 [Render HTML no servidor]
         │
         ▼
 [Streaming para o browser]
+```
+
+### Backend (fluxo interno)
+
+```
+[HTTP Request]
+        │
+        ▼
+[Fastify Plugins] ──→ [CORS, Rate Limit, Auth JWT]
+        │
+        ▼
+[Route Handler] ──→ [Zod validation]
+        │
+        ▼
+[Service] ──→ [Business logic]
+        │
+        ▼
+[Repository] ──→ [Drizzle query]
+        │
+        ▼
+[PostgreSQL]
+        │
+        ▼
+[Response + Canonical Log Line]
 ```
 
 ## Convencoes de Nomenclatura
@@ -148,6 +279,8 @@ Para leitura de dados:
 
 ## Modulos e Dependencias
 
+### Frontend
+
 As funcionalidades sao organizadas em camadas. Cada camada pode depender das abaixo dela:
 
 1. **Fundacao Visual** — Design System, Componentes & Storybook, Layouts & Responsividade, Acessibilidade
@@ -156,3 +289,27 @@ As funcionalidades sao organizadas em camadas. Cada camada pode depender das aba
 4. **Infraestrutura** — Auth, Telemetria & Logging, i18n & SEO
 
 Cada modulo pode ser adotado independentemente. As specs documentam as dependencias entre modulos.
+
+### Backend
+
+Os modulos do backend sao organizados por dominio em `backend/src/modules/`:
+
+| Modulo     | Endpoints                                                 | Descricao                                |
+| ---------- | --------------------------------------------------------- | ---------------------------------------- |
+| **auth**   | `POST /auth/login`, `/refresh`, `/logout`, `GET /auth/me` | Autenticacao JWT com refresh tokens      |
+| **users**  | `GET /users`, `GET /users/:id`, `POST`, `PATCH`, `DELETE` | CRUD de usuarios com RBAC (admin)        |
+| **health** | `GET /health`                                             | Health check (conectividade com o banco) |
+
+Cada modulo segue a mesma estrutura interna: `routes.ts` → `service.ts` → `repository.ts` + `schemas.ts` + `types.ts`. Guia para adicionar novos modulos: [`backend/README.md`](../backend/README.md#adding-a-new-module).
+
+### Integracao Frontend ↔ Backend
+
+O frontend se conecta ao backend via `apiClient` (`@/lib/api/client`) configurado com:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+- **Autenticacao:** O `apiClient` intercepta respostas 401 e automaticamente faz refresh do token
+- **Tipos compartilhados:** Os schemas Zod do backend servem como referencia para os tipos do frontend
+- **CORS:** O backend aceita requests de `CORS_ORIGIN` (default: `http://localhost:3000`)

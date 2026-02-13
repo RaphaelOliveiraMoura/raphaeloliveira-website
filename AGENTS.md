@@ -6,7 +6,12 @@
 
 ## Identidade
 
-Core Stack e um template base universal para projetos Next.js 16 (App Router) com React 19, TypeScript 5 (strict), Tailwind CSS v4, shadcn/ui e React Compiler.
+Core Stack e um template full-stack:
+
+- **Frontend:** Next.js 16 (App Router) com React 19, TypeScript 5 (strict), Tailwind CSS v4, shadcn/ui e React Compiler.
+- **Backend:** Fastify v5 com Drizzle ORM, PostgreSQL 17, JWT auth, Zod validation e Pino logger.
+
+Convencoes:
 
 - **Idioma:** codigo em ingles, documentacao em portugues (BR).
 - **Abordagem:** Spec-Driven Development — toda feature e documentada antes de implementada.

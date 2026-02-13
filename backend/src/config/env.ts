@@ -45,8 +45,7 @@ function loadEnv() {
       })
       .join("\n");
 
-    console.error("❌ Invalid environment variables:\n" + errors);
-    process.exit(1);
+    throw new Error("❌ Invalid environment variables:\n" + errors);
   }
 
   return parsed.data;

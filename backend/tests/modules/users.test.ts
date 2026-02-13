@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { cleanupTestData, createTestUser } from "../helpers/factories.js";
-import { createTestServer, injectRequest } from "../helpers/test-server.js";
+import { cleanupTestData, createTestUser } from "../helpers/factories";
+import { createTestServer, injectRequest } from "../helpers/test-server";
 
 describe("Users routes", () => {
   let app: FastifyInstance;

@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
 
-import { db } from "../../src/db/index.js";
-import { refreshTokens, users } from "../../src/db/schema/index.js";
-import { hashPassword } from "../../src/lib/hash.js";
+import { db } from "../../src/db/index";
+import { refreshTokens, users } from "../../src/db/schema/index";
+import { hashPassword } from "../../src/lib/hash";
 
 export interface TestUser {
   id: string;

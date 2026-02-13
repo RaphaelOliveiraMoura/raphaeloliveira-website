@@ -17,5 +17,21 @@ services:
       timeout: 5s
       retries: 5
 
+  postgres-test:
+    image: postgres:17-alpine
+    container_name: corestack-db-test
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: corestack
+      POSTGRES_PASSWORD: corestack
+      POSTGRES_DB: corestack_test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U corestack"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pgdata:

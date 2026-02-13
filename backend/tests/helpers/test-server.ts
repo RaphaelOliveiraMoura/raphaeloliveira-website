@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 
-import { buildApp } from "../../src/app.js";
+import { buildApp } from "../../src/app";
 
 /**
  * Create a test Fastify instance. Call `.close()` in afterAll.
@@ -34,9 +34,13 @@ export function injectRequest(app: FastifyInstance) {
       app.inject({
         method: "POST",
         url,
-        payload: payload as Record<string, unknown>,
+        ...(payload !== undefined && {
+          payload: payload as Record<string, unknown>,
+        }),
         headers: {
-          "content-type": "application/json",
+          ...(payload !== undefined && {
+            "content-type": "application/json",
+          }),
           ...opts?.headers,
         },
       }),
@@ -49,9 +53,13 @@ export function injectRequest(app: FastifyInstance) {
       app.inject({
         method: "PATCH",
         url,
-        payload: payload as Record<string, unknown>,
+        ...(payload !== undefined && {
+          payload: payload as Record<string, unknown>,
+        }),
         headers: {
-          "content-type": "application/json",
+          ...(payload !== undefined && {
+            "content-type": "application/json",
+          }),
           ...opts?.headers,
         },
       }),
