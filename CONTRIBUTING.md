@@ -94,11 +94,39 @@ npm run typecheck        # TypeScript type-check
 
 Roda em push para `main` e em PRs:
 
-| Step                 | Escopo   | Descricao                                       |
-| -------------------- | -------- | ----------------------------------------------- |
-| Install dependencies | Ambos    | `npm ci` na raiz e em `backend/`                |
-| Lint                 | Frontend | ESLint strict (`lint:ci`)                       |
-| Typecheck (frontend) | Frontend | `tsc --noEmit`                                  |
-| Typecheck (backend)  | Backend  | `tsc --noEmit` no diretorio `backend/`          |
-| Tests (frontend)     | Frontend | Vitest                                          |
-| Tests (backend)      | Backend  | Vitest com PostgreSQL (service container, 5433) |
+| Step                 | Escopo   | Descricao                                        |
+| -------------------- | -------- | ------------------------------------------------ |
+| Install dependencies | Ambos    | `npm ci` na raiz e em `backend/`                 |
+| Lint                 | Frontend | ESLint strict (`lint:ci`)                        |
+| Typecheck (frontend) | Frontend | `tsc --noEmit`                                   |
+| Typecheck (backend)  | Backend  | `tsc --noEmit` no diretorio `backend/`           |
+| Security audit       | Ambos    | `npm audit --omit=dev` (apenas deps de producao) |
+| Tests (frontend)     | Frontend | Vitest                                           |
+| Tests (backend)      | Backend  | Vitest com PostgreSQL (service container, 5433)  |
+
+## Security Audit
+
+Estrategia de triagem de vulnerabilidades (`npm audit`):
+
+| Tipo de dependencia | Politica                      | CI           |
+| ------------------- | ----------------------------- | ------------ |
+| Producao (deps)     | Vulnerabilidades bloqueantes  | Falha o CI   |
+| Desenvolvimento     | Vulnerabilidades informativas | Nao bloqueia |
+
+### Como funciona
+
+- O CI roda `npm audit --omit=dev` para frontend e backend — verifica **apenas** dependencias que vao para o bundle de producao. Se houver vulnerabilidade, o build falha.
+- Vulnerabilidades em devDependencies (Storybook, Vitest, drizzle-kit, etc.) sao revisadas periodicamente mas **nao bloqueiam** o CI, pois nao afetam usuarios em producao.
+
+### Quando agir em vulnerabilidades de devDeps
+
+1. Se existe fix disponivel sem breaking change: rodar `npm audit fix`
+2. Se o fix exige breaking change: avaliar se o upgrade e viavel e priorizar
+3. Se nao existe fix: aceitar o risco, monitorar e aguardar correcao upstream
+
+### Scripts uteis
+
+```bash
+npm audit              # Relatorio completo (deps + devDeps)
+npm run audit:ci       # Apenas deps de producao (mesmo check do CI)
+```

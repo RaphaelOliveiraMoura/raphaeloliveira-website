@@ -31,6 +31,15 @@ Template full-stack universal com **Next.js** (frontend) e **Fastify** (backend)
 | [Swagger/OpenAPI](https://swagger.io/) (`@fastify/swagger`) | 9      | Documentacao de API auto-gerada          |
 | [Vitest](https://vitest.dev/)                               | 3      | Testes unitarios e de integracao         |
 
+## Pre-requisitos
+
+| Ferramenta | Versao minima |
+| ---------- | ------------- |
+| Node.js    | 24 (LTS)      |
+| npm        | 11            |
+
+> Use `nvm install` na raiz do projeto para instalar a versao correta automaticamente (`.nvmrc`).
+
 ## Inicio Rapido
 
 > Lista completa de scripts: [CONTRIBUTING.md](CONTRIBUTING.md) (secao "Scripts").

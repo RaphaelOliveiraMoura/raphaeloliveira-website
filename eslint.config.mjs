@@ -1,3 +1,4 @@
+import { fixupConfigRules } from "@eslint/compat";
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
@@ -5,8 +6,10 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
+  // fixupConfigRules adapta plugins que ainda usam APIs removidas no ESLint 10
+  // (ex: context.getFilename → context.filename)
+  ...fixupConfigRules(nextVitals),
+  ...fixupConfigRules(nextTs),
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

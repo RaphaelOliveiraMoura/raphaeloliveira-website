@@ -35,7 +35,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
           cache-dependency-path: |
             package-lock.json
@@ -46,6 +46,13 @@ jobs:
 
       - name: Install backend dependencies
         run: npm ci
+        working-directory: backend
+
+      - name: Security audit (frontend)
+        run: npm audit --omit=dev
+
+      - name: Security audit (backend)
+        run: npm audit --omit=dev
         working-directory: backend
 
       - name: Lint

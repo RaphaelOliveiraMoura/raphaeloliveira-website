@@ -2,6 +2,10 @@
   "name": "core-stack",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=11.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -22,7 +26,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "pre-commit": "npm run lint:staged && npm run typecheck",
-    "pre-push": "npm run lint && npm run typecheck && npm run test && npm run build"
+    "pre-push": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "audit:ci": "npm audit --omit=dev"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -47,9 +52,9 @@
     "next-intl": "^4.8.2",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",
-    "react": "19.2.3",
+    "react": "19.2.4",
     "react-day-picker": "^9.13.2",
-    "react-dom": "19.2.3",
+    "react-dom": "19.2.4",
     "react-dropzone": "^15.0.0",
     "react-hook-form": "^7.71.1",
     "react-image-crop": "^11.0.10",
@@ -70,6 +75,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.4.1",
     "@commitlint/config-conventional": "^20.4.1",
+    "@eslint/compat": "^2.0.2",
     "@playwright/test": "^1.58.2",
     "@storybook/addon-a11y": "^10.2.8",
     "@storybook/nextjs": "^10.2.8",
@@ -78,14 +84,14 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/dompurify": "^3.0.5",
-    "@types/node": "^20",
+    "@types/dompurify": "^3.2.0",
+    "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^5.1.4",
     "@vitest/coverage-v8": "^4.0.18",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
+    "eslint": "^10",
     "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
