@@ -196,3 +196,106 @@ export function buildSmartSearch(
   // Fallback to ILIKE for short terms
   return buildSearch(term, columns);
 }
+
+// ---- JOIN result helpers ----
+
+/**
+ * Group flattened LEFT JOIN rows into parent entities with nested child arrays.
+ *
+ * Solves the classic SQL JOIN problem where a parent with N children
+ * produces N rows. This function de-duplicates parents and groups
+ * their children into arrays.
+ *
+ * @param rows - Flattened rows from a LEFT JOIN query.
+ * @param parentKey - Key that uniquely identifies the parent (e.g., "id").
+ * @param childFields - Object mapping child array name to child key prefix.
+ *
+ * @example
+ * ```ts
+ * // Query with LEFT JOIN returns flattened rows:
+ * const rows = [
+ *   { id: "1", name: "Admin", permId: "p1", permKey: "users.read" },
+ *   { id: "1", name: "Admin", permId: "p2", permKey: "users.write" },
+ *   { id: "2", name: "User",  permId: null,  permKey: null },
+ * ];
+ *
+ * const grouped = groupJoinResults(rows, "id", {
+ *   permissions: { idKey: "permId", fields: ["permId", "permKey"] },
+ * });
+ *
+ * // Result:
+ * // [
+ * //   { id: "1", name: "Admin", permissions: [{ permId: "p1", permKey: "users.read" }, ...] },
+ * //   { id: "2", name: "User", permissions: [] },
+ * // ]
+ * ```
+ */
+export function groupJoinResults<TRow extends Record<string, unknown>>(
+  rows: TRow[],
+  parentKey: keyof TRow,
+  childGroups: Record<string, { idKey: keyof TRow; fields: (keyof TRow)[] }>,
+): Record<string, unknown>[] {
+  const parentMap = new Map<
+    unknown,
+    { parent: Record<string, unknown>; children: Record<string, unknown[]> }
+  >();
+
+  // Get all child field keys for exclusion from parent
+  const childFieldKeys = new Set<keyof TRow>();
+  for (const group of Object.values(childGroups)) {
+    for (const field of group.fields) {
+      childFieldKeys.add(field);
+    }
+  }
+
+  for (const row of rows) {
+    const parentId = row[parentKey];
+
+    if (!parentMap.has(parentId)) {
+      // Extract parent fields (exclude child fields)
+      const parent: Record<string, unknown> = {};
+      for (const key of Object.keys(row)) {
+        if (!childFieldKeys.has(key as keyof TRow)) {
+          parent[key] = row[key];
+        }
+      }
+
+      // Initialize child arrays
+      const children: Record<string, unknown[]> = {};
+      for (const groupName of Object.keys(childGroups)) {
+        children[groupName] = [];
+      }
+
+      parentMap.set(parentId, { parent, children });
+    }
+
+    const entry = parentMap.get(parentId)!;
+
+    // Extract child rows for each group
+    for (const [groupName, config] of Object.entries(childGroups)) {
+      const childId = row[config.idKey];
+      // Skip null children (LEFT JOIN with no match)
+      if (childId === null || childId === undefined) continue;
+
+      // Avoid duplicates
+      const existing = entry.children[groupName]!;
+      const alreadyAdded = existing.some(
+        (c) =>
+          (c as Record<string, unknown>)[config.idKey as string] === childId,
+      );
+      if (alreadyAdded) continue;
+
+      const child: Record<string, unknown> = {};
+      for (const field of config.fields) {
+        child[field as string] = row[field];
+      }
+      existing.push(child);
+    }
+  }
+
+  // Merge parent with children arrays
+  return Array.from(parentMap.values()).map(({ parent, children }) => ({
+    ...parent,
+    ...children,
+  }));
+}

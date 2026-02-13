@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 import { db } from "../../db/index";
 import type { NewRole, Permission, Role } from "../../db/schema/rbac";
@@ -10,57 +10,119 @@ export interface RoleWithPermissions extends Role {
 
 export class RolesRepository {
   /**
-   * Get all roles with their associated permissions.
+   * Get all roles with their associated permissions using a single JOIN query.
    */
   async findAllWithPermissions(): Promise<RoleWithPermissions[]> {
-    const allRoles = await db.select().from(roles);
-    const allRolePermissions = await db.select().from(rolePermissions);
-    const allPermissions = await db.select().from(permissions);
+    const rows = await db
+      .select({
+        // Role fields
+        id: roles.id,
+        name: roles.name,
+        description: roles.description,
+        isSystem: roles.isSystem,
+        createdAt: roles.createdAt,
+        updatedAt: roles.updatedAt,
+        // Permission fields (nullable due to LEFT JOIN)
+        permId: permissions.id,
+        permKey: permissions.key,
+        permDescription: permissions.description,
+        permResource: permissions.resource,
+        permAction: permissions.action,
+        permCreatedAt: permissions.createdAt,
+      })
+      .from(roles)
+      .leftJoin(rolePermissions, eq(rolePermissions.roleId, roles.id))
+      .leftJoin(permissions, eq(permissions.id, rolePermissions.permissionId));
 
-    const permMap = new Map(allPermissions.map((p) => [p.id, p]));
+    // Group flattened rows into roles with permissions arrays
+    const roleMap = new Map<string, RoleWithPermissions>();
 
-    return allRoles.map((role) => {
-      const permIds = allRolePermissions
-        .filter((rp) => rp.roleId === role.id)
-        .map((rp) => rp.permissionId);
+    for (const row of rows) {
+      if (!roleMap.has(row.id)) {
+        roleMap.set(row.id, {
+          id: row.id,
+          name: row.name,
+          description: row.description,
+          isSystem: row.isSystem,
+          createdAt: row.createdAt,
+          updatedAt: row.updatedAt,
+          permissions: [],
+        });
+      }
 
-      return {
-        ...role,
-        permissions: permIds
-          .map((id) => permMap.get(id))
-          .filter((p): p is Permission => p !== undefined),
-      };
-    });
+      // Add permission if it exists (LEFT JOIN may produce null)
+      if (row.permId) {
+        const role = roleMap.get(row.id)!;
+        // Avoid duplicates
+        if (!role.permissions.some((p) => p.id === row.permId)) {
+          role.permissions.push({
+            id: row.permId,
+            key: row.permKey!,
+            description: row.permDescription ?? null,
+            resource: row.permResource!,
+            action: row.permAction!,
+            createdAt: row.permCreatedAt!,
+          });
+        }
+      }
+    }
+
+    return Array.from(roleMap.values());
   }
 
   /**
-   * Get a role by ID with its permissions.
+   * Get a role by ID with its permissions using a single JOIN query.
    */
   async findByIdWithPermissions(
     id: string,
   ): Promise<RoleWithPermissions | undefined> {
-    const [role] = await db
-      .select()
+    const rows = await db
+      .select({
+        id: roles.id,
+        name: roles.name,
+        description: roles.description,
+        isSystem: roles.isSystem,
+        createdAt: roles.createdAt,
+        updatedAt: roles.updatedAt,
+        permId: permissions.id,
+        permKey: permissions.key,
+        permDescription: permissions.description,
+        permResource: permissions.resource,
+        permAction: permissions.action,
+        permCreatedAt: permissions.createdAt,
+      })
       .from(roles)
-      .where(eq(roles.id, id))
-      .limit(1);
-    if (!role) return undefined;
+      .leftJoin(rolePermissions, eq(rolePermissions.roleId, roles.id))
+      .leftJoin(permissions, eq(permissions.id, rolePermissions.permissionId))
+      .where(eq(roles.id, id));
 
-    const rps = await db
-      .select()
-      .from(rolePermissions)
-      .where(eq(rolePermissions.roleId, id));
+    if (rows.length === 0) return undefined;
 
-    const permIds = rps.map((rp) => rp.permissionId);
-    const perms =
-      permIds.length > 0
-        ? await db
-            .select()
-            .from(permissions)
-            .where(inArray(permissions.id, permIds))
-        : [];
+    const first = rows[0]!;
+    const role: RoleWithPermissions = {
+      id: first.id,
+      name: first.name,
+      description: first.description,
+      isSystem: first.isSystem,
+      createdAt: first.createdAt,
+      updatedAt: first.updatedAt,
+      permissions: [],
+    };
 
-    return { ...role, permissions: perms };
+    for (const row of rows) {
+      if (row.permId) {
+        role.permissions.push({
+          id: row.permId,
+          key: row.permKey!,
+          description: row.permDescription ?? null,
+          resource: row.permResource!,
+          action: row.permAction!,
+          createdAt: row.permCreatedAt!,
+        });
+      }
+    }
+
+    return role;
   }
 
   /**

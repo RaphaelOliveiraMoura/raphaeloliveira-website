@@ -170,17 +170,53 @@ backend/
 
 ## Architecture
 
-The backend follows a **modular architecture by feature**:
+### Premissas Gerais
+
+Todas as features seguem os padroes abaixo de forma consistente:
+
+1. **Ports & Adapters** — Servicos externos (mail, storage, cache, queue, firebase) sao definidos como interfaces (`src/services/<name>/<name>.port.ts`) com implementacoes concretas intercambiaveis (Redis/Memory, BullMQ/Memory, S3/Local, SMTP/Console).
+
+2. **DI Container** — `src/lib/container.ts` registra adapters no bootstrap (`app.ts`); modulos resolvem dependencias por chave tipada (`container.resolve("cache")`), sem acoplamento a implementacoes.
+
+3. **Domain Events** — `src/lib/events.ts` fornece um event emitter tipado (`DomainEventMap`) para integracao desacoplada entre modulos. Listeners registrados no bootstrap; erros em handlers sao isolados e logados.
+
+4. **Modular Architecture** — Cada dominio vive em `src/modules/<name>/` com arquivos padrao: `routes.ts`, `service.ts`, `repository.ts`, `schemas.ts`, `types.ts`, `listener.ts` (quando aplicavel).
+
+5. **Zod Validation & Serialization** — `fastify-type-provider-zod` valida input e serializa output automaticamente. Schemas definidos em `*.schemas.ts`, tipos inferidos via `z.infer<>`, documentacao OpenAPI gerada a partir dos mesmos schemas.
+
+6. **Wide Events / Canonical Log Lines** — `src/plugins/request-context.ts` emite uma unica linha de log estruturada por request no `onResponse`, enriquecida progressivamente pelos handlers via `request.ctx` (userId, action, resource, error, duration).
+
+7. **Typed Error Hierarchy** — `src/lib/errors.ts` define `AppError` como base, com subclasses tipadas (`NotFoundError`, `ForbiddenError`, `ConflictError`, etc.) mapeadas para HTTP status codes e error codes centralizados em `src/config/constants.ts`.
+
+8. **Global Error Handler** — `src/plugins/error-handler.ts` intercepta todas as exceptions (AppError, ZodError, Fastify errors) e normaliza para um formato de resposta unico: `{ code, message, status, details? }`.
+
+9. **BaseRepository + Soft Delete** — `src/lib/base-repository.ts` oferece CRUD generico com suporte a soft-delete opcional via `deletedAt`. Todos os metodos aceitam `tx?: Transaction` para composicao transacional.
+
+10. **Transaction Wrapper** — `src/lib/transaction.ts` encapsula operacoes atomicas via `withTransaction(fn)`. Repositories usam `resolveExecutor(tx)` para operar tanto dentro quanto fora de transacoes.
+
+11. **Audit Automatico** — `src/plugins/audit.ts` loga automaticamente todas as mutacoes (POST/PUT/PATCH/DELETE com 2xx/3xx) usando dados de `request.ctx`, sem codigo adicional nos handlers.
+
+12. **Idempotency Keys** — `src/plugins/idempotency.ts` intercepta requests com header `Idempotency-Key` em mutacoes. Usa lock + cache + DB para prevenir processamento duplicado e replay de respostas anteriores.
+
+13. **Authentication Fallback** — `src/hooks/authenticate.ts` tenta JWT primeiro (`Authorization: Bearer`), depois API Key (`X-API-Key`) como fallback. Hook unico que abstrai o metodo de autenticacao para os handlers.
+
+14. **RBAC Granular** — `src/hooks/require-permission.ts` verifica permissoes por recurso+acao (ex: `users.create`, `uploads.delete`) cacheadas por role, complementando a autorizacao basica por role via `authorize()`.
+
+15. **Graceful Shutdown** — `src/server.ts` executa uma sequencia ordenada: drain connections, remove event listeners, close queue workers, close cache, clear container, close database. Timeout de 30s com force exit.
+
+### Fluxo de Request
 
 ```
 Request → Route → [Hooks/Guards] → Service → Repository → Drizzle/DB
 ```
 
-- **Routes** define endpoints, validate input (Zod), serialize output
-- **Services** contain business logic, no direct DB access
-- **Repositories** encapsulate Drizzle queries (extend `BaseRepository`)
-- **Plugins** handle cross-cutting concerns (auth, CORS, rate limiting, docs, metrics)
-- **Hooks** are reusable pre-handlers (authenticate, authorize, require-permission)
+| Camada           | Responsabilidade                                                            |
+| ---------------- | --------------------------------------------------------------------------- |
+| **Routes**       | Definem endpoints, validam input (Zod), serializam output, enriquecem `ctx` |
+| **Services**     | Logica de negocio, sem acesso direto ao banco                               |
+| **Repositories** | Encapsulam queries Drizzle (estendem `BaseRepository`)                      |
+| **Plugins**      | Concerns transversais (auth, CORS, rate limiting, docs, metrics, audit)     |
+| **Hooks**        | Pre-handlers reutilizaveis (authenticate, authorize, require-permission)    |
 
 ### Ports & Adapters (External Services)
 
@@ -480,4 +516,184 @@ The backend uses a **Wide Events / Canonical Log Lines** pattern for structured 
   "outcome": "success",
   "msg": "request completed"
 }
+```
+
+---
+
+## Utilitarios Cross-cutting
+
+### Retry com Exponential Backoff (`src/lib/retry.ts`)
+
+Wrapper generico para retry de operacoes falhas com backoff exponencial e jitter.
+
+```typescript
+import { withRetry } from "@/lib/retry";
+
+const result = await withRetry(() => sendEmail(to, subject, body), {
+  maxRetries: 3, // Numero maximo de retries
+  baseDelay: 1000, // Delay base em ms
+  maxDelay: 30000, // Delay maximo (cap)
+  jitter: true, // Adiciona randomizacao para evitar thundering herd
+  retryIf: (err) => err instanceof NetworkError, // Filtro de erros retryable
+  signal: abortController.signal, // Cancelamento
+});
+```
+
+### Circuit Breaker (`src/lib/circuit-breaker.ts`)
+
+Protege chamadas a servicos externos com o padrao Circuit Breaker (CLOSED → OPEN → HALF_OPEN).
+
+```typescript
+import { CircuitBreaker, CircuitOpenError } from "@/lib/circuit-breaker";
+
+const breaker = new CircuitBreaker("smtp", {
+  failureThreshold: 5, // Falhas consecutivas para abrir o circuito
+  resetTimeout: 30000, // Tempo em OPEN antes de tentar HALF_OPEN
+  halfOpenMax: 1, // Sucessos em HALF_OPEN para fechar
+});
+
+try {
+  await breaker.execute(() => sendEmail(to, subject, body));
+} catch (err) {
+  if (err instanceof CircuitOpenError) {
+    // Circuito aberto — usar fallback
+  }
+}
+```
+
+### Data Export (`src/lib/export.ts`)
+
+Utilitario generico para exportar entidades como CSV ou JSON com streaming.
+
+```typescript
+import { sendExport } from "@/lib/export";
+
+// Em um route handler:
+await sendExport(reply, users, {
+  format: "csv",
+  filename: "users",
+  columns: [
+    { key: "name", header: "Nome" },
+    { key: "email", header: "Email" },
+    {
+      key: "createdAt",
+      header: "Criado em",
+      transform: (v) => new Date(v as string).toLocaleDateString(),
+    },
+  ],
+});
+```
+
+Rotas de exemplo: `GET /users/export?format=csv`, `GET /audit/export?format=json`.
+
+### Bulk Operations (`src/lib/bulk.ts`)
+
+Operacoes em lote com dois modos de transacao:
+
+```typescript
+import { bulkCreate, bulkUpdate, bulkDelete } from "@/lib/bulk";
+
+// best_effort: erros sao coletados, sucessos sao mantidos
+const result = await bulkCreate(items, (item) => repo.create(item), {
+  transaction: "best_effort",
+  batchSize: 100,
+});
+// result: { total, succeeded, failed, errors: [{ index, error }], data: [...] }
+
+// all_or_nothing: tudo em uma transacao, qualquer falha faz rollback
+const result = await bulkCreate(items, (item, tx) => repo.create(item, tx), {
+  transaction: "all_or_nothing",
+});
+```
+
+---
+
+## Padroes de Query Avancados
+
+### Offset vs Cursor Pagination
+
+| Padrao                      | Quando usar                                         | Vantagens                           | Desvantagens                                          |
+| --------------------------- | --------------------------------------------------- | ----------------------------------- | ----------------------------------------------------- |
+| **Offset** (`page/limit`)   | Listagens com total, tabelas com paginacao numerica | Simples, suporta "ir para pagina X" | Inconsistente com insercoes, lento em offsets grandes |
+| **Cursor** (`cursor/limit`) | Feeds infinitos, scroll infinito, real-time         | Consistente, performante            | Nao suporta "ir para pagina X", sem total             |
+
+```typescript
+// Offset (padrao existente)
+import { paginationSchema, paginate, getOffset } from "@/lib/pagination";
+
+// Cursor (novo)
+import {
+  cursorPaginationSchema,
+  cursorPaginate,
+  encodeCursor,
+  decodeCursor,
+} from "@/lib/pagination";
+
+// No repository:
+const rows = await db
+  .select()
+  .from(table)
+  .limit(limit + 1)
+  .where(gt(table.id, cursorId));
+return cursorPaginate(rows, limit, "id");
+```
+
+### JOINs com Drizzle + groupJoinResults
+
+Para entidades com relacoes (1:N), use LEFT JOIN + `groupJoinResults` em vez de queries separadas (N+1):
+
+```typescript
+import { groupJoinResults } from "@/lib/query-builder";
+
+// Query com LEFT JOIN
+const rows = await db
+  .select({
+    id: roles.id,
+    name: roles.name,
+    permId: permissions.id,
+    permKey: permissions.key,
+  })
+  .from(roles)
+  .leftJoin(rolePermissions, eq(rolePermissions.roleId, roles.id))
+  .leftJoin(permissions, eq(permissions.id, rolePermissions.permissionId));
+
+// Agrupar em parent + children
+const grouped = groupJoinResults(rows, "id", {
+  permissions: { idKey: "permId", fields: ["permId", "permKey"] },
+});
+```
+
+### Listagens complexas com filtros + sort + search + FTS
+
+Padrao recomendado para entidades complexas:
+
+```typescript
+import {
+  buildFilters,
+  buildSearch,
+  buildOrderBy,
+  combineConditions,
+  buildSmartSearch,
+} from "@/lib/query-builder";
+
+// 1. Construir filtros dinamicos
+const filterWhere = buildFilters([
+  { column: table.status, operator: "eq", value: query.status },
+  { column: table.createdAt, operator: "gte", value: query.after },
+]);
+
+// 2. Busca inteligente (FTS com fallback para ILIKE)
+const searchWhere = buildSmartSearch(query.search, [
+  table.title,
+  table.description,
+]);
+
+// 3. Combinar condicoes
+const where = combineConditions(filterWhere, searchWhere);
+
+// 4. Ordenacao dinamica
+const orderBy = buildOrderBy(query.sort, query.order, {
+  createdAt: table.createdAt,
+  title: table.title,
+});
 ```

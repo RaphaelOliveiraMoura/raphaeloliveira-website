@@ -13,10 +13,13 @@ import { apiKeysRoutes } from "./modules/api-keys/api-keys.routes";
 import { auditRoutes } from "./modules/audit/audit.routes";
 import { authRoutes } from "./modules/auth/auth.routes";
 import { featureFlagsRoutes } from "./modules/feature-flags/feature-flags.routes";
+import { registerFeedbackListeners } from "./modules/feedback/feedback.listener";
+import { feedbackRoutes } from "./modules/feedback/feedback.routes";
 import { healthRoutes } from "./modules/health/health.routes";
 import { registerNotificationListeners } from "./modules/notifications/notifications.listener";
 import { notificationsRoutes } from "./modules/notifications/notifications.routes";
 import { rolesRoutes } from "./modules/roles/roles.routes";
+import { searchRoutes } from "./modules/search/search.routes";
 import { sessionsRoutes } from "./modules/sessions/sessions.routes";
 import { settingsRoutes } from "./modules/settings/settings.routes";
 import { uploadsRoutes } from "./modules/uploads/uploads.routes";
@@ -116,6 +119,7 @@ function bootstrapServices() {
 function bootstrapListeners() {
   registerNotificationListeners();
   registerWebhookListeners();
+  registerFeedbackListeners();
 
   log.info("Domain event listeners registered");
 }
@@ -162,6 +166,8 @@ export async function buildApp() {
   await app.register(featureFlagsRoutes, { prefix: "/feature-flags" });
   await app.register(settingsRoutes, { prefix: "/settings" });
   await app.register(webhooksRoutes, { prefix: "/webhooks" });
+  await app.register(searchRoutes, { prefix: "/search" });
+  await app.register(feedbackRoutes, { prefix: "/feedback" });
 
   return app;
 }

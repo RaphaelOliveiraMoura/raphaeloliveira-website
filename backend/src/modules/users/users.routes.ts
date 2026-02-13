@@ -5,6 +5,7 @@ import { z } from "zod";
 import { ROLES } from "../../config/constants";
 import { authenticate } from "../../hooks/authenticate";
 import { authorize } from "../../hooks/authorize";
+import { sendExport } from "../../lib/export";
 import {
   createUserSchema,
   listUsersQuerySchema,
@@ -120,6 +121,44 @@ export async function usersRoutes(app: FastifyInstance) {
 
       const user = await usersService.update(request.params.id, request.body);
       return reply.send(user);
+    },
+  );
+
+  // ---- GET /users/export ----
+  server.get(
+    "/export",
+    {
+      preHandler: [authorize(ROLES.ADMIN)],
+      schema: {
+        tags: ["Users"],
+        summary: "Export users as CSV or JSON (admin only)",
+        security: [{ bearerAuth: [] }],
+        querystring: z.object({
+          format: z.enum(["csv", "json"]).default("csv"),
+        }),
+      },
+    },
+    async (request, reply) => {
+      request.ctx.action = "user.export";
+
+      // Fetch all users (no pagination)
+      const result = await usersService.list({
+        page: 1,
+        limit: 10000,
+      });
+
+      await sendExport(reply, result.data, {
+        format: request.query.format,
+        filename: "users",
+        columns: [
+          { key: "id", header: "ID" },
+          { key: "name", header: "Name" },
+          { key: "email", header: "Email" },
+          { key: "role", header: "Role" },
+          { key: "createdAt", header: "Created At" },
+          { key: "updatedAt", header: "Updated At" },
+        ],
+      });
     },
   );
 

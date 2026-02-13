@@ -10,6 +10,25 @@ export { emailVerificationTokens } from "./email-verification-tokens";
 export type { FeatureFlag, NewFeatureFlag } from "./feature-flags";
 export type { FlagConditions } from "./feature-flags";
 export { featureFlags } from "./feature-flags";
+export type {
+  Feedback,
+  FeedbackPriority,
+  FeedbackResponse,
+  FeedbackStatus,
+  FeedbackType,
+  FeedbackVote,
+  NewFeedback,
+  NewFeedbackResponse,
+  NewFeedbackVote,
+} from "./feedback";
+export {
+  feedbackPriorityEnum,
+  feedbackResponses,
+  feedbacks,
+  feedbackStatusEnum,
+  feedbackTypeEnum,
+  feedbackVotes,
+} from "./feedback";
 export type { IdempotencyKey, NewIdempotencyKey } from "./idempotency-keys";
 export { idempotencyKeys } from "./idempotency-keys";
 export type {

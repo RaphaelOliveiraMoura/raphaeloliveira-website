@@ -53,6 +53,21 @@ export interface DomainEventMap {
 
   // Feature Flags
   "feature-flag.updated": { flagId: string; key: string; enabled: boolean };
+
+  // Feedback
+  "feedback.created": { feedbackId: string; userId: string; type: string };
+  "feedback.status.changed": {
+    feedbackId: string;
+    oldStatus: string;
+    newStatus: string;
+    changedBy: string;
+  };
+  "feedback.response.added": {
+    feedbackId: string;
+    responseId: string;
+    userId: string;
+    isInternal: boolean;
+  };
 }
 
 type EventName = keyof DomainEventMap;

@@ -6,6 +6,9 @@ import {
   auditLogs,
   emailVerificationTokens,
   featureFlags,
+  feedbackResponses,
+  feedbacks,
+  feedbackVotes,
   idempotencyKeys,
   notificationPreferences,
   notifications,
@@ -96,6 +99,9 @@ export async function loginTestUser(
  * Order matters due to foreign key constraints.
  */
 export async function cleanupTestData(): Promise<void> {
+  await db.delete(feedbackVotes);
+  await db.delete(feedbackResponses);
+  await db.delete(feedbacks);
   await db.delete(webhookDeliveries);
   await db.delete(webhooks);
   await db.delete(settings);
