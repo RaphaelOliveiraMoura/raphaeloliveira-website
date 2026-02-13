@@ -25,7 +25,7 @@
     "build-storybook": "storybook build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "pre-commit": "npm run lint:staged && npm run typecheck",
+    "pre-commit": "npm run lint:staged && npm run typecheck && npm run audit:ci",
     "pre-push": "npm run lint && npm run typecheck && npm run test && npm run build",
     "audit:ci": "npm audit --omit=dev"
   },

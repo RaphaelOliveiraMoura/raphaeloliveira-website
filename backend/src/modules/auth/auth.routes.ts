@@ -6,10 +6,13 @@ import { env } from "../../config/env";
 import { authenticate } from "../../hooks/authenticate";
 import { NotFoundError, UnauthorizedError } from "../../lib/errors";
 import {
+  forgotPasswordSchema,
   loginResponseSchema,
   loginSchema,
   meResponseSchema,
   refreshResponseSchema,
+  resetPasswordSchema,
+  verifyEmailSchema,
 } from "./auth.schemas";
 import { AuthService } from "./auth.service";
 
@@ -57,7 +60,7 @@ export async function authRoutes(app: FastifyInstance) {
       request.ctx.action = "auth.login";
       request.ctx.authEmail = request.body.email;
 
-      const result = await authService.login(request.body);
+      const result = await authService.login(request.body, request.ip);
 
       // Enrich ctx with the authenticated user after successful login
       request.ctx.userId = result.user.id;
@@ -101,7 +104,17 @@ export async function authRoutes(app: FastifyInstance) {
       }
 
       const result = await authService.refresh(token);
-      return reply.send(result);
+
+      // Set the new rotated refresh token cookie
+      reply.setCookie(REFRESH_COOKIE, result.refreshToken, {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: getRefreshCookieMaxAge(),
+      });
+
+      return reply.send({ accessToken: result.accessToken });
     },
   );
 
@@ -156,6 +169,97 @@ export async function authRoutes(app: FastifyInstance) {
       }
 
       return reply.send(user);
+    },
+  );
+
+  // ---- POST /auth/forgot-password ----
+  server.post(
+    "/forgot-password",
+    {
+      schema: {
+        tags: ["Auth"],
+        summary: "Request a password reset email",
+        body: forgotPasswordSchema,
+        response: {
+          200: z.object({ success: z.boolean() }),
+        },
+      },
+    },
+    async (request, reply) => {
+      request.ctx.action = "auth.forgot-password";
+      request.ctx.authEmail = request.body.email;
+
+      // Always returns success to prevent email enumeration
+      await authService.forgotPassword(request.body);
+
+      return reply.send({ success: true });
+    },
+  );
+
+  // ---- POST /auth/reset-password ----
+  server.post(
+    "/reset-password",
+    {
+      schema: {
+        tags: ["Auth"],
+        summary: "Reset password using a token",
+        body: resetPasswordSchema,
+        response: {
+          200: z.object({ success: z.boolean() }),
+        },
+      },
+    },
+    async (request, reply) => {
+      request.ctx.action = "auth.reset-password";
+
+      await authService.resetPassword(request.body);
+
+      return reply.send({ success: true });
+    },
+  );
+
+  // ---- POST /auth/send-verification ----
+  server.post(
+    "/send-verification",
+    {
+      preHandler: [authenticate],
+      schema: {
+        tags: ["Auth"],
+        summary: "Send email verification link",
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: z.object({ success: z.boolean() }),
+        },
+      },
+    },
+    async (request, reply) => {
+      request.ctx.action = "auth.send-verification";
+
+      await authService.sendVerificationEmail(request.user.id);
+
+      return reply.send({ success: true });
+    },
+  );
+
+  // ---- POST /auth/verify-email ----
+  server.post(
+    "/verify-email",
+    {
+      schema: {
+        tags: ["Auth"],
+        summary: "Verify email address using a token",
+        body: verifyEmailSchema,
+        response: {
+          200: z.object({ success: z.boolean() }),
+        },
+      },
+    },
+    async (request, reply) => {
+      request.ctx.action = "auth.verify-email";
+
+      await authService.verifyEmail(request.body);
+
+      return reply.send({ success: true });
     },
   );
 }

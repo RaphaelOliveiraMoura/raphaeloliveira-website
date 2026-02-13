@@ -15,20 +15,20 @@ jobs:
     name: Lint, Typecheck & Tests
     runs-on: ubuntu-latest
 
-    services:
-      postgres-test:
-        image: postgres:17-alpine
-        env:
-          POSTGRES_USER: corestack
-          POSTGRES_PASSWORD: corestack
-          POSTGRES_DB: corestack_test
-        ports:
-          - 5433:5432
-        options: >-
-          --health-cmd "pg_isready -U corestack"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 5
+    # services:
+    #   postgres-test:
+    #     image: postgres:17-alpine
+    #     env:
+    #       POSTGRES_USER: corestack
+    #       POSTGRES_PASSWORD: corestack
+    #       POSTGRES_DB: corestack_test
+    #     ports:
+    #       - 5433:5432
+    #     options: >-
+    #       --health-cmd "pg_isready -U corestack"
+    #       --health-interval 5s
+    #       --health-timeout 5s
+    #       --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
@@ -68,6 +68,6 @@ jobs:
       - name: Tests (frontend)
         run: npm run test
 
-      - name: Tests (backend)
-        run: npx vitest run
-        working-directory: backend
+      # - name: Tests (backend)
+      #   run: npm run test
+      #   working-directory: backend

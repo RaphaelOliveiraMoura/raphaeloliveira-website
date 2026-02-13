@@ -8,3 +8,16 @@
  * Use `docker compose up -d` before running tests, or set
  * DATABASE_URL to point to a test database.
  */
+
+import { rm } from "node:fs/promises";
+
+import { afterAll } from "vitest";
+
+// Clean up test-uploads directory after all tests
+afterAll(async () => {
+  try {
+    await rm("./test-uploads", { recursive: true, force: true });
+  } catch {
+    // Directory might not exist
+  }
+});

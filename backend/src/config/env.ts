@@ -23,6 +23,31 @@ const envSchema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().default(100),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(60_000),
 
+  // Account Lockout
+  LOGIN_MAX_ATTEMPTS: z.coerce.number().default(5),
+  LOGIN_LOCKOUT_DURATION: z.string().default("15m"),
+
+  // Mail
+  MAIL_DRIVER: z.enum(["smtp", "console"]).default("console"),
+  SMTP_HOST: z.string().default("localhost"),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  MAIL_FROM: z.string().default("noreply@corestack.dev"),
+
+  // Storage
+  STORAGE_DRIVER: z.enum(["local", "s3"]).default("local"),
+  STORAGE_LOCAL_PATH: z.string().default("./uploads"),
+  S3_BUCKET: z.string().optional(),
+  S3_REGION: z.string().optional(),
+  S3_ACCESS_KEY_ID: z.string().optional(),
+  S3_SECRET_ACCESS_KEY: z.string().optional(),
+  S3_ENDPOINT: z.string().optional(),
+
+  // App
+  APP_NAME: z.string().default("Core Stack"),
+  APP_URL: z.string().default("http://localhost:3000"),
+
   // Logging
   LOG_LEVEL: z
     .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])

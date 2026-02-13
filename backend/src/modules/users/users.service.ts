@@ -6,6 +6,7 @@ import {
   paginate,
   type PaginatedResponse,
 } from "../../lib/pagination";
+import type { Transaction } from "../../lib/transaction";
 import { UsersRepository } from "./users.repository";
 import type {
   CreateUserInput,
@@ -37,7 +38,7 @@ export class UsersService {
   async list(query: ListUsersQuery): Promise<PaginatedResponse<UserDTO>> {
     const offset = getOffset(query.page, query.limit);
 
-    const { data, total } = await this.repository.findMany({
+    const { data, total } = await this.repository.findManyWithFilters({
       offset,
       limit: query.limit,
       search: query.search,
@@ -59,17 +60,20 @@ export class UsersService {
   /**
    * Create a new user.
    */
-  async create(input: CreateUserInput): Promise<UserDTO> {
-    const existing = await this.repository.findByEmail(input.email);
+  async create(input: CreateUserInput, tx?: Transaction): Promise<UserDTO> {
+    const existing = await this.repository.findByEmail(input.email, tx);
     if (existing) throw new ConflictError("User", "email");
 
     const passwordHash = await hashPassword(input.password);
-    const user = await this.repository.create({
-      name: input.name,
-      email: input.email,
-      passwordHash,
-      role: input.role ?? "user",
-    });
+    const user = await this.repository.create(
+      {
+        name: input.name,
+        email: input.email,
+        passwordHash,
+        role: input.role ?? "user",
+      },
+      tx,
+    );
 
     return toDTO(user);
   }
@@ -78,7 +82,6 @@ export class UsersService {
    * Update a user by ID.
    */
   async update(id: string, input: UpdateUserInput): Promise<UserDTO> {
-    // Check if user exists
     const existing = await this.repository.findById(id);
     if (!existing) throw new NotFoundError("User", id);
 
@@ -99,7 +102,7 @@ export class UsersService {
   }
 
   /**
-   * Delete a user by ID.
+   * Delete a user by ID (soft delete).
    */
   async delete(id: string): Promise<void> {
     const deleted = await this.repository.delete(id);
