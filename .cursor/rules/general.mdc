@@ -106,12 +106,6 @@ logger.error("Mensagem de erro", error);
 logger.info("Evento importante", { userId });
 ```
 
-## Spec-Driven Development
-
-As specs em `docs/specs/` sao a fonte de verdade do projeto. Toda mudanca no projeto deve manter as specs sincronizadas.
-
-> Fluxo completo, regras e checklists: `specs.mdc` (fonte canonica). Indice: [docs/specs/README.md](../../docs/specs/README.md).
-
 ## Padroes de Export
 
 - Usar barrel files (`index.ts`) para re-export de modulos publicos
@@ -125,4 +119,4 @@ As specs em `docs/specs/` sao a fonte de verdade do projeto. Toda mudanca no pro
 
 ## Commits
 
-Seguir Conventional Commits. Tipos, escopos e exemplos estao em `docs/CONTRIBUTING.md` (secao "Conventional Commits").
+Seguir Conventional Commits. Tipos, escopos e exemplos estao em `CONTRIBUTING.md` (secao "Conventional Commits").

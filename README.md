@@ -33,7 +33,7 @@ Template full-stack universal com **Next.js** (frontend) e **Fastify** (backend)
 
 ## Inicio Rapido
 
-> Lista completa de scripts: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) (secao "Scripts Disponiveis").
+> Lista completa de scripts: [CONTRIBUTING.md](CONTRIBUTING.md) (secao "Scripts").
 
 ### Frontend
 
@@ -84,28 +84,18 @@ core-stack/
 │   │   └── lib/            # Utilitarios (errors, hash, logger, pagination)
 │   ├── tests/              # Testes Vitest do backend
 │   └── docker-compose.yml  # PostgreSQL para dev e testes
-├── docs/                   # ARCHITECTURE.md, CONTRIBUTING.md, specs/
+├── docs/                   # FEATURES.md, UI-REFERENCES.md
 ├── src/                    # Codigo-fonte frontend (ver general.mdc para arvore detalhada)
 ├── tests/                  # Setup, factories e mocks para testes frontend
 └── public/                 # Assets estaticos
 ```
 
-## Catalogo de Funcionalidades
-
-O projeto segue **Spec-Driven Development**: cada funcionalidade e documentada em uma spec antes de ser implementada. As specs ficam em [`docs/specs/`](docs/specs/README.md).
-
 ## Documentacao
 
-- [Arquitetura](docs/ARCHITECTURE.md) - Decisoes arquiteturais e padroes (frontend + backend)
-- [Contribuicao](docs/CONTRIBUTING.md) - Como contribuir e fluxo de desenvolvimento
-- [Catalogo de Specs](docs/specs/README.md) - Indice detalhado de todas as specs
+- [Catalogo de Features](docs/FEATURES.md) - 25 features com API surface e paths
+- [Contribuicao](CONTRIBUTING.md) - Commits, scripts e CI
 - [Backend](backend/README.md) - Documentacao detalhada da API (endpoints, auth, modulos, logging)
-
-## Abordagem Spec-Driven
-
-Toda funcionalidade segue um fluxo estruturado: spec → aprovacao → implementacao → validacao. As specs servem como documentacao viva e como guia para agentes de IA.
-
-> Fluxo completo: [`.cursor/rules/specs.mdc`](.cursor/rules/specs.mdc). Template: [`docs/specs/_TEMPLATE.md`](docs/specs/_TEMPLATE.md). Guia de contribuicao: [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md).
+- [AGENTS.md](AGENTS.md) - Contexto para agentes de IA (arquitetura, navegacao, regras)
 
 ## Licenca
 

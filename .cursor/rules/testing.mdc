@@ -11,8 +11,6 @@ globs:
 
 ## Ferramentas
 
-> Decisao arquitetural e niveis de teste: [ARCHITECTURE.md](../../docs/ARCHITECTURE.md) (secao "Testes").
-
 - **Testes unitarios/integracao**: Vitest + Testing Library
 - **Testes E2E**: Playwright
 - **Mocks HTTP**: MSW (Mock Service Worker)
@@ -96,7 +94,7 @@ export const handlers = [
 
 ## Scripts
 
-Todos os scripts de teste e qualidade estao documentados em [CONTRIBUTING.md](../../docs/CONTRIBUTING.md) (secao "Scripts Disponiveis").
+Todos os scripts de teste e qualidade estao documentados em [CONTRIBUTING.md](../../CONTRIBUTING.md) (secao "Scripts").
 
 ## Boas Praticas
 
