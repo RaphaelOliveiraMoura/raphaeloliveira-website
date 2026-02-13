@@ -4,6 +4,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 
 import { env } from "../../config/env";
+import { env as appEnv } from "../../config/env";
 import { db } from "../../db/index";
 import {
   emailVerificationTokens,
@@ -21,14 +22,20 @@ import {
 } from "../../lib/errors";
 import { domainEvents } from "../../lib/events";
 import { hashPassword, verifyPassword } from "../../lib/hash";
+import { FirebaseAdapter } from "../../services/firebase/firebase.adapter";
 import { renderTemplate } from "../../services/mail/templates";
 import type {
   ForgotPasswordInput,
   LoginInput,
   ResetPasswordInput,
+  SocialLoginInput,
   VerifyEmailInput,
 } from "./auth.schemas";
-import type { AuthenticatedUser, TokenPair } from "./auth.types";
+import type {
+  AuthenticatedUser,
+  SocialAuthenticatedUser,
+  TokenPair,
+} from "./auth.types";
 
 export class AuthService {
   constructor(private app: FastifyInstance) {}
@@ -122,6 +129,12 @@ export class AuthService {
       });
       throw new UnauthorizedError(
         "Account is temporarily locked due to too many failed login attempts. Please try again later.",
+      );
+    }
+
+    if (!user.passwordHash) {
+      throw new UnauthorizedError(
+        "This account uses social login. Please sign in with your social provider.",
       );
     }
 
@@ -465,5 +478,136 @@ export class AuthService {
         email: user.email,
       });
     }
+  }
+
+  // ---- Social Login ----
+
+  /**
+   * Authenticate a user via Firebase social login.
+   * Creates a new user if one doesn't exist with the given email.
+   * Links the Firebase UID to an existing user if email matches.
+   */
+  async socialLogin(
+    input: SocialLoginInput,
+    ip = "unknown",
+  ): Promise<TokenPair & { user: SocialAuthenticatedUser }> {
+    if (
+      !appEnv.FIREBASE_PROJECT_ID ||
+      !appEnv.FIREBASE_CLIENT_EMAIL ||
+      !appEnv.FIREBASE_PRIVATE_KEY
+    ) {
+      throw new ValidationError({
+        provider: "Social login is not configured",
+      });
+    }
+
+    const firebase = new FirebaseAdapter({
+      projectId: appEnv.FIREBASE_PROJECT_ID,
+      clientEmail: appEnv.FIREBASE_CLIENT_EMAIL,
+      privateKey: appEnv.FIREBASE_PRIVATE_KEY,
+    });
+
+    const firebaseUser = await firebase.verifyIdToken(input.idToken);
+
+    if (!firebaseUser.email) {
+      throw new ValidationError({
+        email: "Email is required for social login",
+      });
+    }
+
+    // Try to find existing user by Firebase UID or email
+    let [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.firebaseUid, firebaseUser.uid))
+      .limit(1);
+
+    if (!user) {
+      [user] = await db
+        .select()
+        .from(users)
+        .where(
+          and(eq(users.email, firebaseUser.email), isNull(users.deletedAt)),
+        )
+        .limit(1);
+    }
+
+    if (user) {
+      // Link Firebase UID if not already linked
+      if (!user.firebaseUid) {
+        await db
+          .update(users)
+          .set({
+            firebaseUid: firebaseUser.uid,
+            avatarUrl: user.avatarUrl ?? firebaseUser.picture ?? null,
+            provider:
+              user.provider === "email" ? firebaseUser.provider : user.provider,
+          })
+          .where(eq(users.id, user.id));
+      }
+
+      // Update avatar if not set
+      if (!user.avatarUrl && firebaseUser.picture) {
+        await db
+          .update(users)
+          .set({ avatarUrl: firebaseUser.picture })
+          .where(eq(users.id, user.id));
+      }
+    } else {
+      // Create new user (no password, email auto-verified)
+      const [newUser] = await db
+        .insert(users)
+        .values({
+          name: firebaseUser.name ?? firebaseUser.email.split("@")[0]!,
+          email: firebaseUser.email,
+          firebaseUid: firebaseUser.uid,
+          avatarUrl: firebaseUser.picture ?? null,
+          provider: firebaseUser.provider,
+          emailVerifiedAt: new Date(),
+        })
+        .returning();
+
+      user = newUser!;
+
+      domainEvents.emit("user.created", {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+      });
+    }
+
+    const payload = { id: user.id, email: user.email, role: user.role };
+    const accessToken = this.app.jwt.sign(payload);
+
+    // Create refresh token
+    const refreshToken = randomUUID();
+    const expiresAt = new Date(
+      Date.now() + parseDuration(env.JWT_REFRESH_EXPIRATION),
+    );
+
+    await db.insert(refreshTokens).values({
+      token: refreshToken,
+      userId: user.id,
+      expiresAt,
+    });
+
+    domainEvents.emit("auth.login", {
+      userId: user.id,
+      email: user.email,
+      ip,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatarUrl: user.avatarUrl,
+        provider: user.provider,
+      },
+    };
   }
 }

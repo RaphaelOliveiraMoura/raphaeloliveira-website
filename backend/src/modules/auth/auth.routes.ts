@@ -12,6 +12,8 @@ import {
   meResponseSchema,
   refreshResponseSchema,
   resetPasswordSchema,
+  socialLoginResponseSchema,
+  socialLoginSchema,
   verifyEmailSchema,
 } from "./auth.schemas";
 import { AuthService } from "./auth.service";
@@ -260,6 +262,43 @@ export async function authRoutes(app: FastifyInstance) {
       await authService.verifyEmail(request.body);
 
       return reply.send({ success: true });
+    },
+  );
+
+  // ---- POST /auth/social ----
+  server.post(
+    "/social",
+    {
+      schema: {
+        tags: ["Auth"],
+        summary: "Login via social provider (Firebase Auth)",
+        body: socialLoginSchema,
+        response: {
+          200: socialLoginResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      request.ctx.action = "auth.social-login";
+
+      const result = await authService.socialLogin(request.body, request.ip);
+
+      request.ctx.userId = result.user.id;
+      request.ctx.userRole = result.user.role;
+
+      // Set refresh token as httpOnly cookie
+      reply.setCookie(REFRESH_COOKIE, result.refreshToken, {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: getRefreshCookieMaxAge(),
+      });
+
+      return reply.send({
+        accessToken: result.accessToken,
+        user: result.user,
+      });
     },
   );
 }

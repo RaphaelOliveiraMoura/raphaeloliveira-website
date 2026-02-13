@@ -2,12 +2,24 @@ import { randomUUID } from "node:crypto";
 
 import { db } from "../../src/db/index";
 import {
+  apiKeys,
   auditLogs,
   emailVerificationTokens,
+  featureFlags,
+  idempotencyKeys,
+  notificationPreferences,
+  notifications,
   passwordResetTokens,
+  permissions,
   refreshTokens,
+  rolePermissions,
+  roles,
+  sessions,
+  settings,
   uploads,
   users,
+  webhookDeliveries,
+  webhooks,
 } from "../../src/db/schema/index";
 import { hashPassword } from "../../src/lib/hash";
 
@@ -84,6 +96,18 @@ export async function loginTestUser(
  * Order matters due to foreign key constraints.
  */
 export async function cleanupTestData(): Promise<void> {
+  await db.delete(webhookDeliveries);
+  await db.delete(webhooks);
+  await db.delete(settings);
+  await db.delete(notificationPreferences);
+  await db.delete(notifications);
+  await db.delete(idempotencyKeys);
+  await db.delete(featureFlags);
+  await db.delete(rolePermissions);
+  await db.delete(permissions);
+  await db.delete(roles);
+  await db.delete(apiKeys);
+  await db.delete(sessions);
   await db.delete(auditLogs);
   await db.delete(uploads);
   await db.delete(emailVerificationTokens);

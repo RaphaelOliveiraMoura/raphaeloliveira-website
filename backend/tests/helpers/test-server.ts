@@ -45,6 +45,25 @@ export function injectRequest(app: FastifyInstance) {
         },
       }),
 
+    put: (
+      url: string,
+      payload?: unknown,
+      opts?: { headers?: Record<string, string> },
+    ) =>
+      app.inject({
+        method: "PUT",
+        url,
+        ...(payload !== undefined && {
+          payload: payload as Record<string, unknown>,
+        }),
+        headers: {
+          ...(payload !== undefined && {
+            "content-type": "application/json",
+          }),
+          ...opts?.headers,
+        },
+      }),
+
     patch: (
       url: string,
       payload?: unknown,
@@ -64,7 +83,17 @@ export function injectRequest(app: FastifyInstance) {
         },
       }),
 
-    delete: (url: string, opts?: { headers?: Record<string, string> }) =>
-      app.inject({ method: "DELETE", url, headers: opts?.headers }),
+    delete: (
+      url: string,
+      opts?: { headers?: Record<string, string>; payload?: unknown },
+    ) =>
+      app.inject({
+        method: "DELETE",
+        url,
+        headers: opts?.headers,
+        ...(opts?.payload !== undefined && {
+          payload: opts.payload as Record<string, unknown>,
+        }),
+      }),
   };
 }

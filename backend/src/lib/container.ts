@@ -2,7 +2,9 @@ import { logger } from "./logger";
 
 const log = logger.child({ module: "container" });
 
+import type { CacheProvider } from "../services/cache/cache.port";
 import type { MailProvider } from "../services/mail/mail.port";
+import type { QueueProvider } from "../services/queue/queue.port";
 import type { StorageProvider } from "../services/storage/storage.port";
 
 /**
@@ -12,7 +14,7 @@ import type { StorageProvider } from "../services/storage/storage.port";
  * ```ts
  * declare module "@/lib/container" {
  *   interface ServiceMap {
- *     cache: CacheProvider;
+ *     myService: MyServiceProvider;
  *   }
  * }
  * ```
@@ -20,6 +22,8 @@ import type { StorageProvider } from "../services/storage/storage.port";
 export interface ServiceMap {
   mail: MailProvider;
   storage: StorageProvider;
+  cache: CacheProvider;
+  queue: QueueProvider;
 }
 
 type ServiceKey = keyof ServiceMap;

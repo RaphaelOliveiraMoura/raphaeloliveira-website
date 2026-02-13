@@ -44,6 +44,18 @@ const envSchema = z.object({
   S3_SECRET_ACCESS_KEY: z.string().optional(),
   S3_ENDPOINT: z.string().optional(),
 
+  // Cache
+  CACHE_DRIVER: z.enum(["redis", "memory"]).default("memory"),
+  REDIS_URL: z.string().default("redis://localhost:6379"),
+
+  // Queue
+  QUEUE_DRIVER: z.enum(["bullmq", "memory"]).default("memory"),
+
+  // Firebase Auth (Social Login)
+  FIREBASE_PROJECT_ID: z.string().optional(),
+  FIREBASE_CLIENT_EMAIL: z.string().optional(),
+  FIREBASE_PRIVATE_KEY: z.string().optional(),
+
   // App
   APP_NAME: z.string().default("Core Stack"),
   APP_URL: z.string().default("http://localhost:3000"),

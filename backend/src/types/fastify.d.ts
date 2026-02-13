@@ -17,6 +17,12 @@ declare module "fastify" {
      * as a single structured log line in the onResponse hook.
      */
     ctx: RequestContext;
+
+    /** Authentication source: "jwt" | "api-key" */
+    authSource?: "jwt" | "api-key";
+
+    /** API key scopes (populated when authenticated via API key) */
+    apiKeyScopes?: string[];
   }
 }
 

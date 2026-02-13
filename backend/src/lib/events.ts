@@ -36,6 +36,23 @@ export interface DomainEventMap {
     updatedBy: string;
   };
   "user.deleted": { userId: string; deletedBy: string };
+
+  // API Keys
+  "api-key.created": { apiKeyId: string; userId: string; name: string };
+  "api-key.revoked": { apiKeyId: string; userId: string };
+
+  // Sessions
+  "session.created": { sessionId: string; userId: string };
+  "session.revoked": { sessionId: string; userId: string };
+
+  // Webhooks
+  "webhook.test": { webhookId: string; test: boolean };
+
+  // Settings
+  "settings.updated": { scope: string; scopeId: string | null; keys: string[] };
+
+  // Feature Flags
+  "feature-flag.updated": { flagId: string; key: string; enabled: boolean };
 }
 
 type EventName = keyof DomainEventMap;

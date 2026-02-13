@@ -14,11 +14,15 @@ export const users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
+  passwordHash: text("password_hash"),
   role: roleEnum("role").notNull().default("user"),
   emailVerifiedAt: timestamp("email_verified_at", { withTimezone: true }),
   failedLoginAttempts: integer("failed_login_attempts").notNull().default(0),
   lockedUntil: timestamp("locked_until", { withTimezone: true }),
+  // Social login fields
+  firebaseUid: varchar("firebase_uid", { length: 128 }).unique(),
+  avatarUrl: varchar("avatar_url", { length: 512 }),
+  provider: varchar("provider", { length: 50 }).notNull().default("email"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

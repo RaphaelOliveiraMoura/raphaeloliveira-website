@@ -9,3 +9,8 @@ export interface AuthenticatedUser {
   email: string;
   role: string;
 }
+
+export interface SocialAuthenticatedUser extends AuthenticatedUser {
+  avatarUrl: string | null;
+  provider: string;
+}

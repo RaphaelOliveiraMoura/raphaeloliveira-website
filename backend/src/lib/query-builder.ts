@@ -13,6 +13,7 @@ import {
 import type { PgColumn } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
+import { buildFullTextSearch } from "./full-text-search";
 import { paginationSchema } from "./pagination";
 
 // ---- Schema helpers ----
@@ -160,4 +161,38 @@ export function combineConditions(
   if (valid.length === 0) return undefined;
   if (valid.length === 1) return valid[0];
   return and(...valid);
+}
+
+/**
+ * Build a search condition using full-text search (tsvector/tsquery)
+ * with ILIKE fallback for short queries.
+ *
+ * Uses PostgreSQL full-text search for terms with 3+ characters,
+ * falls back to ILIKE for shorter terms.
+ *
+ * @example
+ * ```ts
+ * const where = buildSmartSearch("john doe", [users.name, users.email]);
+ * ```
+ */
+export function buildSmartSearch(
+  term: string | undefined,
+  columns: PgColumn[],
+  options?: { fullTextConfig?: string; minFullTextLength?: number },
+): SQL | undefined {
+  if (!term || columns.length === 0) return undefined;
+
+  const minLength = options?.minFullTextLength ?? 3;
+
+  if (term.trim().length >= minLength) {
+    const ftsResult = buildFullTextSearch(
+      term,
+      columns,
+      options?.fullTextConfig,
+    );
+    if (ftsResult) return ftsResult;
+  }
+
+  // Fallback to ILIKE for short terms
+  return buildSearch(term, columns);
 }

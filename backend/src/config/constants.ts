@@ -26,6 +26,8 @@ export const ERROR_CODES = {
   REFRESH_TOKEN_INVALID: "REFRESH_TOKEN_INVALID",
   UNAUTHORIZED: "UNAUTHORIZED",
   FORBIDDEN: "FORBIDDEN",
+  SOCIAL_LOGIN_FAILED: "SOCIAL_LOGIN_FAILED",
+  API_KEY_INVALID: "API_KEY_INVALID",
 
   // Validation
   VALIDATION_ERROR: "VALIDATION_ERROR",
@@ -34,9 +36,21 @@ export const ERROR_CODES = {
   NOT_FOUND: "NOT_FOUND",
   CONFLICT: "CONFLICT",
 
+  // Idempotency
+  IDEMPOTENCY_CONFLICT: "IDEMPOTENCY_CONFLICT",
+
   // Server
   INTERNAL_ERROR: "INTERNAL_ERROR",
   RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED",
 } as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];
+
+/** API Key scopes */
+export const API_KEY_SCOPES = {
+  READ: "read",
+  WRITE: "write",
+  ADMIN: "admin",
+} as const;
+
+export type ApiKeyScope = (typeof API_KEY_SCOPES)[keyof typeof API_KEY_SCOPES];

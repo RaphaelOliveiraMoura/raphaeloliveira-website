@@ -27,6 +27,8 @@ export default defineConfig({
       MAIL_FROM: "test@corestack.dev",
       STORAGE_DRIVER: "local",
       STORAGE_LOCAL_PATH: "./test-uploads",
+      CACHE_DRIVER: "memory",
+      QUEUE_DRIVER: "memory",
       APP_NAME: "Core Stack Test",
       APP_URL: "http://localhost:3000",
     },

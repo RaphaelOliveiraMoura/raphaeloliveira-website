@@ -4,3 +4,4 @@ dist/
 *.log
 coverage/
 test-uploads/
+test-tmp-fixtures/

@@ -44,11 +44,33 @@ async function start() {
       log.info("Cleaning up event listeners...");
       domainEvents.removeAllListeners();
 
-      // 3. Clear the service container
+      // 3. Close queue (stop processing jobs)
+      try {
+        const queue = container.resolve("queue");
+        log.info("Closing job queue...");
+        await queue.close();
+        log.info("Job queue closed");
+      } catch {
+        log.debug("No queue to close (or already closed)");
+      }
+
+      // 4. Flush and close cache
+      try {
+        const cache = container.resolve("cache");
+        if ("close" in cache && typeof cache.close === "function") {
+          log.info("Closing cache connection...");
+          await (cache as { close: () => Promise<void> }).close();
+          log.info("Cache connection closed");
+        }
+      } catch {
+        log.debug("No cache to close (or already closed)");
+      }
+
+      // 5. Clear the service container
       log.info("Clearing service container...");
       container.clear();
 
-      // 4. Close database connection pool
+      // 6. Close database connection pool
       log.info("Closing database connection pool...");
       await closeDatabase();
       log.info("Database connection pool closed");

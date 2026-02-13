@@ -4,25 +4,28 @@ Backend API template built with **Fastify** + **Drizzle ORM** + **PostgreSQL**, 
 
 ## Tech Stack
 
-| Concern        | Technology                          |
-| -------------- | ----------------------------------- |
-| Framework      | Fastify v5                          |
-| Language       | TypeScript (strict mode)            |
-| ORM            | Drizzle ORM                         |
-| Database       | PostgreSQL 17                       |
-| Validation     | Zod                                 |
-| Authentication | JWT (access + refresh tokens)       |
-| API Docs       | Swagger / OpenAPI (auto-generated)  |
-| Tests          | Vitest                              |
-| Logger         | Pino (structured JSON, Wide Events) |
-| Email          | Nodemailer (SMTP) + Console adapter |
-| Storage        | AWS S3 / Local filesystem           |
-| Metrics        | Prometheus (prom-client)            |
-| Security       | Helmet, CORS, Rate Limiting, ETag   |
+| Concern        | Technology                              |
+| -------------- | --------------------------------------- |
+| Framework      | Fastify v5                              |
+| Language       | TypeScript (strict mode)                |
+| ORM            | Drizzle ORM                             |
+| Database       | PostgreSQL 17                           |
+| Cache          | Redis (ioredis) / In-memory             |
+| Queue          | BullMQ (Redis) / In-memory              |
+| Validation     | Zod                                     |
+| Authentication | JWT + API Keys + Firebase Auth (Social) |
+| Authorization  | RBAC (roles + granular permissions)     |
+| API Docs       | Swagger / OpenAPI (auto-generated)      |
+| Tests          | Vitest                                  |
+| Logger         | Pino (structured JSON, Wide Events)     |
+| Email          | Nodemailer (SMTP) + Console adapter     |
+| Storage        | AWS S3 / Local filesystem               |
+| Metrics        | Prometheus (prom-client)                |
+| Security       | Helmet, CORS, Rate Limiting, ETag, HMAC |
 
 ## Quick Start
 
-### 1. Start PostgreSQL
+### 1. Start PostgreSQL + Redis
 
 ```bash
 docker compose up -d
@@ -54,10 +57,12 @@ npm run db:migrate
 npm run db:seed
 ```
 
-Creates two demo users:
+Creates:
 
-- **Admin:** `admin@corestack.dev` / `password123`
-- **User:** `demo@corestack.dev` / `password123`
+- **Demo users:** `admin@corestack.dev` / `demo@corestack.dev` (password: `password123`)
+- **Default roles:** `admin` (all permissions) and `user` (limited permissions)
+- **Default permissions:** CRUD for all resources
+- **Default feature flags:** social-login, webhooks, api-keys, notifications
 
 ### 6. Start dev server
 
@@ -94,18 +99,25 @@ backend/
 │   ├── server.ts               # Entry point (starts server, graceful shutdown)
 │   ├── config/
 │   │   ├── env.ts              # Env validation (Zod)
-│   │   └── constants.ts        # App constants, roles, error codes
+│   │   └── constants.ts        # App constants, roles, error codes, scopes
 │   ├── db/
 │   │   ├── index.ts            # Drizzle connection
 │   │   ├── schema/             # Database tables (Drizzle schemas)
 │   │   ├── migrations/         # SQL migrations (drizzle-kit)
-│   │   └── seed.ts             # Seed script
+│   │   └── seed.ts             # Seed script (users, roles, permissions, flags)
 │   ├── modules/                # Feature modules (domain)
-│   │   ├── auth/               # Login, logout, refresh, me, password reset, email verification
+│   │   ├── api-keys/           # API key management (create, list, revoke)
+│   │   ├── auth/               # Login, logout, refresh, social login, password reset
 │   │   ├── audit/              # Audit log (auto + manual)
+│   │   ├── feature-flags/      # Dynamic feature toggles with conditions
+│   │   ├── health/             # Health, liveness, readiness probes
+│   │   ├── notifications/      # In-app notifications with preferences
+│   │   ├── roles/              # RBAC roles and permissions management
+│   │   ├── sessions/           # Session management (list, revoke)
+│   │   ├── settings/           # System and user settings/preferences
 │   │   ├── uploads/            # File uploads via storage providers
 │   │   ├── users/              # CRUD users (soft delete)
-│   │   └── health/             # Health, liveness, readiness probes
+│   │   └── webhooks/           # Webhook subscriptions + delivery log
 │   ├── plugins/                # Fastify plugins
 │   │   ├── audit.ts            # Auto audit logging for mutations
 │   │   ├── auth.ts             # JWT + cookies
@@ -114,11 +126,16 @@ backend/
 │   │   ├── error-handler.ts    # Global error handler
 │   │   ├── etag.ts             # ETag / conditional requests
 │   │   ├── helmet.ts           # Security headers (CSP, HSTS, etc.)
+│   │   ├── idempotency.ts      # Idempotency keys for safe retries
 │   │   ├── metrics.ts          # Prometheus metrics
 │   │   ├── rate-limit.ts       # Rate limiting
 │   │   ├── request-context.ts  # Wide Events / canonical log lines
 │   │   └── swagger.ts          # OpenAPI documentation
-│   ├── hooks/                  # Pre-handlers (authenticate, authorize)
+│   ├── hooks/                  # Pre-handlers
+│   │   ├── authenticate.ts     # JWT + API key authentication (fallback)
+│   │   ├── authenticate-api-key.ts  # API key auth hook
+│   │   ├── authorize.ts        # Role-based authorization
+│   │   └── require-permission.ts    # Granular permission check
 │   ├── lib/                    # Shared utilities
 │   │   ├── base-repository.ts  # Abstract CRUD repository
 │   │   ├── container.ts        # DI service container
@@ -126,21 +143,27 @@ backend/
 │   │   ├── duration.ts         # Duration parsing/formatting
 │   │   ├── errors.ts           # Custom error classes
 │   │   ├── events.ts           # Typed domain events
+│   │   ├── feature-flags.ts    # Feature flag evaluator
+│   │   ├── full-text-search.ts # PostgreSQL tsvector/tsquery helpers
 │   │   ├── hash.ts             # Password hashing (bcrypt)
 │   │   ├── logger.ts           # Pino logger
 │   │   ├── pagination.ts       # Pagination helpers
-│   │   ├── query-builder.ts    # Generic filter/sort/search
+│   │   ├── query-builder.ts    # Generic filter/sort/search + FTS
 │   │   ├── sanitize.ts         # XSS sanitization
+│   │   ├── scheduler.ts        # Cron job registration
 │   │   ├── slug.ts             # URL-friendly slugs
 │   │   ├── soft-delete.ts      # Soft delete column helpers
 │   │   └── transaction.ts      # DB transaction wrapper
 │   ├── services/               # External service adapters (Ports & Adapters)
-│   │   ├── mail/               # Email: port, nodemailer adapter, console adapter, templates
+│   │   ├── cache/              # Cache: port, Redis adapter, memory adapter
+│   │   ├── firebase/           # Firebase Auth: ID token verification
+│   │   ├── mail/               # Email: port, nodemailer adapter, console adapter
+│   │   ├── queue/              # Queue: port, BullMQ adapter, memory adapter, workers
 │   │   └── storage/            # Storage: port, S3 adapter, local adapter
 │   └── types/                  # TypeScript type augmentations
 ├── tests/                      # Vitest tests
 ├── drizzle.config.ts           # Drizzle Kit config
-├── docker-compose.yml          # PostgreSQL for local dev
+├── docker-compose.yml          # PostgreSQL + Redis for local dev
 ├── Dockerfile                  # Production multi-stage build
 └── package.json
 ```
@@ -157,14 +180,14 @@ Request → Route → [Hooks/Guards] → Service → Repository → Drizzle/DB
 - **Services** contain business logic, no direct DB access
 - **Repositories** encapsulate Drizzle queries (extend `BaseRepository`)
 - **Plugins** handle cross-cutting concerns (auth, CORS, rate limiting, docs, metrics)
-- **Hooks** are reusable pre-handlers (authenticate, authorize)
+- **Hooks** are reusable pre-handlers (authenticate, authorize, require-permission)
 
 ### Ports & Adapters (External Services)
 
-External services (email, storage) follow the **Ports & Adapters** pattern:
+External services (email, storage, cache, queue) follow the **Ports & Adapters** pattern:
 
 - **Ports** — interfaces in `src/services/<name>/<name>.port.ts`
-- **Adapters** — concrete implementations (Nodemailer, S3, Local FS, Console)
+- **Adapters** — concrete implementations (Redis, BullMQ, Nodemailer, S3, Local FS, Console, Memory)
 - **Container** — `src/lib/container.ts` registers adapters at bootstrap; services resolve them by key
 
 This avoids coupling application code to specific libraries.
@@ -184,6 +207,8 @@ domainEvents.on("user.created", async (payload) => {
 });
 ```
 
+Used by: **Notifications** (in-app notifications on events), **Webhooks** (dispatch to external URLs), **Audit** (automatic audit logging).
+
 ## API Endpoints
 
 ### Auth (`/auth`)
@@ -191,6 +216,7 @@ domainEvents.on("user.created", async (payload) => {
 | Method | Path                      | Auth | Description                                  |
 | ------ | ------------------------- | ---- | -------------------------------------------- |
 | POST   | `/auth/login`             | No   | Login with email and password                |
+| POST   | `/auth/social`            | No   | Social login via Firebase (Google/GitHub)    |
 | POST   | `/auth/refresh`           | No   | Refresh access token (cookie, with rotation) |
 | POST   | `/auth/logout`            | No   | Revoke refresh token                         |
 | GET    | `/auth/me`                | Yes  | Get authenticated user profile               |
@@ -208,6 +234,75 @@ domainEvents.on("user.created", async (payload) => {
 | POST   | `/users`     | Admin | Create user                    |
 | PATCH  | `/users/:id` | Admin | Update user                    |
 | DELETE | `/users/:id` | Admin | Soft-delete user               |
+
+### Sessions (`/sessions`)
+
+| Method | Path            | Auth | Description                        |
+| ------ | --------------- | ---- | ---------------------------------- |
+| GET    | `/sessions`     | Yes  | List active sessions               |
+| DELETE | `/sessions/:id` | Yes  | Revoke a specific session          |
+| DELETE | `/sessions`     | Yes  | Revoke all sessions except current |
+
+### API Keys (`/api-keys`)
+
+| Method | Path            | Auth | Description                             |
+| ------ | --------------- | ---- | --------------------------------------- |
+| POST   | `/api-keys`     | Yes  | Create API key (secret shown only once) |
+| GET    | `/api-keys`     | Yes  | List API keys (without secret)          |
+| DELETE | `/api-keys/:id` | Yes  | Revoke API key                          |
+
+### Roles & Permissions (`/roles`, `/permissions`)
+
+| Method | Path                     | Auth  | Description                       |
+| ------ | ------------------------ | ----- | --------------------------------- |
+| GET    | `/roles`                 | Admin | List roles with permissions       |
+| POST   | `/roles`                 | Admin | Create custom role                |
+| PATCH  | `/roles/:id`             | Admin | Update role                       |
+| DELETE | `/roles/:id`             | Admin | Delete role (except system roles) |
+| PUT    | `/roles/:id/permissions` | Admin | Set permissions for a role        |
+| GET    | `/permissions`           | Admin | List all available permissions    |
+
+### Notifications (`/notifications`)
+
+| Method | Path                          | Auth | Description                     |
+| ------ | ----------------------------- | ---- | ------------------------------- |
+| GET    | `/notifications`              | Yes  | List notifications (paginated)  |
+| GET    | `/notifications/unread-count` | Yes  | Get unread count                |
+| PATCH  | `/notifications/:id/read`     | Yes  | Mark as read                    |
+| POST   | `/notifications/read-all`     | Yes  | Mark all as read                |
+| DELETE | `/notifications/:id`          | Yes  | Delete notification             |
+| GET    | `/notifications/preferences`  | Yes  | Get notification preferences    |
+| PUT    | `/notifications/preferences`  | Yes  | Update notification preferences |
+
+### Feature Flags (`/feature-flags`)
+
+| Method | Path                      | Auth  | Description                         |
+| ------ | ------------------------- | ----- | ----------------------------------- |
+| GET    | `/feature-flags`          | Admin | List all flags                      |
+| POST   | `/feature-flags`          | Admin | Create flag                         |
+| PATCH  | `/feature-flags/:id`      | Admin | Update flag                         |
+| DELETE | `/feature-flags/:id`      | Admin | Delete flag                         |
+| GET    | `/feature-flags/evaluate` | Yes   | Evaluate all flags for current user |
+
+### Settings (`/settings`)
+
+| Method | Path               | Auth  | Description                                     |
+| ------ | ------------------ | ----- | ----------------------------------------------- |
+| GET    | `/settings`        | Yes   | Get user settings (merged with system defaults) |
+| PUT    | `/settings`        | Yes   | Update user settings (batch)                    |
+| GET    | `/settings/system` | Admin | Get system settings                             |
+| PUT    | `/settings/system` | Admin | Update system settings                          |
+
+### Webhooks (`/webhooks`)
+
+| Method | Path                       | Auth | Description                  |
+| ------ | -------------------------- | ---- | ---------------------------- |
+| POST   | `/webhooks`                | Yes  | Create webhook (secret once) |
+| GET    | `/webhooks`                | Yes  | List webhooks                |
+| PATCH  | `/webhooks/:id`            | Yes  | Update webhook               |
+| DELETE | `/webhooks/:id`            | Yes  | Delete webhook               |
+| GET    | `/webhooks/:id/deliveries` | Yes  | List delivery history        |
+| POST   | `/webhooks/:id/test`       | Yes  | Send test event              |
 
 ### Uploads (`/uploads`)
 
@@ -240,12 +335,27 @@ domainEvents.on("user.created", async (payload) => {
 
 ## Authentication Flow
 
-Compatible with the Core Stack frontend auth system:
+### JWT (Primary)
 
 1. **Login:** `POST /auth/login` returns an `accessToken` in the response body and a `refresh-token` in an httpOnly cookie
 2. **Authenticated requests:** Send `Authorization: Bearer <accessToken>` header
 3. **Token refresh:** `POST /auth/refresh` reads the cookie, rotates the refresh token, and returns a new `accessToken`
 4. **Logout:** `POST /auth/logout` revokes the refresh token and clears the cookie
+
+### Social Login (Firebase)
+
+1. **Client-side:** User signs in with Google/GitHub/Apple via Firebase SDK
+2. **Client sends:** `POST /auth/social { provider, idToken }`
+3. **Backend verifies:** Firebase ID token, creates or links user account
+4. **Returns:** Same JWT pair as regular login
+
+### API Key Authentication
+
+1. **Create:** `POST /api-keys` returns a full key (shown once)
+2. **Use:** Send `X-API-Key: <key>` header
+3. **Backend:** Extracts prefix, looks up hash, validates scopes
+
+The authenticate hook tries JWT first, then falls back to API key if the `X-API-Key` header is present.
 
 ### Security Features
 
@@ -253,10 +363,48 @@ Compatible with the Core Stack frontend auth system:
 - **Refresh token rotation** — old refresh token is revoked on each refresh
 - **Password reset** — secure token-based flow with email
 - **Email verification** — token-based verification flow
+- **RBAC** — roles with granular permissions, cached for performance
+- **API key scopes** — fine-grained access control for integrations
+- **Idempotency keys** — safe retries for POST/PUT/PATCH operations
 - **Security headers** — Helmet (CSP, HSTS, X-Frame-Options, etc.)
 - **Rate limiting** — configurable per-window limits
 - **Input sanitization** — XSS prevention utilities
 - **Audit logging** — automatic logging of all mutations
+- **Webhook HMAC** — payload signed with HMAC-SHA256 for verification
+
+## Background Jobs & Scheduling
+
+### Job Queue
+
+BullMQ-based job queue with Redis (falls back to in-memory for dev):
+
+- **Email delivery** — async email sending with retry
+- **Webhook delivery** — POST to external URLs with HMAC signing and retry
+- **Cleanup** — expired tokens, sessions, idempotency keys
+
+### Scheduled Jobs (Cron)
+
+| Schedule      | Job                         | Description                     |
+| ------------- | --------------------------- | ------------------------------- |
+| `0 0 * * *`   | `cleanup:expired-tokens`    | Clean up expired refresh tokens |
+| `0 * * * *`   | `cleanup:inactive-sessions` | Remove inactive sessions        |
+| `0 */6 * * *` | `cleanup:idempotency-keys`  | Purge expired idempotency keys  |
+
+## Environment Variables
+
+See `.env.example` for all available variables with descriptions. Key groups:
+
+| Group    | Variables                                                              |
+| -------- | ---------------------------------------------------------------------- |
+| Server   | `PORT`, `HOST`, `NODE_ENV`                                             |
+| Database | `DATABASE_URL`                                                         |
+| JWT      | `JWT_SECRET`, `JWT_ACCESS/REFRESH_EXPIRATION`                          |
+| CORS     | `CORS_ORIGIN`                                                          |
+| Cache    | `CACHE_DRIVER`, `REDIS_URL`                                            |
+| Queue    | `QUEUE_DRIVER`                                                         |
+| Mail     | `MAIL_DRIVER`, `SMTP_*`                                                |
+| Storage  | `STORAGE_DRIVER`, `S3_*`                                               |
+| Firebase | `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` |
 
 ## Frontend Integration
 
@@ -288,7 +436,8 @@ The frontend's `apiClient` and auth interceptor will work with this backend out 
    request.ctx.resource = { type: "my", id: result.id };
    ```
 5. Add Drizzle schema in `src/db/schema/` if needed
-6. Run `npm run db:generate && npm run db:migrate`
+6. Export from `src/db/schema/index.ts`
+7. Run `npm run db:generate && npm run db:migrate`
 
 ## Observability / Logging
 
