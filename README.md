@@ -2,50 +2,6 @@
 
 Template full-stack universal com **Next.js** (frontend) e **Fastify** (backend). Serve como ponto de partida com uma base solida de componentes, utilitarios, API REST, padroes e documentacao para iniciar qualquer novo projeto - de landing pages a paineis administrativos com backend proprio.
 
-## Tech Stack
-
-### Frontend
-
-| Tecnologia                                    | Versao | Proposito                          |
-| --------------------------------------------- | ------ | ---------------------------------- |
-| [Next.js](https://nextjs.org/)                | 16     | Framework React com App Router     |
-| [React](https://react.dev/)                   | 19     | Biblioteca UI com React Compiler   |
-| [TypeScript](https://www.typescriptlang.org/) | 5      | Tipagem estatica                   |
-| [Tailwind CSS](https://tailwindcss.com/)      | 4      | Estilizacao utility-first          |
-| [shadcn/ui](https://ui.shadcn.com/)           | -      | Componentes acessiveis (Radix UI)  |
-| [Storybook](https://storybook.js.org/)        | -      | Documentacao visual de componentes |
-| [Vitest](https://vitest.dev/)                 | 4      | Testes unitarios e de integracao   |
-| [Playwright](https://playwright.dev/)         | -      | Testes end-to-end                  |
-
-### Backend
-
-| Tecnologia                                                  | Versao | Proposito                                |
-| ----------------------------------------------------------- | ------ | ---------------------------------------- |
-| [Fastify](https://fastify.dev/)                             | 5      | Framework HTTP de alta performance       |
-| [TypeScript](https://www.typescriptlang.org/)               | 5      | Tipagem estatica (strict mode)           |
-| [Drizzle ORM](https://orm.drizzle.team/)                    | 0.44   | ORM type-safe para PostgreSQL            |
-| [PostgreSQL](https://www.postgresql.org/)                   | 17     | Banco de dados relacional                |
-| [Zod](https://zod.dev/)                                     | 3      | Validacao de schemas e env vars          |
-| [Pino](https://getpino.io/)                                 | 10     | Logger estruturado (Wide Events pattern) |
-| JWT (`@fastify/jwt`)                                        | 9      | Autenticacao (access + refresh tokens)   |
-| [Swagger/OpenAPI](https://swagger.io/) (`@fastify/swagger`) | 9      | Documentacao de API auto-gerada          |
-| [Vitest](https://vitest.dev/)                               | 3      | Testes unitarios e de integracao         |
-
-## Pre-requisitos
-
-| Ferramenta | Versao minima |
-| ---------- | ------------- |
-| Node.js    | 24 (LTS)      |
-| npm        | 11            |
-
-> Use `nvm install` na raiz do projeto para instalar a versao correta automaticamente (`.nvmrc`).
-
-## Inicio Rapido
-
-> Lista completa de scripts: [CONTRIBUTING.md](CONTRIBUTING.md) (secao "Scripts").
-
-### Frontend
-
 ```bash
 npm install         # Instalar dependencias
 npm run dev         # Servidor de desenvolvimento
@@ -55,57 +11,76 @@ npm test            # Testes
 npm run storybook   # Storybook (documentacao de componentes)
 ```
 
-Acesse [http://localhost:3000](http://localhost:3000) para o app e [http://localhost:6006](http://localhost:6006) para o Storybook.
+## Catalogo de Features
 
-### Backend
+Referencia de todas as funcionalidades implementadas no Core Stack, com API surface, componentes, hooks e paths.
 
-```bash
-cd backend
-docker compose up -d          # Subir PostgreSQL (dev + test)
-npm install                   # Instalar dependencias
-cp .env.example .env          # Configurar variaveis de ambiente
-npm run db:generate           # Gerar migrations
-npm run db:migrate            # Aplicar migrations
-npm run db:seed               # Seed com dados demo (opcional)
-npm run dev                   # Servidor de desenvolvimento
-```
+### A. Fundacao Visual
 
-Acesse [http://localhost:3001](http://localhost:3001) para a API e [http://localhost:3001/docs](http://localhost:3001/docs) para o Swagger.
+**Design System:** CSS variables + Tailwind v4 `@theme` (cores, tipografia Geist, espacamento, radius, sombras), tema dark/light via `ThemeProvider`, tokens de animacao (`duration-fast`, `ease-in-out`), `PageTransition`, `useReducedMotion`.
 
-> Documentacao detalhada do backend: [`backend/README.md`](backend/README.md).
+**Componentes & Storybook:** ~30 componentes shadcn/ui (`@/components/ui/*`) organizados por categoria (Basic, Form, Feedback, Overlay, Navigation, Data, Layout). Storybook 10 com stories em `stories/`.
 
-## Estrutura do Projeto
+**Layouts & Responsividade:** Layouts Marketing, Dashboard e Auth. Sidebar colapsavel/drawer mobile (`@/components/layouts/dashboard-sidebar`), navbar, footer. Hooks: `useMediaQuery`, `useBreakpoint`, `useIsMobile`, `useIsDesktop`.
 
-> Fonte canonica da estrutura de pastas do frontend: [`.cursor/rules/general.mdc`](.cursor/rules/general.mdc). Para agentes de IA: [`AGENTS.md`](AGENTS.md).
+**Acessibilidade:** WCAG 2.1 AA: `SkipLink`, `LiveRegion`, focus trap em modais, ARIA patterns, `meetsContrastRatio` (`@/lib/utils/contrast`).
 
-```
-core-stack/
-├── .cursor/rules/          # Regras para agentes de IA
-├── .github/workflows/      # CI/CD (GitHub Actions)
-├── .storybook/             # Configuracao do Storybook
-├── backend/                # API REST (Fastify + Drizzle + PostgreSQL)
-│   ├── src/
-│   │   ├── modules/        # Modulos de dominio (auth, users, health)
-│   │   ├── plugins/        # Plugins Fastify (auth, cors, rate-limit, swagger)
-│   │   ├── hooks/          # Pre-handlers (authenticate, authorize)
-│   │   ├── db/             # Drizzle schemas, migrations, seed
-│   │   ├── config/         # Env vars (Zod), constantes
-│   │   └── lib/            # Utilitarios (errors, hash, logger, pagination)
-│   ├── tests/              # Testes Vitest do backend
-│   └── docker-compose.yml  # PostgreSQL para dev e testes
-├── docs/                   # FEATURES.md, UI-REFERENCES.md
-├── src/                    # Codigo-fonte frontend (ver general.mdc para arvore detalhada)
-├── tests/                  # Setup, factories e mocks para testes frontend
-└── public/                 # Assets estaticos
-```
+**Animacoes & Micro-Interacoes:** Primitivos Framer Motion (`@/lib/motion`): `FadeIn`, `SlideIn`, `StaggerChildren`, `AnimateOnScroll`, `CountUp`, `TypeWriter`. `ScrollProgress`, `BackToTop`, `MotionProvider`. Keyframes CSS: `shimmer`, `shake`, `wiggle`, `gradient-shift`, `marquee`, `border-beam`. Componentes visuais de marketing (`@/components/shared`): `DotPattern`, `AnimatedGradientText`, `BorderBeam`, `Marquee`, `BentoGrid`/`BentoCard`.
 
-## Documentacao
+### B. Dados & Formularios
 
-- [Catalogo de Features](docs/FEATURES.md) - 25 features com API surface e paths
-- [Contribuicao](CONTRIBUTING.md) - Commits, scripts e CI
-- [Backend](backend/README.md) - Documentacao detalhada da API (endpoints, auth, modulos, logging)
-- [AGENTS.md](AGENTS.md) - Contexto para agentes de IA (arquitetura, navegacao, regras)
+**Formularios:** react-hook-form + Zod. `Form`, `FormWizard`, `MaskedInput` (`@/components/shared`). Schemas compartilhados (`@/lib/validation/schemas/shared`). Mascaras: CPF, CNPJ, CEP, telefone, moeda (`@/lib/masks`).
 
-## Licenca
+**Formatadores & Date/Time:** `@/lib/formatters`: `formatCurrency`, `abbreviateNumber`, `formatCpf`, `formatCnpj`, `formatCep`, `truncate`, `capitalize`, `slugify`, `pluralize`. `@/lib/datetime`: `formatDate`, `formatRelativeTime`, `formatDateRange`, `formatInUserTimezone`.
 
-Projeto privado - uso interno.
+**Exibicao & Gestao de Dados:** `DataTable`, `VirtualizedDataTable`, `TableFilters`, `BulkActionBar`, `EditableCell`, `InfiniteList`, `EmptyState`, `GridListViewToggle` (`@/components/shared`). Export CSV/Excel/JSON/PDF (`@/lib/data/export`). Padroes CRUD.
+
+### C. API & Servidor
+
+**Cliente API & Erros:** `createApiClient`, `apiClient` (`@/lib/api/client`), `ApiError`, `normalizeApiError` (`@/lib/api/errors`). `QueryProvider` (`@/providers/query-provider`). `ErrorBoundary`, `ErrorState`, `LoadingFallback` (`@/components/shared`).
+
+**Servidor & Real-time:** Server Actions com Zod, API Routes, middleware, ISR. `useWebSocket`, `useSSE`, `usePolling` (`@/lib/realtime`).
+
+### D. Navegacao
+
+**Navegacao, URL & Busca:** `useUrlState`, `useUrlStateMulti`, `useUrlPagination` (`@/hooks`). `Breadcrumbs`, `CommandPalette` (`@/components/navigation`). `GlobalSearch`, `HighlightMatch`, `SearchResultItem` (`@/components/search`). `useSearchResults`, `useRecentSearches`.
+
+### E. Infraestrutura
+
+**Internacionalizacao:** next-intl com App Router. `Link`, `useRouter`, `usePathname`, `useTranslations`, `useLocale`, `useDateFormatter`, `useNumberFormatter` (`@/lib/i18n`). `LanguageSwitcher` (`@/components/shared`). Locales: pt-BR, en, es.
+
+**SEO:** `generateMetadataBase` (`@/lib/seo/metadata`). JSON-LD: `buildOrganizationJsonLd`, `buildProductJsonLd`, `buildArticleJsonLd`, `buildBreadcrumbJsonLd` (`@/lib/seo/json-ld`). `JsonLd` component. `sitemap.ts`, `robots.ts`.
+
+**Autenticacao & Autorizacao:** `useAuth`, `usePermissions` (`@/hooks`). `Can`, `PermissionButton`, `RequirePermission` (`@/components/auth`). `AuthProvider` (`@/providers`). RBAC, `getSession` (`@/lib/auth/session`). Middleware de protecao.
+
+**Seguranca & Configuracao:** `env` tipado via t3-env/zod (`@/config/env`). `sanitizeHtml` (`@/lib/security/sanitize`). `getSecurityHeaders`, `generateCsrfToken`, `validateCsrfToken`, `createClientRateLimiter` (`@/lib/security`). `useThrottle`.
+
+**Logging & Telemetria:** `logger` com niveis debug/info/warn/error (`@/lib/telemetry/logger`). `track` analytics (`@/lib/telemetry/analytics`). `reportWebVitals` (`@/lib/telemetry/web-vitals`). `WebVitalsReporter`, `PageViewTracker` (`@/components/telemetry`). `useTrackEvent`.
+
+### F. Padroes de UX
+
+**Feedback & Orientacao:** `toast` (success, error, warning, info, promise) (`@/lib/feedback/toast`). `EmptyState`, `ErrorState`, `SkeletonPresets`, `ConfirmDialog`, `LoadingButton`, `NotificationCenter`, `Tour`, `OfflineBanner` (`@/components/shared`). `useNotifications`, `useOnlineStatus`.
+
+**Interacoes Avancadas:** `useClipboard`, `useShare`, `useKeyboardShortcut` (`@/hooks`). `ShortcutProvider`, `CheatSheet`. `SortableList`, `KanbanBoard` (`@/components/shared`) via @dnd-kit.
+
+### G. Media & Conteudo
+
+**Arquivos & Media:** `FileUpload`, `ImageCropUpload`, `Lightbox`, `Avatar`, `ResponsiveImage`, `VideoPlayer` (`@/components/shared`). `downloadWithProgress` (`@/lib/media`).
+
+**Conteudo Rico:** `MarkdownContent`, `CodeBlock`, `RichTextEditor`, `ResponsiveEmbed`, `TableOfContents` (`@/components/content`). Sanitizacao via `@/lib/security/sanitize`. Prose styles em `prose.css`.
+
+### H. Plataforma
+
+**Hooks & Utilitarios:** 25+ hooks (`@/hooks`): `useDebounce`, `useThrottle`, `useMediaQuery`, `useLocalStorage`, `useSessionStorage`, `useClipboard`, `useOnClickOutside`, `useIntersectionObserver`, `useKeyboardShortcut`, `usePrevious`, `useToggle`, `useOnlineStatus`, `useWindowSize`, `useScrollPosition`, `useEventListener`, `useCookieConsent`. Storage wrappers (`@/lib/storage`). `CookieConsentBanner`.
+
+**Performance & PWA:** Code splitting via `next/dynamic`. `VirtualList`, `WebVitalsReporter`, `InstallPWAButton` (`@/components/shared`). `usePWAInstall` (`@/hooks`). Service worker, manifest, pagina `/offline`.
+
+### I. Experiencia do Desenvolvedor
+
+**Estrategia de Testes:** Vitest + Testing Library + MSW + Playwright. `customRender` (`@/tests/utils/render`), factories (`tests/factories`), mock server (`tests/mocks/server`). Setup em `tests/setup.ts`.
+
+**Pipeline de Entrega:** GitHub Actions CI (lint, type-check, test, build). `useFeatureFlag`, `Feature` component (`@/hooks`, `@/components/shared`). Config: `@/config/feature-flags`.
+
+### J. Paginas de Exemplo
+
+**Paginas de Exemplo:** Landing page, dashboard, dados (DataTable + filtros + export), formularios, configuracoes, galeria de componentes, playground de hooks, animacoes. Rotas: `/[locale]/(marketing)/`, `/[locale]/(dashboard)/dashboard/*`, `/[locale]/(examples)/examples/*`.
