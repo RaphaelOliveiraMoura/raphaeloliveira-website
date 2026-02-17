@@ -21,10 +21,21 @@ const authMiddleware = createAuthMiddleware(
 export default function proxy(request: Parameters<typeof intlMiddleware>[0]) {
   const response = intlMiddleware(request);
 
-  // Security headers
-  const headers = getSecurityHeaders();
+  // Gerar nonce único para CSP (produção)
+  const nonce =
+    process.env.NODE_ENV === "production"
+      ? Buffer.from(crypto.randomUUID()).toString("base64")
+      : undefined;
+
+  // Security headers com nonce
+  const headers = getSecurityHeaders(nonce);
   for (const [key, value] of Object.entries(headers)) {
     response.headers.set(key, value);
+  }
+
+  // Adicionar nonce ao header x-nonce para o Next.js usar
+  if (nonce) {
+    response.headers.set("x-nonce", nonce);
   }
 
   // Auth guards
