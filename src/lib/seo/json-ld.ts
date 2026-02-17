@@ -79,3 +79,26 @@ export function buildBreadcrumbJsonLd(
     })),
   };
 }
+
+export interface PersonSchema {
+  "@context": string;
+  "@type": "Person";
+  name: string;
+  url: string;
+  jobTitle: string;
+  sameAs: string[];
+}
+
+export function buildPersonJsonLd(): PersonSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Raphael de Oliveira Moura",
+    url: SITE_URL,
+    jobTitle: "Software Engineer",
+    sameAs: [
+      "https://github.com/RaphaelOliveiraMoura",
+      "https://www.linkedin.com/in/raphaeloliveiramoura/",
+    ],
+  };
+}

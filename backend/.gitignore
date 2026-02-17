@@ -1,8 +1,0 @@
-node_modules/
-dist/
-.env
-*.log
-coverage/
-test-uploads/
-test-tmp-fixtures/
-uploads/

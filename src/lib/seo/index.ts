@@ -5,7 +5,9 @@ export {
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
   buildOrganizationJsonLd,
+  buildPersonJsonLd,
   type OrganizationSchema,
+  type PersonSchema,
 } from "./json-ld";
 export { generateMetadata } from "./metadata";
 // generateOgImage is intentionally NOT exported here.

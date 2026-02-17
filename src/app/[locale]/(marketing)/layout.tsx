@@ -8,9 +8,9 @@ import { CookieConsentBanner } from "@/components/shared";
 import { generateMetadata as generateSeoMetadata } from "@/lib/seo";
 
 export const metadata = generateSeoMetadata({
-  title: "Core Stack",
+  title: "Raphael Oliveira — Software Engineer",
   description:
-    "Template base universal para projetos Next.js com componentes, hooks e utilitarios prontos para producao.",
+    "Portfolio de Raphael de Oliveira Moura — Desenvolvedor fullstack com +7 anos de experiência em React, Node.js e TypeScript.",
   path: "/",
 });
 

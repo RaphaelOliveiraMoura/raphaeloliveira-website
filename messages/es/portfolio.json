@@ -1,0 +1,148 @@
+{
+  "hero": {
+    "greeting": "Hola, soy",
+    "name": "Raphael de Oliveira",
+    "role": "Ingeniero de Software",
+    "description": "Desarrollador fullstack con más de 7 años de experiencia construyendo aplicaciones web escalables y liderando equipos de alto rendimiento.",
+    "cta": "Contáctame",
+    "viewWork": "Ver mi trabajo",
+    "scrollDown": "Desplázate hacia abajo"
+  },
+  "about": {
+    "title": "Sobre mí",
+    "subtitle": "Conoce un poco de mi historia",
+    "bio1": "Mi nombre es Raphael de Oliveira Moura. Soy desarrollador de software graduado en Sistemas de Información por el Centro Universitário Una y técnico en informática por el CEFET-MG.",
+    "bio2": "Con más de 7 años de experiencia en desarrollo de software, tengo una profunda comprensión de las mejores prácticas y tendencias del sector. Además, soy capaz de liderar equipos de desarrolladores y garantizar la entrega de proyectos de alta calidad.",
+    "bio3": "Mi objetivo es seguir aprendiendo y aplicando tecnologías innovadoras para resolver desafíos complejos y lograr resultados excepcionales para mis clientes y equipo. Uno de mis objetivos es mejorar mi capacidad de impactar positivamente a otras personas.",
+    "yearsExperience": "Años de experiencia",
+    "projectsDelivered": "Proyectos entregados",
+    "companiesWorked": "Empresas trabajadas",
+    "location": "Belo Horizonte, Brasil"
+  },
+  "experience": {
+    "title": "Experiencia profesional",
+    "subtitle": "Mi trayectoria profesional",
+    "present": "Presente",
+    "items": {
+      "boticario": {
+        "company": "Grupo Boticário",
+        "role": "Desarrollador Fullstack III (React/Node)",
+        "period": "jul/2024 - Presente",
+        "location": "Remoto",
+        "type": "Tiempo completo",
+        "description": "Actuando como desarrollador fullstack en la mayor empresa de cosméticos de Brasil, desarrollando soluciones con React y Node.js para los sistemas internos de la empresa."
+      },
+      "natahouse_lead": {
+        "company": "nata.house",
+        "role": "Líder técnico",
+        "period": "oct/2022 - jul/2024",
+        "duration": "1 año y 10 meses",
+        "location": "Minas Gerais, Brasil · Remoto",
+        "type": "Tiempo completo",
+        "description": "Actué en la planificación y desarrollo de proyectos de punta a punta, desde el primer contacto con el cliente para entender la demanda, definiciones arquitectónicas del proyecto, planificación y liderazgo técnico del equipo."
+      },
+      "natahouse_dev": {
+        "company": "nata.house",
+        "role": "Desarrollador full stack",
+        "period": "feb/2020 - oct/2022",
+        "duration": "2 años y 9 meses",
+        "location": "Belo Horizonte y Región",
+        "type": "Tiempo completo",
+        "description": "Actué como desarrollador en diferentes proyectos y frentes, garantizando siempre entregas con calidad."
+      },
+      "kukac_dev": {
+        "company": "Kukac",
+        "role": "Desarrollador full stack",
+        "period": "jul/2019 - feb/2020",
+        "duration": "8 meses",
+        "location": "Belo Horizonte y Región",
+        "type": "Tiempo completo",
+        "description": "Actué en el desarrollo de sistemas de chatbot para terceros utilizando herramientas de inteligencia artificial proporcionadas como servicio por IBM."
+      },
+      "kukac_intern": {
+        "company": "Kukac",
+        "role": "Pasante de desarrollo",
+        "period": "mar/2019 - jul/2019",
+        "duration": "5 meses",
+        "location": "Belo Horizonte y Región",
+        "type": "Pasantía",
+        "description": "Inicio de mi carrera profesional en el desarrollo de software, trabajando en proyectos internos y aprendiendo las mejores prácticas del mercado."
+      }
+    }
+  },
+  "education": {
+    "title": "Formación académica",
+    "subtitle": "Mi camino de aprendizaje",
+    "items": {
+      "una": {
+        "institution": "Centro Universitário Una",
+        "degree": "Licenciatura, Sistemas de Información",
+        "period": "2019 - 2022",
+        "description": "Durante mi graduación, tuve la oportunidad de adquirir conocimientos sólidos en programación, bases de datos, seguridad de la información y otras áreas importantes de TI."
+      },
+      "rocketseat": {
+        "institution": "Rocketseat",
+        "degree": "Bootcamp GoStack",
+        "period": "2019 - 2021",
+        "description": "Aprendizaje de las herramientas más modernas utilizadas hoy por grandes empresas como Uber, Netflix, Airbnb e Instagram. Acceso a varios contenidos para desarrollo de habilidades técnicas y blandas."
+      }
+    }
+  },
+  "recommendations": {
+    "title": "Personas y organizaciones que me inspiran",
+    "subtitle": "Referencias que me ayudaron en mi camino",
+    "items": {
+      "branas": {
+        "name": "Rodrigo Branas",
+        "description": "Desarrollador y autor, conocido por sus cursos y libros sobre programación. Su canal de YouTube ofrece una amplia gama de contenido educativo sobre desarrollo de software."
+      },
+      "elemarjr": {
+        "name": "Elemar Jr",
+        "description": "Consultor y arquitecto de software, reconocido por sus charlas y artículos sobre arquitectura de software y desarrollo ágil."
+      },
+      "akita": {
+        "name": "Fábio Akita",
+        "description": "Empresario y desarrollador, fundador de Codeminer 42. Conocido por sus charlas y videos sobre temas avanzados de desarrollo y cultura de ingeniería."
+      },
+      "manguinho": {
+        "name": "Rodrigo Manguinho",
+        "description": "Instructor y desarrollador, conocido por sus cursos sobre desarrollo full stack y prácticas de mercado en Mango Academy."
+      },
+      "deschamps": {
+        "name": "Filipe Deschamps",
+        "description": "Ingeniero de software y YouTuber, referencia para desarrolladores con videos educativos e insights sobre la industria tecnológica."
+      },
+      "wendel": {
+        "name": "Erick Wendel",
+        "description": "Especialista en Node.js, conocido por sus charlas, cursos y tutoriales que ayudan a los desarrolladores a profundizar en el ecosistema JavaScript."
+      },
+      "montano": {
+        "name": "Lucas Montano",
+        "description": "Desarrollador y creador de contenido que aborda temas de programación y desarrollo personal en la carrera tecnológica."
+      },
+      "solto": {
+        "name": "Mario Solto",
+        "description": "Instructor en la plataforma Alura y YouTuber. Su canal DevSoltinho tiene diversos videos con insights sobre tecnología de calidad excepcional."
+      },
+      "rocketseat": {
+        "name": "Rocketseat",
+        "description": "Empresa de tecnología educativa que ofrece cursos y contenido gratuito sobre programación, enfocada en acelerar la carrera de los desarrolladores."
+      }
+    }
+  },
+  "techStack": {
+    "title": "Tecnologías",
+    "subtitle": "Herramientas y tecnologías que utilizo a diario",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "devops": "DevOps y Herramientas"
+  },
+  "contact": {
+    "title": "¿Hablamos?",
+    "subtitle": "Siempre estoy abierto a nuevas oportunidades y conexiones. ¡No dudes en contactarme!",
+    "email": "Enviar correo",
+    "github": "Ver proyectos en GitHub",
+    "linkedin": "Conectar en LinkedIn",
+    "or": "o"
+  }
+}

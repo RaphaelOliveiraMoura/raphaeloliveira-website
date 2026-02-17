@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Core Stack",
-  description: "Template base universal para projetos Next.js",
+  title: "Raphael Oliveira — Software Engineer",
+  description:
+    "Portfolio de Raphael de Oliveira Moura — Desenvolvedor fullstack com +7 anos de experiência em React, Node.js e TypeScript.",
 };
 
 export default function RootLayout({
