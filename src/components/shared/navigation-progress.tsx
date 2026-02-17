@@ -134,7 +134,7 @@ export function NavigationProgress() {
       aria-valuenow={Math.round(value)}
       aria-valuemin={0}
       aria-valuemax={100}
-      className="pointer-events-none fixed inset-x-0 top-0 z-[9999] h-0.5"
+      className="pointer-events-none fixed inset-x-0 top-0 z-9999 h-0.5"
     >
       <div
         className="h-full bg-primary transition-[width] duration-200 ease-out"

@@ -1,4 +1,6 @@
 export { AnimatedGradientText } from "./animated-gradient-text";
+export type { RecommendationItem } from "./animated-recommendations";
+export { AnimatedRecommendations } from "./animated-recommendations";
 export { BackToTop } from "./back-to-top";
 export { BentoCard, BentoGrid } from "./bento-grid";
 export { BorderBeam } from "./border-beam";

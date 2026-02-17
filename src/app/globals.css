@@ -203,8 +203,7 @@ body {
   img[loading="lazy"] {
     opacity: 0;
   }
-  img[loading="lazy"].loaded,
-  img[loading="lazy"][complete] {
+  img[loading="lazy"][data-loaded="true"] {
     opacity: 1;
   }
 

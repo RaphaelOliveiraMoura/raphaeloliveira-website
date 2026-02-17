@@ -2,14 +2,21 @@
 
 import { Menu } from "lucide-react";
 
-import { GlobalSearch } from "@/components/search";
+import { LanguageSwitcher } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-import { Link, useTranslations } from "@/lib/i18n";
+import { useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-breakpoint";
 import { useScrollPosition } from "@/hooks/use-scroll-position";
+
+const NAV_ITEMS = [
+  { href: "#about", key: "about" },
+  { href: "#experience", key: "experience" },
+  { href: "#education", key: "education" },
+  { href: "#contact", key: "contact" },
+] as const;
 
 export function MarketingNavbar() {
   const isMobile = useIsMobile();
@@ -17,38 +24,29 @@ export function MarketingNavbar() {
   const { y: scrollY } = useScrollPosition();
   const isScrolled = scrollY > 20;
 
+  const handleScrollTo = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const navLinks = (
     <>
-      <Link
-        href="/features"
-        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
-      >
-        {t("nav.features")}
-      </Link>
-      <Link
-        href="/pricing"
-        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
-      >
-        {t("nav.pricing")}
-      </Link>
-      <Link
-        href="/docs"
-        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
-      >
-        {t("nav.docs")}
-      </Link>
-      <Link
-        href="/examples"
-        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
-      >
-        {t("nav.examples")}
-      </Link>
-      <Link
-        href="/landings"
-        className="relative text-muted-foreground transition-colors duration-normal hover:text-foreground"
-      >
-        {t("nav.landings")}
-      </Link>
+      {NAV_ITEMS.map((item) => (
+        <a
+          key={item.key}
+          href={item.href}
+          onClick={(e) => handleScrollTo(e, item.href)}
+          className="relative text-sm text-muted-foreground transition-colors duration-normal hover:text-foreground"
+        >
+          {t(`nav.${item.key}`)}
+        </a>
+      ))}
     </>
   );
 
@@ -63,34 +61,41 @@ export function MarketingNavbar() {
         )}
       >
         <div className="flex h-14 items-center justify-between px-4">
-          <Link
-            href="/"
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             className={cn(
               "font-semibold transition-all duration-normal",
               isScrolled ? "text-base" : "text-lg",
             )}
           >
             {t("logo")}
-          </Link>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label={t("nav.openMenu")}
-              >
-                <Menu className="size-4" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <nav
-                className="flex flex-col gap-4 pt-8"
-                aria-label={t("nav.primary")}
-              >
-                {navLinks}
-              </nav>
-            </SheetContent>
-          </Sheet>
+          </a>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label={t("nav.openMenu")}
+                >
+                  <Menu className="size-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <nav
+                  className="flex flex-col gap-4 pt-8"
+                  aria-label={t("nav.primary")}
+                >
+                  {navLinks}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </header>
     );
@@ -106,19 +111,23 @@ export function MarketingNavbar() {
       )}
     >
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
-        <Link
-          href="/"
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           className={cn(
             "font-semibold transition-all duration-normal",
             isScrolled ? "text-base" : "text-lg",
           )}
         >
           {t("logo")}
-        </Link>
-        <nav className="flex gap-6" aria-label={t("nav.primary")}>
+        </a>
+        <nav className="flex items-center gap-6" aria-label={t("nav.primary")}>
           {navLinks}
         </nav>
-        <GlobalSearch />
+        <LanguageSwitcher />
       </div>
     </header>
   );
