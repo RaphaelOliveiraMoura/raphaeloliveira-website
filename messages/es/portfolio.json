@@ -3,7 +3,7 @@
     "greeting": "Hola, soy",
     "name": "Raphael de Oliveira",
     "role": "Ingeniero de Software",
-    "description": "Desarrollador fullstack con más de 7 años de experiencia construyendo aplicaciones web escalables y liderando equipos de alto rendimiento.",
+    "description": "Desarrollador fullstack con más de {yearsOfExperience} años de experiencia construyendo aplicaciones web escalables y liderando equipos de alto rendimiento.",
     "cta": "Contáctame",
     "viewWork": "Ver mi trabajo",
     "scrollDown": "Desplázate hacia abajo"
@@ -12,7 +12,7 @@
     "title": "Sobre mí",
     "subtitle": "Conoce un poco de mi historia",
     "bio1": "Mi nombre es Raphael de Oliveira Moura. Soy desarrollador de software graduado en Sistemas de Información por el Centro Universitário Una y técnico en informática por el CEFET-MG.",
-    "bio2": "Con más de 7 años de experiencia en desarrollo de software, tengo una profunda comprensión de las mejores prácticas y tendencias del sector. Además, soy capaz de liderar equipos de desarrolladores y garantizar la entrega de proyectos de alta calidad.",
+    "bio2": "Con más de {yearsOfExperience} años de experiencia en desarrollo de software, tengo una profunda comprensión de las mejores prácticas y tendencias del sector. Además, soy capaz de liderar equipos de desarrolladores y garantizar la entrega de proyectos de alta calidad.",
     "bio3": "Mi objetivo es seguir aprendiendo y aplicando tecnologías innovadoras para resolver desafíos complejos y lograr resultados excepcionales para mis clientes y equipo. Uno de mis objetivos es mejorar mi capacidad de impactar positivamente a otras personas.",
     "yearsExperience": "Años de experiencia",
     "projectsDelivered": "Proyectos entregados",

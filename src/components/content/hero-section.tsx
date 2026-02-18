@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 
 import { useTranslations } from "@/lib/i18n";
 import { FadeIn, TypeWriter } from "@/lib/motion";
+import { calculateYearsOfExperience } from "@/lib/utils/years-of-experience";
 
 export function HeroSection() {
   const t = useTranslations("portfolio");
@@ -70,7 +71,9 @@ export function HeroSection() {
 
       <FadeIn delay={0.4} duration={0.5}>
         <p className="max-w-2xl text-balance text-lg text-muted-foreground md:text-xl">
-          {t("hero.description")}
+          {t("hero.description", {
+            yearsOfExperience: calculateYearsOfExperience(),
+          })}
         </p>
       </FadeIn>
 

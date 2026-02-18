@@ -117,6 +117,6 @@
   },
   "metadata": {
     "title": "Raphael Oliveira — Engenheiro de Software",
-    "description": "Portfolio de Raphael de Oliveira Moura — Desenvolvedor fullstack com +7 anos de experiência em React, Node.js e TypeScript."
+    "description": "Portfolio de Raphael de Oliveira Moura — Desenvolvedor fullstack com +{yearsOfExperience} anos de experiência em React, Node.js e TypeScript."
   }
 }

@@ -4,6 +4,7 @@ import { MapPin } from "lucide-react";
 
 import { useTranslations } from "@/lib/i18n";
 import { AnimateOnScroll, CountUp, FadeIn, fadeInUp } from "@/lib/motion";
+import { calculateYearsOfExperience } from "@/lib/utils/years-of-experience";
 
 import { Marquee, ResponsiveImage } from "../shared";
 
@@ -38,19 +39,15 @@ const ALL_TECHS: TechItem[] = [
   ...DEVOPS_TECHS,
 ];
 
-function calculateYearsOfExperience(): number {
-  const start = new Date(2019, 2, 1); // mar/2019
-  const now = new Date();
-  return Math.floor(
-    (now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 365.25),
-  );
-}
-
 export function AboutSection() {
   const t = useTranslations("portfolio");
   const yearsOfExperience = calculateYearsOfExperience();
 
-  const timelineItems = [t("about.bio1"), t("about.bio2"), t("about.bio3")];
+  const timelineItems = [
+    t("about.bio1"),
+    t("about.bio2", { yearsOfExperience }),
+    t("about.bio3"),
+  ];
 
   const stats = [
     {

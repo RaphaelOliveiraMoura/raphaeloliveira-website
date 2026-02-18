@@ -37,8 +37,8 @@ export function ResponsiveImage({
       placeholder={blurDataURL ? "blur" : "empty"}
       blurDataURL={blurDataURL}
       loading={priority ? undefined : "lazy"}
-      onLoadingComplete={(img) => {
-        img.dataset.loaded = "true";
+      onLoad={(event) => {
+        event.currentTarget.dataset.loaded = "true";
       }}
       className={cn(className)}
     />
