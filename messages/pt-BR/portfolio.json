@@ -137,6 +137,33 @@
     "backend": "Backend",
     "devops": "DevOps & Ferramentas"
   },
+  "projects": {
+    "title": "Projetos",
+    "subtitle": "Projetos pessoais e trabalhos open-source que construí",
+    "visitProject": "Visitar projeto",
+    "items": {
+      "matchMoment": {
+        "name": "Match Moment",
+        "description": "Jogo gratuito de conhecimento futebolístico no navegador. Organize partidas históricas em ordem cronológica numa linha do tempo e teste sua memória esportiva em diferentes competições.",
+        "category": "Jogo"
+      },
+      "itoOnline": {
+        "name": "Ito Online",
+        "description": "Jogo de cartas colaborativo gratuito com multiplayer em tempo real. Jogadores entram em salas por códigos e trabalham juntos para ordenar cartas com base em dicas temáticas criativas. Suporta 2-10 jogadores.",
+        "category": "Multiplayer"
+      },
+      "huntspace": {
+        "name": "Huntspace",
+        "description": "Plataforma comunitária onde desenvolvedores validam os projetos uns dos outros através de feedbacks construtivos. Sistema baseado em reputação gamificado com conquistas e rankings.",
+        "category": "Comunidade"
+      },
+      "barcaApi": {
+        "name": "Barça API",
+        "description": "API REST pública para dados do FC Barcelona — elenco, partidas e classificação. Possui uma interface retro de terminal interativa e não requer autenticação.",
+        "category": "API"
+      }
+    }
+  },
   "contact": {
     "title": "Vamos conversar?",
     "subtitle": "Estou sempre aberto a novas oportunidades e conexões. Sinta-se à vontade para entrar em contato!",

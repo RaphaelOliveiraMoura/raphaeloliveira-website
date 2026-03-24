@@ -12,6 +12,7 @@ import { useIsMobile } from "@/hooks/use-breakpoint";
 import { useScrollPosition } from "@/hooks/use-scroll-position";
 
 const NAV_ITEMS = [
+  { href: "#projects", key: "projects" },
   { href: "#about", key: "about" },
   { href: "#experience", key: "experience" },
   { href: "#education", key: "education" },

@@ -111,7 +111,7 @@ export function HeroSection() {
 
       <FadeIn delay={0.7} duration={0.5}>
         <button
-          onClick={() => handleScrollTo("#about")}
+          onClick={() => handleScrollTo("#projects")}
           className="mt-8 animate-bounce text-muted-foreground transition-colors hover:text-foreground"
           aria-label={t("hero.scrollDown")}
         >
