@@ -5,7 +5,9 @@ import {
   Braces,
   ExternalLink,
   Gamepad2,
+  Layers,
   LucideIcon,
+  Terminal,
   Trophy,
   Users,
 } from "lucide-react";
@@ -26,7 +28,9 @@ const PROJECT_KEYS = [
   "matchMoment",
   "itoOnline",
   "huntspace",
+  "bugCapitalist",
   "barcaApi",
+  "barcelonaApp",
 ] as const;
 
 interface ProjectData {
@@ -43,6 +47,29 @@ interface ProjectData {
 }
 
 const PROJECTS_DATA: Record<(typeof PROJECT_KEYS)[number], ProjectData> = {
+  bugCapitalist: {
+    url: "https://github.com/RaphaelOliveiraMoura/bugcap",
+    displayUrl: "github.com/RaphaelOliveiraMoura/bugcap",
+    tech: ["TypeScript", "Ink", "React", "Node.js"],
+    colSpan: 1,
+    featured: true,
+    icon: Terminal,
+    gradient: "linear-gradient(135deg, #111827 0%, #1f2937 50%, #14b8a6 100%)",
+    iconGradient: "linear-gradient(135deg, #111827, #14b8a6)",
+    beamColors: { from: "#38bdf8", to: "#34d399" },
+    image: "/images/projects/bug-capitalist.png",
+  },
+  barcelonaApp: {
+    url: "https://fc-barcelona.app/",
+    displayUrl: "fc-barcelona.app",
+    tech: ["Next.js", "React", "TypeScript", "PostgreSQL"],
+    colSpan: 2,
+    featured: false,
+    icon: Layers,
+    gradient: "linear-gradient(135deg, #991b1b 0%, #1d4ed8 60%, #0f172a 100%)",
+    iconGradient: "linear-gradient(135deg, #991b1b, #1d4ed8)",
+    image: "/images/projects/barcelona-app.png",
+  },
   matchMoment: {
     url: "https://www.match-moment.com/",
     displayUrl: "match-moment.com",

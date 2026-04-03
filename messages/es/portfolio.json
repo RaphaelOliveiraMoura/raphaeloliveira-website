@@ -142,6 +142,16 @@
     "subtitle": "Proyectos personales y trabajo open-source que he construido",
     "visitProject": "Visitar proyecto",
     "items": {
+      "bugCapitalist": {
+        "name": "Bug Capitalist",
+        "description": "Juego idle de terminal que convierte sesiones de programación con IA en progreso gamificado. Desarrollado como CLI en TypeScript con interfaz React usando Ink.",
+        "category": "CLI"
+      },
+      "barcelonaApp": {
+        "name": "Barcelona App",
+        "description": "Aplicación full-stack moderna enfocada en productividad y escalabilidad, construida con Next.js 16, React 19 y TypeScript como base reutilizable para nuevos productos.",
+        "category": "Web App"
+      },
       "matchMoment": {
         "name": "Match Moment",
         "description": "Juego gratuito de conocimiento futbolístico en el navegador. Organiza partidos históricos cronológicamente en una línea de tiempo y pon a prueba tu memoria deportiva en diferentes competiciones.",
