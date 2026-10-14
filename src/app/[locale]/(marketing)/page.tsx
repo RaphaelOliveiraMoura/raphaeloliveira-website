@@ -1,33 +1,19 @@
-"use client";
+import { buildDeskContent, DeskHome, DeskTextVersion } from "@/components/desk";
+import { JsonLd } from "@/components/shared";
 
-import { AboutSection } from "@/components/content/about-section";
-import { ContactSection } from "@/components/content/contact-section";
-import { EducationSection } from "@/components/content/education-section";
-import { ExperienceSection } from "@/components/content/experience-section";
-import { HeroSection } from "@/components/content/hero-section";
-import { ProjectsSection } from "@/components/content/projects-section";
-import { RecommendationsSection } from "@/components/content/recommendations-section";
-import { BackToTop, JsonLd, ScrollProgress } from "@/components/shared";
-
+import { getMessages } from "@/lib/i18n";
 import { buildPersonJsonLd } from "@/lib/seo";
 
-export default function PortfolioPage() {
-  const jsonLd = buildPersonJsonLd();
+export default async function PortfolioPage() {
+  const messages = await getMessages();
+  const content = buildDeskContent(messages.desk);
 
   return (
     <>
-      <JsonLd data={jsonLd} />
-      <ScrollProgress />
-
-      <HeroSection />
-      <ProjectsSection />
-      <AboutSection />
-      <ExperienceSection />
-      <EducationSection />
-      <RecommendationsSection />
-      <ContactSection />
-
-      <BackToTop className="fixed bottom-8 right-12" />
+      <JsonLd data={buildPersonJsonLd()} />
+      <DeskHome content={content}>
+        <DeskTextVersion content={content} />
+      </DeskHome>
     </>
   );
 }

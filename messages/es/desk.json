@@ -1,0 +1,477 @@
+{
+  "brand": "EL ESCRITORIO DE RAPHAEL",
+  "loading": "Ordenando el escritorio…",
+  "canvasLabel": "Escritorio en 3D con objetos clicables: libro, cajón, fichas, corcho, portalápices, taza, pelota, portacartas y portátil",
+  "macroHint": "HAZ CLIC EN LOS OBJETOS · ARRASTRA LA PELOTA · MUEVE EL RATÓN PARA MIRAR ALREDEDOR",
+  "macroHintTouch": "TOCA LOS OBJETOS · ARRASTRA PARA MIRAR ALREDEDOR",
+  "skipIntro": "saltar la llegada",
+  "back": "← volver al escritorio",
+  "prev": "Elemento anterior",
+  "next": "Elemento siguiente",
+  "counter": "{current} / {total}",
+  "shortcuts": "Secciones del escritorio",
+  "goal": "¡Golazo! {count, plural, one {# gol} other {# goles}} en la cuenta.",
+  "webglError": "Tu navegador no pudo montar el escritorio en 3D. Aquí está todo en texto.",
+  "clock": "{time} en BH · {phase}",
+  "phases": {
+    "morning": "mañana",
+    "afternoon": "tarde",
+    "evening": "atardecer",
+    "night": "noche"
+  },
+  "controls": {
+    "sound": "Sonido ambiente",
+    "soundOn": "sonido activado",
+    "soundOff": "sonido desactivado",
+    "lamp": "Lámpara",
+    "lampOn": "lámpara encendida",
+    "lampOff": "lámpara apagada",
+    "listView": "ver en lista",
+    "deskView": "ver el escritorio",
+    "terminalInput": "Terminal del portátil: escribe un comando y pulsa Enter"
+  },
+  "sections": {
+    "about": {
+      "label": "sobre mí",
+      "hint": "SOBRE MÍ · LAS CINTAS DEL LIBRO CAMBIAN DE CAPÍTULO"
+    },
+    "projects": {
+      "label": "proyectos",
+      "hint": "PROYECTOS · HAZ CLIC EN LAS FICHAS DEL CAJÓN"
+    },
+    "career": {
+      "label": "trayectoria",
+      "hint": "TRAYECTORIA · HAZ CLIC EN LAS FICHAS DEL ABANICO"
+    },
+    "inspirations": {
+      "label": "inspiraciones",
+      "hint": "INSPIRACIONES · HAZ CLIC EN LAS POLAROIDS DEL CORCHO"
+    },
+    "tools": {
+      "label": "herramientas",
+      "hint": "HERRAMIENTAS · HAZ CLIC EN LOS LÁPICES"
+    },
+    "now": {
+      "label": "ahora",
+      "hint": "AHORA · HAZ CLIC EN LOS PÓSITS"
+    },
+    "football": {
+      "label": "fuera del código",
+      "hint": "FUERA DEL CÓDIGO · HAZ CLIC EN LAS ENTRADAS · METE LA PELOTA EN LA PORTERÍA"
+    },
+    "contact": {
+      "label": "contacto",
+      "hint": "CONTACTO · HAZ CLIC EN LOS SOBRES"
+    },
+    "notebook": {
+      "label": "actividad",
+      "hint": "ACTIVIDAD · ← → ALTERNA ENTRE EL PANEL Y LA TERMINAL"
+    }
+  },
+  "list": {
+    "name": "Raphael de Oliveira Moura",
+    "title": "El escritorio de Raphael, en texto",
+    "intro": "Raphael de Oliveira Moura, ingeniero de software en Belo Horizonte, Brasil. Todo lo que hay en el escritorio en 3D, organizado en una lista.",
+    "visit": "abrir"
+  },
+  "content": {
+    "about": {
+      "who": {
+        "label": "CAPÍTULO 01",
+        "short": "Quién soy",
+        "title": "Quién soy",
+        "text": "Raphael de Oliveira Moura, ingeniero de software en Belo Horizonte. Programando profesionalmente desde marzo de 2019.",
+        "meta": "Sistemas de Información · Una / Técnico en informática · CEFET-MG"
+      },
+      "today": {
+        "label": "CAPÍTULO 02",
+        "short": "Hoy",
+        "title": "Hoy",
+        "text": "Desarrollador Fullstack III en Grupo Boticário, con React y Node.js en los sistemas internos de la empresa.",
+        "meta": "desde julio de 2024 · remoto"
+      },
+      "leadership": {
+        "label": "CAPÍTULO 03",
+        "short": "Liderazgo",
+        "title": "Liderazgo",
+        "text": "En nata.house pasé de dev a líder técnico: del primer contacto con el cliente a la arquitectura y al equipo.",
+        "meta": "oct/2022 — jul/2024"
+      },
+      "spare-time": {
+        "label": "CAPÍTULO 04",
+        "short": "Tiempo libre",
+        "title": "Tiempo libre",
+        "text": "Publico juegos, APIs y herramientas. Hincha del Barça, lo que explica la mitad de ellos.",
+        "meta": ""
+      }
+    },
+    "projects": {
+      "match-moment": {
+        "label": "FICHA 01 · JUEGO",
+        "short": "Match Moment",
+        "title": "Match Moment",
+        "text": "Ordena partidos históricos en una línea de tiempo.",
+        "meta": "Next.js · React · TypeScript",
+        "cta": "match-moment.com ↗"
+      },
+      "ito-online": {
+        "label": "FICHA 02 · MULTIJUGADOR",
+        "short": "Ito Online",
+        "title": "Ito Online",
+        "text": "Cartas cooperativas en tiempo real, de 2 a 10 personas.",
+        "meta": "Next.js · WebSocket",
+        "cta": "playito.io ↗"
+      },
+      "barca-api": {
+        "label": "FICHA 03 · API",
+        "short": "Barça API",
+        "title": "Barça API",
+        "text": "Plantilla, partidos y clasificación del Barça, sin clave.",
+        "meta": "Next.js · PostgreSQL · Drizzle",
+        "cta": "api.fc-barcelona.app ↗"
+      },
+      "huntspace": {
+        "label": "FICHA 04 · COMUNIDAD",
+        "short": "Huntspace",
+        "title": "Huntspace",
+        "text": "Devs validan los proyectos de los demás.",
+        "meta": "React Native · Next.js · Supabase",
+        "cta": "huntspace.dev ↗"
+      },
+      "bug-capitalist": {
+        "label": "FICHA 05 · CLI",
+        "short": "Bug Capitalist",
+        "title": "Bug Capitalist",
+        "text": "Idle game de terminal para sesiones con IA.",
+        "meta": "Ink · React · Node.js",
+        "cta": "ver en GitHub ↗"
+      },
+      "barcelona-app": {
+        "label": "FICHA 06 · WEB APP",
+        "short": "Barcelona App",
+        "title": "Barcelona App",
+        "text": "El universo Barça en una app full-stack.",
+        "meta": "Next.js · React · PostgreSQL",
+        "cta": "fc-barcelona.app ↗"
+      }
+    },
+    "career": {
+      "boticario": {
+        "label": "TRABAJO · JUL 2024 — HOY",
+        "short": "Boticário",
+        "title": "Grupo Boticário",
+        "text": "Desarrollador Fullstack III. React y Node.js en los sistemas internos de la mayor empresa de cosméticos de Brasil.",
+        "meta": "remoto",
+        "cta": "currículum en LinkedIn ↗"
+      },
+      "nata-lead": {
+        "label": "TRABAJO · OCT 2022 — JUL 2024",
+        "short": "nata · líder",
+        "title": "nata.house · líder técnico",
+        "text": "Proyectos de principio a fin: del primer contacto con el cliente a la arquitectura y al liderazgo del equipo.",
+        "meta": "remoto",
+        "cta": ""
+      },
+      "nata-dev": {
+        "label": "TRABAJO · FEB 2020 — OCT 2022",
+        "short": "nata · dev",
+        "title": "nata.house · dev",
+        "text": "Desarrollador fullstack en distintos proyectos y frentes, con foco en la calidad de entrega.",
+        "meta": "Belo Horizonte",
+        "cta": ""
+      },
+      "una": {
+        "label": "FORMACIÓN · 2019 — 2022",
+        "short": "Una",
+        "title": "Una",
+        "text": "Grado en Sistemas de Información: programación, bases de datos y seguridad de la información.",
+        "meta": "también: técnico en informática por el CEFET-MG",
+        "cta": ""
+      },
+      "kukac-dev": {
+        "label": "TRABAJO · JUL 2019 — FEB 2020",
+        "short": "Kukac · dev",
+        "title": "Kukac · dev",
+        "text": "Chatbots para terceros con herramientas de IA de IBM ofrecidas como servicio.",
+        "meta": "Belo Horizonte",
+        "cta": ""
+      },
+      "kukac-intern": {
+        "label": "TRABAJO · MAR — JUL 2019",
+        "short": "Kukac · prácticas",
+        "title": "Kukac · prácticas",
+        "text": "El comienzo: proyectos internos y las buenas prácticas del día a día.",
+        "meta": "Belo Horizonte",
+        "cta": ""
+      }
+    },
+    "inspirations": {
+      "branas": {
+        "title": "Rodrigo Branas",
+        "text": "Desarrollador y autor, conocido por sus cursos y libros de programación y por su canal de YouTube."
+      },
+      "elemar-jr": {
+        "title": "Elemar Jr",
+        "text": "Consultor y arquitecto de software, con charlas y artículos sobre arquitectura y desarrollo ágil."
+      },
+      "fabio-akita": {
+        "title": "Fábio Akita",
+        "text": "Empresario y desarrollador, fundador de Codeminer 42. Habla de temas avanzados de desarrollo y cultura de ingeniería."
+      },
+      "manguinho": {
+        "title": "Rodrigo Manguinho",
+        "text": "Instructor y desarrollador, con cursos de desarrollo full stack y prácticas de mercado en Mango Academy."
+      },
+      "filipe-deschamps": {
+        "title": "Filipe Deschamps",
+        "text": "Ingeniero de software y youtuber, referente con vídeos educativos sobre la industria tecnológica."
+      },
+      "erick-wendel": {
+        "title": "Erick Wendel",
+        "text": "Especialista en Node.js, con charlas, cursos y tutoriales sobre el ecosistema JavaScript."
+      },
+      "lucas-montano": {
+        "title": "Lucas Montano",
+        "text": "Desarrollador y creador de contenido sobre programación y carrera en tecnología."
+      },
+      "mario-solto": {
+        "title": "Mario Solto",
+        "text": "Instructor en Alura y youtuber, con el canal DevSoltinho y su mirada sobre la tecnología."
+      },
+      "rocketseat": {
+        "title": "Rocketseat",
+        "text": "Educación en tecnología, con cursos y contenidos gratuitos para acelerar la carrera de devs. Donde hice GoStack."
+      }
+    },
+    "tools": {
+      "typescript": {
+        "title": "TypeScript",
+        "text": "La base de todo: front, back y scripts."
+      },
+      "react": {
+        "title": "React",
+        "text": "Interfaces en Grupo Boticário, en nata.house y en proyectos personales."
+      },
+      "nextjs": {
+        "title": "Next.js",
+        "text": "Match Moment, Ito Online, Barça API y Barcelona App."
+      },
+      "nodejs": {
+        "title": "Node.js",
+        "text": "Back-end y herramientas, como Bug Capitalist."
+      },
+      "nestjs": {
+        "title": "NestJS",
+        "text": "APIs estructuradas en Node.js."
+      },
+      "postgresql": {
+        "title": "PostgreSQL",
+        "text": "La base de datos de Barça API y Barcelona App."
+      },
+      "aws": {
+        "title": "AWS",
+        "text": "Infraestructura y servicios en la nube, incluido DynamoDB."
+      },
+      "docker": {
+        "title": "Docker",
+        "text": "Entornos estandarizados, del local al deploy."
+      }
+    },
+    "now": {
+      "working": {
+        "label": "AHORA · TRABAJANDO",
+        "short": "trabajando",
+        "title": "Grupo Boticário",
+        "text": "Fullstack III, con React y Node.js en los sistemas internos.",
+        "pending": false
+      },
+      "building": {
+        "label": "AHORA · CONSTRUYENDO",
+        "short": "construyendo",
+        "title": "Este escritorio",
+        "text": "El portafolio en 3D que estás viendo, hecho con three.js y Next.js.",
+        "pending": false
+      },
+      "studying": {
+        "label": "AHORA · ESTUDIANDO",
+        "short": "estudiando",
+        "title": "Estudiando",
+        "text": "[el tema que estás estudiando ahora]",
+        "pending": true
+      },
+      "reading": {
+        "label": "AHORA · LEYENDO",
+        "short": "leyendo",
+        "title": "Leyendo",
+        "text": "[un libro o artículo que recomiendas]",
+        "pending": true
+      }
+    },
+    "football": {
+      "fan": {
+        "label": "FUERA DEL CÓDIGO",
+        "short": "Hincha",
+        "title": "Hincha del Barça",
+        "text": "Lo que explica la mitad de mis proyectos.",
+        "cta": ""
+      },
+      "match-moment": {
+        "label": "FÚTBOL · JUEGO",
+        "short": "Match Moment",
+        "title": "Match Moment",
+        "text": "Partidos históricos para ordenar en la línea de tiempo.",
+        "cta": "jugar ↗"
+      },
+      "barca-api": {
+        "label": "FÚTBOL · API",
+        "short": "Barça API",
+        "title": "Barça API",
+        "text": "Datos públicos del Barça, sin clave.",
+        "cta": "probar ↗"
+      },
+      "barcelona-app": {
+        "label": "FÚTBOL · APP",
+        "short": "Barcelona App",
+        "title": "Barcelona App",
+        "text": "El universo Barça en una sola app.",
+        "cta": "abrir ↗"
+      }
+    },
+    "contact": {
+      "email": {
+        "label": "CONTACTO · E-MAIL",
+        "short": "e-mail",
+        "title": "Escríbeme",
+        "text": "raphael.moura0208@gmail.com",
+        "meta": "trabajo, proyectos o fútbol",
+        "cta": "enviar e-mail →",
+        "pending": false
+      },
+      "linkedin": {
+        "label": "CONTACTO · LINKEDIN",
+        "short": "LinkedIn",
+        "title": "LinkedIn",
+        "text": "linkedin.com/in/raphaeloliveiramoura",
+        "meta": "",
+        "cta": "abrir perfil ↗",
+        "pending": false
+      },
+      "github": {
+        "label": "CONTACTO · GITHUB",
+        "short": "GitHub",
+        "title": "GitHub",
+        "text": "github.com/RaphaelOliveiraMoura",
+        "meta": "",
+        "cta": "ver repositorios ↗",
+        "pending": false
+      },
+      "cv": {
+        "label": "CONTACTO · CURRÍCULUM",
+        "short": "CV",
+        "title": "Currículum",
+        "text": "[enlace al PDF del currículum]",
+        "meta": "",
+        "cta": "descargar PDF ↓",
+        "pending": true
+      }
+    },
+    "notebook": {
+      "activity": {
+        "label": "PORTÁTIL · ACTIVIDAD",
+        "short": "actividad",
+        "title": "Actividad reciente",
+        "text": "Commits, builds y deploys de los proyectos personales.",
+        "cta": ""
+      },
+      "terminal": {
+        "label": "PORTÁTIL · TERMINAL",
+        "short": "terminal",
+        "title": "Terminal",
+        "text": "Escribe help y pulsa Enter.",
+        "cta": ""
+      }
+    }
+  },
+  "canvas": {
+    "author": "Raphael Oliveira",
+    "page": "p. {n}",
+    "tool": "HERRAMIENTA · {n} / {total}",
+    "ticket": "ENTRADA",
+    "inspiration": "INSPIRACIÓN",
+    "seal": "ro"
+  },
+  "notebook": {
+    "title": "actividad",
+    "simulated": "datos simulados",
+    "status": "en línea · {time} en BH",
+    "now": "ahora",
+    "minutesAgo": "hace {n} min",
+    "hoursAgo": "hace {n} h",
+    "kinds": {
+      "commit": "commit",
+      "deploy": "deploy",
+      "build": "build",
+      "pr": "PR",
+      "test": "tests"
+    },
+    "deployOk": "en línea en {s}s",
+    "deployFail": "falló, reintentando",
+    "buildOk": "build ok en {s}s",
+    "buildFail": "el build se rompió",
+    "prMerged": "#{n} merged",
+    "testOk": "{n} pasaron en {s}s",
+    "testFail": "1 de {n} falló",
+    "terminalTitle": "terminal",
+    "bugcapStatus": "bugs {bugs} · caja ${cash} · becarios {interns} · siguiente ${cost}",
+    "hint": "← → cambia de pantalla"
+  },
+  "terminal": {
+    "welcome": [
+      "raphael@escritorio — terminal de juguete",
+      "escribe help para ver los comandos"
+    ],
+    "help": [
+      "comandos:",
+      "  whoami      de quién es este escritorio",
+      "  about       un resumen rápido",
+      "  ls          proyectos del cajón",
+      "  contact     cómo hablar conmigo",
+      "  date        qué hora es en BH",
+      "  bugcap      jugar a Bug Capitalist",
+      "  clear       limpiar la pantalla"
+    ],
+    "unknown": "comando no encontrado: {cmd} (prueba help)",
+    "whoami": [
+      "raphael de oliveira moura",
+      "ingeniero de software · belo horizonte"
+    ],
+    "about": [
+      "fullstack desde 2019: react, node.js y typescript.",
+      "hoy en grupo boticário; antes nata.house y kukac."
+    ],
+    "contact": [
+      "e-mail   raphael.moura0208@gmail.com",
+      "github   github.com/RaphaelOliveiraMoura",
+      "linkedin linkedin.com/in/raphaeloliveiramoura"
+    ],
+    "projectsTitle": "proyectos/",
+    "date": "{time} en Belo Horizonte",
+    "sudo": "buen intento. aquí solo hay café y fútbol.",
+    "exit": "no se puede salir del escritorio. haz clic fuera del portátil para volver.",
+    "bugcapIntro": [
+      "BUG CAPITALIST · edición de bolsillo",
+      "los bugs aparecen solos. corrígelos y gana.",
+      "enter o fix corrige · hire contrata becario · quit sale"
+    ],
+    "bugcapHelp": [
+      "fix (o enter)   corrige un bug: +$12",
+      "hire            contrata un becario que corrige solo",
+      "quit            vuelve a la terminal"
+    ],
+    "bugcapFixed": "bug corregido. caja: ${cash}",
+    "bugcapNoBugs": "no hay bugs en la cola. por ahora.",
+    "bugcapHired": "becario contratado. ya son {interns}.",
+    "bugcapBroke": "un becario cuesta ${cost}. corrige más bugs.",
+    "bugcapQuit": "fin de la jornada: {fixed} bugs corregidos."
+  }
+}

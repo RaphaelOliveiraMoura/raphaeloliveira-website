@@ -15,8 +15,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       common: (await import(`../../messages/${locale}/common.json`)).default,
       auth: (await import(`../../messages/${locale}/auth.json`)).default,
       errors: (await import(`../../messages/${locale}/errors.json`)).default,
-      portfolio: (await import(`../../messages/${locale}/portfolio.json`))
-        .default,
+      desk: (await import(`../../messages/${locale}/desk.json`)).default,
       validation: (await import(`../../messages/${locale}/validation.json`))
         .default,
     },

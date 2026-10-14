@@ -1,0 +1,437 @@
+"use client";
+
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+
+import { LanguageSwitcher } from "@/components/shared";
+
+import type { Daylight } from "@/lib/desk";
+import { toast } from "@/lib/feedback";
+import { useLocale, useMessages, useTranslations } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
+import {
+  useEventListener,
+  useLocalStorage,
+  useMediaQuery,
+  useReducedMotion,
+  useSessionStorage,
+} from "@/hooks";
+
+import { DeskAudio } from "./desk-audio";
+import {
+  DESK_SECTIONS,
+  type DeskContent,
+  type DeskSectionKey,
+} from "./desk-content";
+import { deskSerif } from "./desk-fonts";
+import type { DeskEngine, DeskEngineCallbacks } from "./engine/desk-engine";
+import type { DeskEngineStrings } from "./engine/scene-kit";
+
+const DeskScene = dynamic(() => import("./desk-scene"), { ssr: false });
+
+export interface DeskHomeProps {
+  content: DeskContent;
+  /** Versão em texto (SSR): acessível e indexável, visível no modo lista. */
+  children: ReactNode;
+}
+
+const chip =
+  "min-h-9 shrink-0 rounded-full border border-[#1D1B18] px-3 text-xs whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9533D]";
+
+export function DeskHome({ content, children }: DeskHomeProps) {
+  const t = useTranslations("desk");
+  const locale = useLocale();
+  const messages = useMessages().desk;
+  const reducedMotion = useReducedMotion();
+  const coarse = useMediaQuery("(pointer: coarse)");
+
+  const [engine, setEngine] = useState<DeskEngine | null>(null);
+  const [focus, setFocus] = useState<DeskSectionKey | null>(null);
+  const [item, setItem] = useState(0);
+  const [introDone, setIntroDone] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [listMode, setListMode] = useState(false);
+  const [daylight, setDaylight] = useState<Daylight | null>(null);
+  const [clock, setClock] = useState("");
+  const [lampOn, setLampOn] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [soundOn, setSoundOn] = useLocalStorage("desk:sound", false);
+  const [introSeen, setIntroSeen] = useSessionStorage("desk:intro-seen", false);
+  const [goals, setGoals] = useLocalStorage("desk:goals", 0);
+
+  const audioRef = useRef<DeskAudio | null>(null);
+  const tagEls = useRef(new Map<DeskSectionKey, HTMLElement>());
+  const floatEl = useRef<HTMLDivElement | null>(null);
+  const terminalRef = useRef<HTMLInputElement>(null);
+
+  const strings: DeskEngineStrings = {
+    locale,
+    canvas: messages.canvas,
+    notebook: messages.notebook,
+    terminal: messages.terminal,
+  };
+
+  const items = focus ? content[focus] : [];
+  const current = items[item];
+  const terminalOpen = focus === "notebook" && item === 1;
+  const night = daylight?.phase === "night";
+
+  const getAudio = () => {
+    audioRef.current ??= new DeskAudio();
+    return audioRef.current;
+  };
+
+  const callbacks: DeskEngineCallbacks = {
+    onFocusChange: (nextFocus, nextItem) => {
+      setFocus(nextFocus);
+      setItem(nextItem);
+    },
+    onIntroEnd: () => {
+      setIntroDone(true);
+      setIntroSeen(true);
+    },
+    onGoal: () => {
+      const count = goals + 1;
+      setGoals(count);
+      toast.success(t("goal", { count }));
+    },
+    onSound: (sound, volume) => audioRef.current?.play(sound, volume),
+    onDaylight: (d) => {
+      setDaylight(d);
+      const hours = Math.floor(d.hour);
+      const minutes = Math.round((d.hour - hours) * 60);
+      setClock(
+        `${String(hours).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`,
+      );
+    },
+    onLampChange: setLampOn,
+  };
+
+  const handleEngine = (next: DeskEngine | null) => {
+    setEngine(next);
+    if (!next) return;
+    tagEls.current.forEach((el, key) => next.setTagElement(key, el));
+    next.setFloatElement(floatEl.current);
+  };
+
+  const toggleSound = () => {
+    const audio = getAudio();
+    if (soundOn) audio.disable();
+    else audio.enable();
+    setSoundOn(!soundOn);
+  };
+
+  // O navegador só libera áudio depois de um gesto: religa o som salvo no primeiro toque.
+  useEventListener("pointerdown", () => {
+    if (soundOn) getAudio().enable();
+  });
+
+  useEventListener("keydown", (event) => {
+    if (!engine || listMode) return;
+    const typing = event.target instanceof HTMLInputElement;
+    if (event.key === "Escape" && focus) {
+      engine.setFocus(null);
+      return;
+    }
+    if (typing) return;
+    if (focus && event.key === "ArrowRight") engine.stepItem(1);
+    if (focus && event.key === "ArrowLeft") engine.stepItem(-1);
+  });
+
+  useEffect(() => {
+    if (terminalOpen) terminalRef.current?.focus();
+  }, [terminalOpen]);
+
+  useEffect(() => () => audioRef.current?.dispose(), []);
+
+  const goTo = (key: DeskSectionKey) => engine?.setFocus(key);
+  const showList = listMode || failed;
+  const counter = t("counter", {
+    current: String(item + 1).padStart(2, "0"),
+    total: String(items.length).padStart(2, "0"),
+  });
+  const external = current?.href.startsWith("http");
+
+  return (
+    <div
+      data-night={night}
+      className="group relative h-dvh min-h-[560px] overflow-hidden bg-[#E4DDD0] font-mono text-[#1D1B18]"
+      onPointerUp={() => {
+        if (terminalOpen) terminalRef.current?.focus();
+      }}
+    >
+      {!failed && (
+        <DeskScene
+          key={locale}
+          content={content}
+          strings={strings}
+          label={t("canvasLabel")}
+          reducedMotion={reducedMotion}
+          playIntro={!introSeen}
+          callbacks={callbacks}
+          onEngine={handleEngine}
+          onError={() => setFailed(true)}
+        />
+      )}
+
+      {!engine && !failed && (
+        <p className="absolute inset-0 flex items-center justify-center text-sm tracking-wide">
+          {t("loading")}
+        </p>
+      )}
+
+      {DESK_SECTIONS.map((key) => (
+        <button
+          key={key}
+          type="button"
+          ref={(el) => {
+            if (el) tagEls.current.set(key, el);
+            else tagEls.current.delete(key);
+            engine?.setTagElement(key, el);
+          }}
+          tabIndex={focus ? -1 : 0}
+          onClick={() => goTo(key)}
+          className="pointer-events-none absolute left-0 top-0 rounded-sm bg-[#FFFEFA] px-3 py-1.5 text-[13px] tracking-wide whitespace-nowrap text-[#1D1B18] opacity-0 shadow-[0_2px_6px_rgba(40,30,10,0.18)] transition-[opacity,background-color,color] duration-300 data-[hover=true]:bg-[#1D1B18] data-[hover=true]:text-[#F4F2ED] focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-[#C9533D]"
+        >
+          {messages.sections[key].label} ↗
+        </button>
+      ))}
+
+      <header
+        className={cn(
+          "pointer-events-none absolute inset-x-0 top-0 flex flex-wrap items-center justify-between gap-3 px-4 py-4 text-[13px] tracking-wide transition-opacity duration-500 sm:px-10",
+          focus && "opacity-0",
+        )}
+      >
+        <p className="pointer-events-auto flex items-baseline gap-2.5 text-[#1D1B18] group-data-[night=true]:text-[#EDE7DC]">
+          <span
+            className={cn(
+              deskSerif.className,
+              "text-3xl italic tracking-normal",
+            )}
+          >
+            {messages.canvas.seal}
+          </span>
+          {t("brand")}
+        </p>
+        <nav
+          aria-label={t("shortcuts")}
+          className="pointer-events-auto hidden flex-wrap gap-x-3.5 gap-y-1 lg:flex"
+        >
+          {DESK_SECTIONS.map((key) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => goTo(key)}
+              className="min-h-10 text-[13px] text-[#1D1B18] underline-offset-4 hover:underline group-data-[night=true]:text-[#EDE7DC]"
+            >
+              {messages.sections[key].label}
+            </button>
+          ))}
+        </nav>
+      </header>
+
+      <div className="absolute right-4 bottom-4 left-4 flex flex-wrap items-center justify-between gap-2 sm:right-10 sm:left-10">
+        <p
+          className={cn(
+            "pointer-events-none w-full text-[10px] tracking-[0.12em] text-[#5E584D] transition-opacity duration-500 md:w-auto md:text-xs group-data-[night=true]:text-[#B9B1A3]",
+            focus && "opacity-0",
+          )}
+        >
+          {coarse ? t("macroHintTouch") : t("macroHint")}
+        </p>
+        <div className="ml-auto flex max-w-full items-center gap-2 overflow-x-auto pb-1">
+          {daylight && (
+            <span className="hidden shrink-0 rounded-full bg-[rgba(255,254,250,0.85)] px-3 py-2 text-[11px] tracking-[0.08em] sm:inline">
+              {t("clock", {
+                time: clock,
+                phase: t(`phases.${daylight.phase}`),
+              })}
+            </span>
+          )}
+          <button
+            type="button"
+            aria-pressed={lampOn}
+            aria-label={t("controls.lamp")}
+            onClick={() => engine?.toggleLamp()}
+            className={cn(
+              chip,
+              lampOn ? "bg-[#1D1B18] text-[#F4F2ED]" : "bg-[#FFFEFA]",
+            )}
+          >
+            {lampOn ? t("controls.lampOn") : t("controls.lampOff")}
+          </button>
+          <button
+            type="button"
+            aria-pressed={soundOn}
+            aria-label={t("controls.sound")}
+            onClick={toggleSound}
+            className={cn(
+              chip,
+              soundOn ? "bg-[#1D1B18] text-[#F4F2ED]" : "bg-[#FFFEFA]",
+            )}
+          >
+            {soundOn ? t("controls.soundOn") : t("controls.soundOff")}
+          </button>
+          <button
+            type="button"
+            aria-pressed={showList}
+            onClick={() => setListMode(!listMode)}
+            disabled={failed}
+            className={cn(chip, "bg-[#FFFEFA]")}
+          >
+            {t("controls.listView")}
+          </button>
+          <div className="shrink-0 rounded-full bg-[#FFFEFA]">
+            <LanguageSwitcher />
+          </div>
+        </div>
+      </div>
+
+      {engine && !introDone && (
+        <button
+          type="button"
+          onClick={() => engine.skipIntro()}
+          className={cn(
+            chip,
+            "absolute top-20 right-4 bg-[#FFFEFA] sm:right-10",
+          )}
+        >
+          {t("skipIntro")}
+        </button>
+      )}
+
+      {focus && (
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex flex-wrap items-center justify-between gap-2.5 px-4 py-4 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-3 sm:px-10">
+          <button
+            type="button"
+            onClick={() => engine?.setFocus(null)}
+            className={cn(
+              chip,
+              "pointer-events-auto min-h-11 bg-[#FFFEFA] px-4",
+            )}
+          >
+            {t("back")}
+          </button>
+          <p className="hidden rounded-full bg-[rgba(255,254,250,0.85)] px-3.5 py-2 text-[11px] tracking-[0.14em] text-[#4A453C] md:block">
+            {messages.sections[focus].hint}
+          </p>
+          <nav
+            aria-label={t("shortcuts")}
+            className="pointer-events-auto flex max-w-full gap-1 overflow-x-auto pb-1"
+          >
+            {DESK_SECTIONS.map((key) => (
+              <button
+                key={key}
+                type="button"
+                aria-current={key === focus ? "true" : undefined}
+                onClick={() => goTo(key)}
+                className={cn(
+                  chip,
+                  "min-h-8 px-2.5 text-[11px]",
+                  key === focus
+                    ? "bg-[#1D1B18] text-[#F4F2ED]"
+                    : "bg-[#FFFEFA]",
+                )}
+              >
+                {messages.sections[key].label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      )}
+
+      <div
+        ref={(el) => {
+          floatEl.current = el;
+          engine?.setFloatElement(el);
+        }}
+        className="pointer-events-none absolute left-0 top-0 flex items-center gap-2 opacity-0 transition-opacity duration-300"
+      >
+        <button
+          type="button"
+          aria-label={t("prev")}
+          onClick={() => engine?.stepItem(-1)}
+          className="size-11 rounded-full border border-[#1D1B18] bg-[#FFFEFA] text-base"
+        >
+          ←
+        </button>
+        {current?.href && current.cta && (
+          <a
+            href={current.href}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noopener noreferrer" : undefined}
+            className="flex min-h-11 items-center rounded-full bg-[#1D1B18] px-4 text-xs tracking-wide whitespace-nowrap text-[#F4F2ED] shadow-[0_10px_18px_-10px_rgba(0,0,0,0.6)]"
+          >
+            {current.cta}
+          </a>
+        )}
+        <span className="flex min-h-11 items-center rounded-full bg-[rgba(255,254,250,0.9)] px-3 text-[11px] tracking-[0.08em]">
+          {terminalOpen ? messages.content.notebook.terminal.text : counter}
+        </span>
+        <button
+          type="button"
+          aria-label={t("next")}
+          onClick={() => engine?.stepItem(1)}
+          className="size-11 rounded-full border border-[#1D1B18] bg-[#FFFEFA] text-base"
+        >
+          →
+        </button>
+      </div>
+
+      {terminalOpen && (
+        <input
+          ref={terminalRef}
+          value={draft}
+          aria-label={t("controls.terminalInput")}
+          autoComplete="off"
+          autoCapitalize="none"
+          spellCheck={false}
+          onChange={(e) => {
+            setDraft(e.target.value);
+            engine?.terminalDraft(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter") return;
+            engine?.terminalSubmit(draft);
+            setDraft("");
+          }}
+          className="sr-only"
+        />
+      )}
+
+      <p aria-live="polite" className="sr-only">
+        {focus && current
+          ? `${messages.sections[focus].label}: ${current.title} (${counter})`
+          : ""}
+      </p>
+
+      <div
+        className={cn(
+          showList
+            ? "absolute inset-0 overflow-y-auto bg-[#F4F1EA]"
+            : "sr-only focus-within:not-sr-only focus-within:absolute focus-within:inset-0 focus-within:overflow-y-auto focus-within:bg-[#F4F1EA]",
+        )}
+      >
+        {failed && (
+          <p className="mx-auto max-w-3xl px-4 pt-8 text-sm text-[#8A3B2B] sm:px-10">
+            {t("webglError")}
+          </p>
+        )}
+        {listMode && !failed && (
+          <button
+            type="button"
+            onClick={() => setListMode(false)}
+            className={cn(
+              chip,
+              "fixed top-4 right-4 z-10 bg-[#FFFEFA] sm:right-10",
+            )}
+          >
+            {t("controls.deskView")}
+          </button>
+        )}
+        {children}
+      </div>
+    </div>
+  );
+}

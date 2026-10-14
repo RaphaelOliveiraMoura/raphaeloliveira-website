@@ -6,6 +6,7 @@ export { stripLocalePrefix } from "./utils";
  * Re-exports de next-intl para uso em componentes.
  * Componentes NUNCA devem importar diretamente de "next-intl".
  */
+export type { Messages } from "next-intl";
 export {
   useFormatter,
   useLocale,
