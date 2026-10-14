@@ -46,3 +46,5 @@ debug-storybook.log
 next-env.d.ts
 
 raphaeloliveira-website
+# Preferências locais do Claude Code
+.claude/settings.local.json
