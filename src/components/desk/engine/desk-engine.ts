@@ -4,9 +4,10 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 
-import type {
-  DeskContent,
-  DeskSectionKey,
+import {
+  DESK_SECTIONS,
+  type DeskContent,
+  type DeskSectionKey,
 } from "@/components/desk/desk-content";
 
 import {
@@ -15,10 +16,15 @@ import {
   getDaylight,
   getDaylightForHour,
   isHome,
+  nextPreset,
   stepPhysics,
+  stepTour,
+  type ViewMode,
+  type ViewPreset,
 } from "@/lib/desk";
 import { isClient } from "@/lib/utils/environment";
 
+import { CameraRig } from "./camera-rig";
 import { buildEnvironment, TABLE } from "./environment";
 import { buildBook } from "./objects/book";
 import { buildCardStack } from "./objects/card-stack";
@@ -30,6 +36,7 @@ import { buildMug } from "./objects/mug";
 import { buildNotebook } from "./objects/notebook";
 import { buildPencilCup } from "./objects/pencil-cup";
 import type { DeskFonts } from "./paint";
+import { buildRoom, type Room } from "./room";
 import {
   createSceneKit,
   type DeskEngineStrings,
@@ -51,6 +58,14 @@ export type DeskSound =
   | "goal"
   | "key";
 
+export interface DeskViewState {
+  mode: ViewMode;
+  preset: ViewPreset | null;
+  /** Parada do passeio: -1 é a visão geral. */
+  tourIndex: number;
+  tourTotal: number;
+}
+
 export interface DeskEngineCallbacks {
   onFocusChange: (focus: DeskSectionKey | null, item: number) => void;
   onIntroEnd: () => void;
@@ -58,6 +73,7 @@ export interface DeskEngineCallbacks {
   onSound: (sound: DeskSound, volume?: number) => void;
   onDaylight: (daylight: Daylight) => void;
   onLampChange: (on: boolean) => void;
+  onViewChange: (view: DeskViewState) => void;
 }
 
 export interface DeskEngineOptions {
@@ -69,6 +85,8 @@ export interface DeskEngineOptions {
   playIntro: boolean;
   /** Força a hora de BH (0–24), para ver a mesa em outro momento do dia. */
   hourOverride: number | null;
+  /** Modo inicial da câmera: órbita no desktop, passeio no celular. */
+  initialMode: ViewMode;
   callbacks: DeskEngineCallbacks;
 }
 
@@ -137,6 +155,12 @@ const HOME = {
   target: new THREE.Vector3(-1, 0, -3),
 };
 const INTRO_START = new THREE.Vector3(0, 300, 40);
+/** Ordem das paradas do passeio guiado. */
+const TOUR: readonly DeskSectionKey[] = DESK_SECTIONS;
+/** Rodinha: soma de deltaY que vale uma parada do passeio, e a pausa entre paradas. */
+const WHEEL_STEP = 40;
+const WHEEL_COOLDOWN = 650;
+const SWIPE_MIN = 40;
 const DRAG_THRESHOLD = 6;
 const APERTURE = 0.0016;
 const PLANE_Y = { ball: 4.5, pencil: 0.48 } as const;
@@ -194,6 +218,12 @@ export class DeskEngine {
   private readonly env;
   private readonly play;
   private readonly notebook;
+  private readonly room: Room;
+  private readonly rig: CameraRig;
+  private readonly pointers = new Map<number, { x: number; y: number }>();
+  private pinch = 0;
+  private wheelSum = 0;
+  private wheelLock = 0;
   private readonly raycaster = new THREE.Raycaster();
   private readonly pointer = new THREE.Vector2();
   private readonly camPos = new THREE.Vector3();
@@ -212,8 +242,6 @@ export class DeskEngine {
   private hoverItem = -1;
   private sway = { x: 0, y: 0 };
   private gyro: { x: number; y: number } | null = null;
-  private pan = 0;
-  private panGoal = 0;
   private blur = 0;
   private introT: number | null;
   private landed = new Set<DeskSectionKey>();
@@ -228,7 +256,9 @@ export class DeskEngine {
     y: number;
     body: string | null;
     active: boolean;
-    panStart: number;
+    lastPX: number;
+    lastPY: number;
+    lastMoveT: number;
     lastX: number;
     lastZ: number;
     lastT: number;
@@ -264,6 +294,8 @@ export class DeskEngine {
       opts.strings,
     );
     this.env = buildEnvironment(this.kit);
+    this.room = buildRoom(this.kit);
+    this.rig = new CameraRig(opts.initialMode, opts.reducedMotion);
     buildBook(this.kit);
     buildDrawer(this.kit);
     buildCardStack(this.kit);
@@ -334,7 +366,10 @@ export class DeskEngine {
 
     this.last = performance.now();
     this.raf = requestAnimationFrame(this.tick);
-    if (this.introT === null) queueMicrotask(() => opts.callbacks.onIntroEnd());
+    queueMicrotask(() => {
+      this.emitView();
+      if (this.introT === null) opts.callbacks.onIntroEnd();
+    });
   }
 
   // ---------- API pública ----------
@@ -344,8 +379,11 @@ export class DeskEngine {
     const changed = key !== this.focusKey;
     this.focusKey = key;
     this.item = key ? Math.max(0, Math.min(item, this.itemCount(key) - 1)) : 0;
+    if (this.rig.mode === "tour") {
+      this.rig.tourIndex = key ? TOUR.indexOf(key) : -1;
+      this.emitView();
+    }
     if (changed) {
-      this.panGoal = 0;
       this.play.bodies.forEach((b) => {
         if (!isHome(b)) b.returning = true;
       });
@@ -381,6 +419,33 @@ export class DeskEngine {
 
   toggleLamp(): void {
     this.setLamp(!this.lampOn);
+  }
+
+  setViewMode(mode: ViewMode): void {
+    if (this.introT !== null) this.finishIntro();
+    this.rig.setMode(mode);
+    if (this.focusKey) this.setFocus(null);
+    this.opts.callbacks.onSound("click", 0.5);
+    this.emitView();
+  }
+
+  setPreset(preset: ViewPreset): void {
+    if (this.focusKey) this.setFocus(null);
+    this.rig.setPreset(preset);
+    this.emitView();
+  }
+
+  cyclePreset(): void {
+    this.setPreset(nextPreset(this.rig.preset ?? "home"));
+  }
+
+  /** Avança (1) ou volta (-1) uma parada do passeio guiado. */
+  tourStep(delta: 1 | -1): void {
+    if (this.rig.mode !== "tour") this.rig.setMode("tour");
+    const index = stepTour(this.rig.tourIndex, delta, TOUR.length);
+    this.rig.tourIndex = index;
+    this.setFocus(index < 0 ? null : (TOUR[index] ?? null));
+    this.emitView();
   }
 
   skipIntro(): void {
@@ -440,6 +505,15 @@ export class DeskEngine {
     return this.aspect < 0.9;
   }
 
+  private emitView(): void {
+    this.opts.callbacks.onViewChange({
+      mode: this.rig.mode,
+      preset: this.rig.preset,
+      tourIndex: this.rig.tourIndex,
+      tourTotal: TOUR.length,
+    });
+  }
+
   private finishIntro(): void {
     this.introT = null;
     this.opts.callbacks.onIntroEnd();
@@ -452,6 +526,7 @@ export class DeskEngine {
         ? getDaylight(new Date())
         : getDaylightForHour(override);
     this.env.applyDaylight(daylight);
+    this.room.applyDaylight(daylight);
     this.opts.callbacks.onDaylight(daylight);
     if (initial) {
       this.lampOn = daylight.lampOnByDefault;
@@ -471,20 +546,6 @@ export class DeskEngine {
     this.camera.updateProjectionMatrix();
     this.goalCamera.aspect = w / h;
     this.goalCamera.updateProjectionMatrix();
-  }
-
-  private homeView(): { p: THREE.Vector3; t: THREE.Vector3 } {
-    const t = HOME.target.clone();
-    const offset = HOME.position.clone().sub(HOME.target);
-    if (this.aspect < 1.6) {
-      const k = Math.min(2.7, 1.6 / this.aspect);
-      offset.multiplyScalar(k);
-      // No retrato a câmera sobe mais, para caber a profundidade da mesa.
-      if (this.portrait)
-        offset.applyAxisAngle(new THREE.Vector3(1, 0, 0), -0.42);
-    }
-    t.x += this.pan;
-    return { p: t.clone().add(offset), t };
   }
 
   private focusView(key: DeskSectionKey): {
@@ -592,8 +653,41 @@ export class DeskEngine {
       }
     };
 
+    const wheel = (ev: WheelEvent) => {
+      ev.preventDefault();
+      if (this.introT !== null) return;
+      if (this.rig.mode === "tour") {
+        const now = performance.now();
+        if (now < this.wheelLock) return;
+        this.wheelSum += ev.deltaY;
+        if (Math.abs(this.wheelSum) < WHEEL_STEP) return;
+        this.tourStep(this.wheelSum > 0 ? 1 : -1);
+        this.wheelSum = 0;
+        this.wheelLock = now + WHEEL_COOLDOWN;
+        return;
+      }
+      if (this.focusKey) return;
+      this.rig.zoomBy(Math.exp(ev.deltaY * 0.0012));
+    };
+    canvas.addEventListener("wheel", wheel, { passive: false });
+    this.cleanups.push(() => canvas.removeEventListener("wheel", wheel));
+
+    on(canvas, "dblclick", (ev) => {
+      if (this.focusKey || this.rig.mode !== "orbit") return;
+      this.setPointer(ev);
+      const { hit } = this.pick();
+      if (hit && hit.userData.key !== "table") return;
+      const point = new THREE.Vector3();
+      const table = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+      if (this.raycaster.ray.intersectPlane(table, point)) {
+        this.rig.flyTo(point);
+        this.emitView();
+      }
+    });
+
     on(canvas, "pointerdown", (ev) => {
       enableGyro();
+      this.pointers.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
       if (this.introT !== null) {
         this.finishIntro();
         return;
@@ -608,7 +702,9 @@ export class DeskEngine {
         y: ev.clientY,
         body: canDrag ? body : null,
         active: false,
-        panStart: this.panGoal,
+        lastPX: ev.clientX,
+        lastPY: ev.clientY,
+        lastMoveT: performance.now(),
         lastX: 0,
         lastZ: 0,
         lastT: performance.now(),
@@ -618,6 +714,21 @@ export class DeskEngine {
     });
 
     on(canvas, "pointermove", (ev) => {
+      if (this.pointers.has(ev.pointerId)) {
+        this.pointers.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+      }
+      if (this.pointers.size === 2) {
+        // Pinça: aproxima/afasta (ou inclina na cadeira); cancela o arraste.
+        const [a, b] = [...this.pointers.values()];
+        const dist = a && b ? Math.hypot(a.x - b.x, a.y - b.y) : 0;
+        if (this.pinch > 0 && dist > 0 && !this.focusKey) {
+          this.rig.zoomBy(this.pinch / dist);
+        }
+        this.pinch = dist;
+        if (this.drag?.active) this.rig.endDrag(true);
+        this.drag = null;
+        return;
+      }
       this.setPointer(ev);
       if (ev.pointerType === "mouse")
         this.sway = { x: this.pointer.x, y: this.pointer.y };
@@ -637,6 +748,8 @@ export class DeskEngine {
             body.returning = false;
             drag.lastX = body.x;
             drag.lastZ = body.z;
+          } else if (this.canLook()) {
+            this.rig.beginDrag();
           }
         }
         if (drag.active) {
@@ -648,6 +761,8 @@ export class DeskEngine {
     });
 
     const release = (ev: PointerEvent) => {
+      this.pointers.delete(ev.pointerId);
+      if (this.pointers.size < 2) this.pinch = 0;
       const drag = this.drag;
       if (!drag || drag.id !== ev.pointerId) return;
       this.drag = null;
@@ -662,6 +777,21 @@ export class DeskEngine {
           [body.vx, body.vz] = still ? [0, 0] : clampSpeed(drag.vx, drag.vz);
           if (Math.hypot(body.vx, body.vz) > 20)
             this.opts.callbacks.onSound("kick", 0.8);
+          return;
+        }
+        if (this.canLook()) {
+          this.rig.endDrag(performance.now() - drag.lastMoveT > 90);
+          return;
+        }
+        // No passeio, deslizar para cima/baixo troca de parada.
+        const dx = ev.clientX - drag.x;
+        const dy = ev.clientY - drag.y;
+        if (
+          this.rig.mode === "tour" &&
+          Math.abs(dy) > SWIPE_MIN &&
+          Math.abs(dy) > Math.abs(dx)
+        ) {
+          this.tourStep(dy < 0 ? 1 : -1);
         }
         return;
       }
@@ -680,12 +810,18 @@ export class DeskEngine {
     if (!drag) return;
     const body = this.play.bodies.find((b) => b.id === drag.body);
     if (!body) {
-      // Arrastar no vazio desloca a câmera para os lados (essencial no celular).
+      // Arrastar no vazio gira a câmera em volta da mesa (ou vira a cabeça na cadeira).
+      if (!this.canLook()) return;
       const r = this.opts.canvas.getBoundingClientRect();
-      const span = this.portrait ? 120 : 70;
-      const limit = this.portrait ? 52 : 26;
-      const next = drag.panStart - ((ev.clientX - drag.x) / r.width) * span;
-      this.panGoal = Math.max(-limit, Math.min(limit, next));
+      const now = performance.now();
+      this.rig.dragBy(
+        (ev.clientX - drag.lastPX) / r.width,
+        (ev.clientY - drag.lastPY) / r.height,
+        (now - drag.lastMoveT) / 1000,
+      );
+      drag.lastPX = ev.clientX;
+      drag.lastPY = ev.clientY;
+      drag.lastMoveT = now;
       return;
     }
     const y = PLANE_Y[body.id as keyof typeof PLANE_Y] ?? 0;
@@ -704,6 +840,11 @@ export class DeskEngine {
     drag.lastX = body.x;
     drag.lastZ = body.z;
     drag.lastT = now;
+  }
+
+  /** Arrastar no vazio mexe a câmera só fora do foco e fora do passeio. */
+  private canLook(): boolean {
+    return !this.focusKey && this.rig.mode !== "tour";
   }
 
   private updateHover(): void {
@@ -756,8 +897,9 @@ export class DeskEngine {
   }
 
   private readonly tick = (now: number) => {
-    const dt = Math.min(0.05, (now - this.last) / 1000);
-    this.last = now;
+    // Nunca negativo: um quadro atrasado não pode "voltar no tempo".
+    const dt = Math.min(0.05, Math.max(0, (now - this.last) / 1000));
+    this.last = Math.max(this.last, now);
     this.elapsed += dt;
     const reduced = this.opts.reducedMotion;
     const a = reduced ? 1 : 1 - Math.exp(-dt * 4.2);
@@ -770,14 +912,15 @@ export class DeskEngine {
     }
 
     // ---------- câmera ----------
-    this.pan +=
-      (this.panGoal - this.pan) * (reduced ? 1 : 1 - Math.exp(-dt * 8));
-    const view = focus ? this.focusView(focus) : this.homeView();
-    const look = this.gyro ?? this.sway;
-    const swayK = focus || reduced ? 0 : 1;
-    const goalP = view.p
-      .clone()
-      .add(new THREE.Vector3(look.x * 4 * swayK, look.y * 2 * swayK, 0));
+    this.rig.update(dt);
+    const look =
+      focus || reduced || this.drag?.active
+        ? { x: 0, y: 0 }
+        : (this.gyro ?? this.sway);
+    const view = focus
+      ? this.focusView(focus)
+      : this.rig.pose(this.aspect, look);
+    const goalP = view.p;
     if (this.introT !== null) {
       this.introT += dt;
       const t = easeInOutCubic(Math.min(1, this.introT / INTRO.camera));

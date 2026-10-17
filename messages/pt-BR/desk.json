@@ -2,8 +2,14 @@
   "brand": "A MESA DO RAPHAEL",
   "loading": "Arrumando a mesa…",
   "canvasLabel": "Mesa em 3D com objetos clicáveis: livro, gaveta, fichas, mural, porta-lápis, caneca, bola, porta-cartas e notebook",
-  "macroHint": "CLIQUE NOS OBJETOS · ARRASTE A BOLA · MOVA O MOUSE PARA OLHAR EM VOLTA",
-  "macroHintTouch": "TOQUE NOS OBJETOS · ARRASTE PARA OLHAR EM VOLTA",
+  "hints": {
+    "orbit": "CLIQUE NOS OBJETOS · ARRASTE PARA GIRAR · RODINHA APROXIMA · DUPLO CLIQUE VOA ATÉ O PONTO",
+    "orbitTouch": "TOQUE NOS OBJETOS · ARRASTE PARA GIRAR · PINÇA APROXIMA",
+    "seat": "ARRASTE PARA OLHAR EM VOLTA · RODINHA INCLINA O CORPO · ESC LEVANTA DA CADEIRA",
+    "seatTouch": "ARRASTE PARA OLHAR EM VOLTA · PINÇA INCLINA O CORPO",
+    "tour": "ROLE PARA A PRÓXIMA PARADA · ↑ ↓ TAMBÉM FUNCIONAM",
+    "tourTouch": "DESLIZE PARA CIMA PARA A PRÓXIMA PARADA"
+  },
   "skipIntro": "pular a chegada",
   "back": "← voltar à mesa",
   "prev": "Item anterior",
@@ -29,6 +35,24 @@
     "listView": "ver em lista",
     "deskView": "ver a mesa",
     "terminalInput": "Terminal do notebook: digite um comando e aperte Enter"
+  },
+  "view": {
+    "label": "Como ver a mesa",
+    "orbit": "mesa",
+    "seat": "cadeira",
+    "tour": "passeio",
+    "preset": "vista: {name}",
+    "cyclePreset": "Trocar de vista (teclas 1 a 4)",
+    "presets": {
+      "home": "inicial",
+      "top": "de cima",
+      "side": "de lado",
+      "window": "contra a janela"
+    },
+    "tourOverview": "visão geral",
+    "tourProgress": "{current} de {total}",
+    "tourPrev": "Parada anterior",
+    "tourNext": "Próxima parada"
   },
   "sections": {
     "about": {

@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 
 import { LanguageSwitcher } from "@/components/shared";
 
-import type { Daylight } from "@/lib/desk";
+import type { Daylight, ViewMode, ViewPreset } from "@/lib/desk";
 import { toast } from "@/lib/feedback";
 import { useLocale, useMessages, useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -24,10 +24,22 @@ import {
   type DeskSectionKey,
 } from "./desk-content";
 import { deskSerif } from "./desk-fonts";
-import type { DeskEngine, DeskEngineCallbacks } from "./engine/desk-engine";
+import type {
+  DeskEngine,
+  DeskEngineCallbacks,
+  DeskViewState,
+} from "./engine/desk-engine";
 import type { DeskEngineStrings } from "./engine/scene-kit";
 
 const DeskScene = dynamic(() => import("./desk-scene"), { ssr: false });
+
+const VIEW_MODES: readonly ViewMode[] = ["orbit", "seat", "tour"];
+const PRESET_KEYS: Partial<Record<string, ViewPreset>> = {
+  "1": "home",
+  "2": "top",
+  "3": "side",
+  "4": "window",
+};
 
 export interface DeskHomeProps {
   content: DeskContent;
@@ -54,6 +66,7 @@ export function DeskHome({ content, children }: DeskHomeProps) {
   const [daylight, setDaylight] = useState<Daylight | null>(null);
   const [clock, setClock] = useState("");
   const [lampOn, setLampOn] = useState(false);
+  const [view, setView] = useState<DeskViewState | null>(null);
   const [draft, setDraft] = useState("");
   const [soundOn, setSoundOn] = useLocalStorage("desk:sound", false);
   const [introSeen, setIntroSeen] = useSessionStorage("desk:intro-seen", false);
@@ -105,6 +118,7 @@ export function DeskHome({ content, children }: DeskHomeProps) {
       );
     },
     onLampChange: setLampOn,
+    onViewChange: setView,
   };
 
   const handleEngine = (next: DeskEngine | null) => {
@@ -129,13 +143,26 @@ export function DeskHome({ content, children }: DeskHomeProps) {
   useEventListener("keydown", (event) => {
     if (!engine || listMode) return;
     const typing = event.target instanceof HTMLInputElement;
-    if (event.key === "Escape" && focus) {
-      engine.setFocus(null);
+    if (event.key === "Escape") {
+      if (focus) engine.setFocus(null);
+      else if (view?.mode === "seat") engine.setViewMode("orbit");
       return;
     }
     if (typing) return;
     if (focus && event.key === "ArrowRight") engine.stepItem(1);
     if (focus && event.key === "ArrowLeft") engine.stepItem(-1);
+    if (view?.mode === "tour") {
+      if (["ArrowDown", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        engine.tourStep(1);
+      }
+      if (["ArrowUp", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        engine.tourStep(-1);
+      }
+    }
+    const preset = PRESET_KEYS[event.key];
+    if (preset) engine.setPreset(preset);
   });
 
   useEffect(() => {
@@ -168,6 +195,7 @@ export function DeskHome({ content, children }: DeskHomeProps) {
           label={t("canvasLabel")}
           reducedMotion={reducedMotion}
           playIntro={!introSeen}
+          initialMode={coarse ? "tour" : "orbit"}
           callbacks={callbacks}
           onEngine={handleEngine}
           onError={() => setFailed(true)}
@@ -231,15 +259,83 @@ export function DeskHome({ content, children }: DeskHomeProps) {
         </nav>
       </header>
 
-      <div className="absolute right-4 bottom-4 left-4 flex flex-wrap items-center justify-between gap-2 sm:right-10 sm:left-10">
-        <p
-          className={cn(
-            "pointer-events-none w-full text-[10px] tracking-[0.12em] text-[#5E584D] transition-opacity duration-500 md:w-auto md:text-xs group-data-[night=true]:text-[#B9B1A3]",
-            focus && "opacity-0",
+      <div className="absolute right-4 bottom-4 left-4 flex flex-wrap items-end justify-between gap-2 sm:right-10 sm:left-10">
+        <div className="flex w-full flex-col gap-2 md:w-auto">
+          <p
+            className={cn(
+              "pointer-events-none text-[10px] tracking-[0.12em] text-[#5E584D] transition-opacity duration-500 md:text-xs group-data-[night=true]:text-[#B9B1A3]",
+              focus && view?.mode !== "tour" && "opacity-0",
+            )}
+          >
+            {t(`hints.${view?.mode ?? "orbit"}${coarse ? "Touch" : ""}`)}
+          </p>
+          {view && (
+            <div className="flex max-w-full items-center gap-2 overflow-x-auto pb-1">
+              <div
+                role="group"
+                aria-label={t("view.label")}
+                className="flex shrink-0 rounded-full border border-[#1D1B18] bg-[#FFFEFA] p-0.5"
+              >
+                {VIEW_MODES.map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    aria-pressed={view.mode === mode}
+                    onClick={() => engine?.setViewMode(mode)}
+                    className={cn(
+                      "min-h-8 rounded-full px-3 text-xs whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-[#C9533D]",
+                      view.mode === mode && "bg-[#1D1B18] text-[#F4F2ED]",
+                    )}
+                  >
+                    {t(`view.${mode}`)}
+                  </button>
+                ))}
+              </div>
+              {view.mode === "orbit" && (
+                <button
+                  type="button"
+                  aria-label={t("view.cyclePreset")}
+                  title={t("view.cyclePreset")}
+                  onClick={() => engine?.cyclePreset()}
+                  className={cn(chip, "bg-[#FFFEFA]")}
+                >
+                  {t("view.preset", {
+                    name: t(`view.presets.${view.preset ?? "home"}`),
+                  })}{" "}
+                  ↻
+                </button>
+              )}
+              {view.mode === "tour" && (
+                <div className="flex shrink-0 items-center gap-1">
+                  <button
+                    type="button"
+                    aria-label={t("view.tourPrev")}
+                    onClick={() => engine?.tourStep(-1)}
+                    className="size-9 rounded-full border border-[#1D1B18] bg-[#FFFEFA]"
+                  >
+                    ↑
+                  </button>
+                  <span className="rounded-full bg-[rgba(255,254,250,0.9)] px-3 py-2 text-[11px] tracking-[0.08em]">
+                    {view.tourIndex < 0
+                      ? t("view.tourOverview")
+                      : t("view.tourProgress", {
+                          current: view.tourIndex + 1,
+                          total: view.tourTotal,
+                        })}
+                  </span>
+                  <button
+                    type="button"
+                    aria-label={t("view.tourNext")}
+                    onClick={() => engine?.tourStep(1)}
+                    className="size-9 rounded-full border border-[#1D1B18] bg-[#FFFEFA]"
+                  >
+                    ↓
+                  </button>
+                </div>
+              )}
+            </div>
           )}
-        >
-          {coarse ? t("macroHintTouch") : t("macroHint")}
-        </p>
+        </div>
         <div className="ml-auto flex max-w-full items-center gap-2 overflow-x-auto pb-1">
           {daylight && (
             <span className="hidden shrink-0 rounded-full bg-[rgba(255,254,250,0.85)] px-3 py-2 text-[11px] tracking-[0.08em] sm:inline">

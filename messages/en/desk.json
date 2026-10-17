@@ -2,8 +2,14 @@
   "brand": "RAPHAEL'S DESK",
   "loading": "Setting up the desk…",
   "canvasLabel": "3D desk with clickable objects: book, drawer, index cards, corkboard, pencil cup, mug, ball, letter rack and laptop",
-  "macroHint": "CLICK THE OBJECTS · DRAG THE BALL · MOVE THE MOUSE TO LOOK AROUND",
-  "macroHintTouch": "TAP THE OBJECTS · DRAG TO LOOK AROUND",
+  "hints": {
+    "orbit": "CLICK THE OBJECTS · DRAG TO ROTATE · SCROLL TO ZOOM · DOUBLE-CLICK TO FLY THERE",
+    "orbitTouch": "TAP THE OBJECTS · DRAG TO ROTATE · PINCH TO ZOOM",
+    "seat": "DRAG TO LOOK AROUND · SCROLL TO LEAN IN · ESC TO STAND UP",
+    "seatTouch": "DRAG TO LOOK AROUND · PINCH TO LEAN IN",
+    "tour": "SCROLL FOR THE NEXT STOP · ↑ ↓ WORK TOO",
+    "tourTouch": "SWIPE UP FOR THE NEXT STOP"
+  },
   "skipIntro": "skip the arrival",
   "back": "← back to the desk",
   "prev": "Previous item",
@@ -29,6 +35,24 @@
     "listView": "view as list",
     "deskView": "view the desk",
     "terminalInput": "Laptop terminal: type a command and press Enter"
+  },
+  "view": {
+    "label": "How to view the desk",
+    "orbit": "desk",
+    "seat": "chair",
+    "tour": "tour",
+    "preset": "view: {name}",
+    "cyclePreset": "Change view (keys 1 to 4)",
+    "presets": {
+      "home": "default",
+      "top": "from above",
+      "side": "from the side",
+      "window": "against the window"
+    },
+    "tourOverview": "overview",
+    "tourProgress": "{current} of {total}",
+    "tourPrev": "Previous stop",
+    "tourNext": "Next stop"
   },
   "sections": {
     "about": {

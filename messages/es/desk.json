@@ -2,8 +2,14 @@
   "brand": "EL ESCRITORIO DE RAPHAEL",
   "loading": "Ordenando el escritorio…",
   "canvasLabel": "Escritorio en 3D con objetos clicables: libro, cajón, fichas, corcho, portalápices, taza, pelota, portacartas y portátil",
-  "macroHint": "HAZ CLIC EN LOS OBJETOS · ARRASTRA LA PELOTA · MUEVE EL RATÓN PARA MIRAR ALREDEDOR",
-  "macroHintTouch": "TOCA LOS OBJETOS · ARRASTRA PARA MIRAR ALREDEDOR",
+  "hints": {
+    "orbit": "HAZ CLIC EN LOS OBJETOS · ARRASTRA PARA GIRAR · LA RUEDA ACERCA · DOBLE CLIC VUELA HASTA EL PUNTO",
+    "orbitTouch": "TOCA LOS OBJETOS · ARRASTRA PARA GIRAR · PELLIZCA PARA ACERCAR",
+    "seat": "ARRASTRA PARA MIRAR ALREDEDOR · LA RUEDA TE INCLINA · ESC TE LEVANTA",
+    "seatTouch": "ARRASTRA PARA MIRAR ALREDEDOR · PELLIZCA PARA INCLINARTE",
+    "tour": "DESPLAZA PARA LA SIGUIENTE PARADA · ↑ ↓ TAMBIÉN FUNCIONAN",
+    "tourTouch": "DESLIZA HACIA ARRIBA PARA LA SIGUIENTE PARADA"
+  },
   "skipIntro": "saltar la llegada",
   "back": "← volver al escritorio",
   "prev": "Elemento anterior",
@@ -29,6 +35,24 @@
     "listView": "ver en lista",
     "deskView": "ver el escritorio",
     "terminalInput": "Terminal del portátil: escribe un comando y pulsa Enter"
+  },
+  "view": {
+    "label": "Cómo ver el escritorio",
+    "orbit": "escritorio",
+    "seat": "silla",
+    "tour": "recorrido",
+    "preset": "vista: {name}",
+    "cyclePreset": "Cambiar de vista (teclas 1 a 4)",
+    "presets": {
+      "home": "inicial",
+      "top": "desde arriba",
+      "side": "de lado",
+      "window": "contra la ventana"
+    },
+    "tourOverview": "vista general",
+    "tourProgress": "{current} de {total}",
+    "tourPrev": "Parada anterior",
+    "tourNext": "Siguiente parada"
   },
   "sections": {
     "about": {

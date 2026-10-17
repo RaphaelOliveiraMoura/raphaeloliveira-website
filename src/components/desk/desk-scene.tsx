@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+import type { ViewMode } from "@/lib/desk";
 import { logger } from "@/lib/telemetry/logger";
 
 import type { DeskContent } from "./desk-content";
@@ -19,6 +20,7 @@ export interface DeskSceneProps {
   label: string;
   reducedMotion: boolean;
   playIntro: boolean;
+  initialMode: ViewMode;
   callbacks: DeskEngineCallbacks;
   onEngine: (engine: DeskEngine | null) => void;
   onError: () => void;
@@ -45,6 +47,7 @@ export default function DeskScene({
   label,
   reducedMotion,
   playIntro,
+  initialMode,
   callbacks,
   onEngine,
   onError,
@@ -52,7 +55,13 @@ export default function DeskScene({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const callbacksRef = useRef(callbacks);
   const handlersRef = useRef({ onEngine, onError });
-  const initRef = useRef({ content, strings, reducedMotion, playIntro });
+  const initRef = useRef({
+    content,
+    strings,
+    reducedMotion,
+    playIntro,
+    initialMode,
+  });
 
   useEffect(() => {
     callbacksRef.current = callbacks;
@@ -75,6 +84,7 @@ export default function DeskScene({
         strings: init.strings,
         reducedMotion: init.reducedMotion,
         playIntro: init.playIntro,
+        initialMode: init.initialMode,
         hourOverride: readHourOverride(),
         fonts: {
           serif: deskSerif.style.fontFamily,
@@ -90,6 +100,7 @@ export default function DeskScene({
           onSound: (...args) => callbacksRef.current.onSound(...args),
           onDaylight: (d) => callbacksRef.current.onDaylight(d),
           onLampChange: (on) => callbacksRef.current.onLampChange(on),
+          onViewChange: (view) => callbacksRef.current.onViewChange(view),
         },
       });
       handlersRef.current.onEngine(engine);
