@@ -15,7 +15,11 @@ const LAMP_HEAD = new THREE.Vector3(62, 30, -36);
 const LAMP_TARGET = new THREE.Vector3(6, 0, 2);
 const SUN_SCALE = 3.1;
 const AMBIENT_SCALE = 2.7;
-const LAMP_INTENSITY = 15000;
+const LAMP_INTENSITY = 24000;
+/** Luz rebatida da luminária: clareia a mesa toda, sem sombra. */
+const LAMP_FILL = 1.6;
+/** Quanto a exposição sobe com a luminária acesa (o olho se adapta). */
+const LAMP_EXPOSURE = 0.18;
 
 export interface Environment {
   /** Caixilho só de sombra: precisa sumir do passe de profundidade do desfoque. */
@@ -90,7 +94,7 @@ function buildLamp(kit: SceneKit) {
   head.add(bulb);
   lamp.add(head);
 
-  const spot = new THREE.SpotLight(0xffd6a0, 0, 0, 0.75, 0.6, 2);
+  const spot = new THREE.SpotLight(0xffd6a0, 0, 0, 1.0, 0.8, 1.7);
   spot.position
     .copy(LAMP_HEAD)
     .add(LAMP_TARGET.clone().sub(LAMP_HEAD).normalize().multiplyScalar(3));
@@ -208,9 +212,14 @@ export function buildEnvironment(kit: SceneKit): Environment {
 
   const windowFrame = buildWindowFrame(kit);
   const { spot, bulbMat } = buildLamp(kit);
+  const lampFill = new THREE.HemisphereLight(0xffd2a0, 0x6b4a2e, 0);
+  scene.add(lampFill);
 
   let lampTarget = 0;
   let lampLevel = 0;
+  let baseExposure = 1;
+  // De dia a luminária quase não muda a cena; à noite ela carrega a mesa.
+  let darkness = 0;
 
   return {
     windowFrame,
@@ -223,7 +232,8 @@ export function buildEnvironment(kit: SceneKit): Environment {
       hemi.color.setHex(d.skyColor);
       hemi.groundColor.setHex(d.groundColor);
       hemi.intensity = d.ambientIntensity * AMBIENT_SCALE;
-      kit.renderer.toneMappingExposure = d.exposure;
+      baseExposure = d.exposure;
+      darkness = Math.min(1, Math.max(0, 1 - d.sunIntensity));
       windowFrame.position
         .copy(WINDOW_CENTER)
         .addScaledVector(dir, WINDOW_DISTANCE);
@@ -237,7 +247,10 @@ export function buildEnvironment(kit: SceneKit): Environment {
       const a = reduced ? 1 : 1 - Math.exp(-dt * 10);
       lampLevel += (lampTarget - lampLevel) * a;
       spot.intensity = lampLevel * LAMP_INTENSITY;
+      lampFill.intensity = lampLevel * LAMP_FILL * (0.25 + 0.75 * darkness);
       bulbMat.emissiveIntensity = lampLevel * 3;
+      kit.renderer.toneMappingExposure =
+        baseExposure + lampLevel * LAMP_EXPOSURE * darkness;
     },
   };
 }
