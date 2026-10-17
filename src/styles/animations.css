@@ -223,3 +223,19 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Marcador da mesa 3D: pulsa só no fim do ciclo, "de tempos em tempos" */
+@keyframes desk-beacon {
+  0%,
+  72% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  76% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(3.4);
+    opacity: 0;
+  }
+}

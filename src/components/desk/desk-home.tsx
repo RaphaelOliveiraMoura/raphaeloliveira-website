@@ -3,9 +3,11 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
+import { ChevronUp } from "lucide-react";
+
 import { LanguageSwitcher } from "@/components/shared";
 
-import type { Daylight, ViewMode, ViewPreset } from "@/lib/desk";
+import type { Daylight, ViewMode, ViewPreset, ViewStation } from "@/lib/desk";
 import { toast } from "@/lib/feedback";
 import { useLocale, useMessages, useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -39,7 +41,16 @@ const PRESET_KEYS: Partial<Record<string, ViewPreset>> = {
   "2": "top",
   "3": "side",
   "4": "window",
+  "5": "close",
 };
+const STATIONS: readonly ViewStation[] = [
+  "home",
+  "top",
+  "side",
+  "window",
+  "close",
+  "seat",
+];
 
 export interface DeskHomeProps {
   content: DeskContent;
@@ -74,6 +85,7 @@ export function DeskHome({ content, children }: DeskHomeProps) {
 
   const audioRef = useRef<DeskAudio | null>(null);
   const tagEls = useRef(new Map<DeskSectionKey, HTMLElement>());
+  const wayEls = useRef(new Map<ViewStation, HTMLElement>());
   const floatEl = useRef<HTMLDivElement | null>(null);
   const terminalRef = useRef<HTMLInputElement>(null);
 
@@ -125,6 +137,9 @@ export function DeskHome({ content, children }: DeskHomeProps) {
     setEngine(next);
     if (!next) return;
     tagEls.current.forEach((el, key) => next.setTagElement(key, el));
+    wayEls.current.forEach((el, station) =>
+      next.setWaypointElement(station, el),
+    );
     next.setFloatElement(floatEl.current);
   };
 
@@ -208,10 +223,11 @@ export function DeskHome({ content, children }: DeskHomeProps) {
         </p>
       )}
 
-      {DESK_SECTIONS.map((key) => (
+      {DESK_SECTIONS.map((key, i) => (
         <button
           key={key}
           type="button"
+          aria-label={messages.sections[key].label}
           ref={(el) => {
             if (el) tagEls.current.set(key, el);
             else tagEls.current.delete(key);
@@ -219,11 +235,49 @@ export function DeskHome({ content, children }: DeskHomeProps) {
           }}
           tabIndex={focus ? -1 : 0}
           onClick={() => goTo(key)}
-          className="pointer-events-none absolute left-0 top-0 rounded-sm bg-[#FFFEFA] px-3 py-1.5 text-[13px] tracking-wide whitespace-nowrap text-[#1D1B18] opacity-0 shadow-[0_2px_6px_rgba(40,30,10,0.18)] transition-[opacity,background-color,color] duration-300 data-[hover=true]:bg-[#1D1B18] data-[hover=true]:text-[#F4F2ED] focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-[#C9533D]"
+          className="group/tag pointer-events-none absolute top-0 left-0 grid size-11 place-items-center opacity-0 transition-opacity duration-300 focus-visible:outline-none"
         >
-          {messages.sections[key].label} ↗
+          <span
+            aria-hidden="true"
+            className="relative block size-3 rounded-full bg-[#FFFEFA] shadow-[0_0_0_2px_rgba(29,27,24,0.55),0_2px_6px_rgba(40,30,10,0.35)] transition-colors group-focus-visible/tag:bg-[#C9533D] group-data-[near=true]/tag:bg-[#C9533D]"
+          >
+            <span
+              className="absolute inset-0 rounded-full bg-[#FFFEFA] group-data-[near=true]/tag:hidden motion-safe:animate-[desk-beacon_4.5s_ease-out_infinite]"
+              style={{ animationDelay: `${i * 0.5}s` }}
+            />
+          </span>
+          <span className="pointer-events-none absolute bottom-full left-1/2 mb-0.5 -translate-x-1/2 translate-y-1 rounded-sm bg-[#FFFEFA] px-3 py-1.5 text-[13px] tracking-wide whitespace-nowrap text-[#1D1B18] opacity-0 shadow-[0_2px_6px_rgba(40,30,10,0.18)] transition-[opacity,translate] duration-200 group-focus-visible/tag:translate-y-0 group-focus-visible/tag:opacity-100 group-focus-visible/tag:outline-2 group-focus-visible/tag:outline-[#C9533D] group-data-[near=true]/tag:pointer-events-auto group-data-[near=true]/tag:translate-y-0 group-data-[near=true]/tag:opacity-100">
+            {messages.sections[key].label} ↗
+          </span>
         </button>
       ))}
+
+      <nav aria-label={t("view.stationsLabel")}>
+        {STATIONS.map((station) => (
+          <button
+            key={station}
+            type="button"
+            ref={(el) => {
+              if (el) wayEls.current.set(station, el);
+              else wayEls.current.delete(station);
+              engine?.setWaypointElement(station, el);
+            }}
+            tabIndex={-1}
+            onClick={() => engine?.goToStation(station)}
+            className="group/way pointer-events-none absolute top-0 left-0 flex flex-col items-center gap-1.5 opacity-0 transition-opacity duration-500 focus-visible:outline-none"
+          >
+            <span
+              aria-hidden="true"
+              className="grid size-12 rotate-[var(--arrow-angle)] place-items-center rounded-full border border-[rgba(255,254,250,0.85)] bg-[rgba(29,27,24,0.42)] text-[#FFFEFA] shadow-[0_6px_16px_-6px_rgba(0,0,0,0.6)] backdrop-blur-sm transition-[scale,background-color] duration-200 group-hover/way:scale-110 group-hover/way:bg-[rgba(29,27,24,0.7)] group-focus-visible/way:outline-2 group-focus-visible/way:outline-[#C9533D]"
+            >
+              <ChevronUp className="size-6" />
+            </span>
+            <span className="rounded-full bg-[rgba(29,27,24,0.72)] px-2.5 py-1 text-[11px] whitespace-nowrap text-[#FFFEFA] opacity-0 transition-opacity group-hover/way:opacity-100 group-focus-visible/way:opacity-100">
+              {t(`view.stations.${station}`)}
+            </span>
+          </button>
+        ))}
+      </nav>
 
       <header
         className={cn(

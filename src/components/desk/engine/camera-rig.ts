@@ -55,6 +55,11 @@ export class CameraRig {
     this.reduced = reduced;
   }
 
+  /** Para onde a órbita está indo (a vista "atual" para fins de navegação). */
+  get orbitTarget(): OrbitState {
+    return this.orbitGoal;
+  }
+
   setMode(mode: ViewMode): void {
     this.mode = mode;
     if (mode === "seat") this.seatGoal = { ...SEAT_REST };

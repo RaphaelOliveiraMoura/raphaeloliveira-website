@@ -42,17 +42,27 @@
     "seat": "cadeira",
     "tour": "passeio",
     "preset": "vista: {name}",
-    "cyclePreset": "Trocar de vista (teclas 1 a 4)",
+    "cyclePreset": "Trocar de vista (teclas 1 a 5)",
     "presets": {
       "home": "inicial",
       "top": "de cima",
       "side": "de lado",
-      "window": "contra a janela"
+      "window": "contra a janela",
+      "close": "de perto"
     },
     "tourOverview": "visão geral",
     "tourProgress": "{current} de {total}",
     "tourPrev": "Parada anterior",
-    "tourNext": "Próxima parada"
+    "tourNext": "Próxima parada",
+    "stations": {
+      "home": "voltar ao início",
+      "top": "ver de cima",
+      "side": "dar a volta pela esquerda",
+      "window": "ir para o lado da luminária",
+      "close": "chegar perto da mesa",
+      "seat": "sentar na cadeira"
+    },
+    "stationsLabel": "Caminhos pelo quarto"
   },
   "sections": {
     "about": {

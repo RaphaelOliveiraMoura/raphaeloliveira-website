@@ -16,11 +16,17 @@ import {
   getDaylight,
   getDaylightForHour,
   isHome,
+  nearestPreset,
   nextPreset,
+  ORBIT_PRESETS,
+  orbitPose,
+  SEAT_EYE,
+  STATION_LINKS,
   stepPhysics,
   stepTour,
   type ViewMode,
   type ViewPreset,
+  type ViewStation,
 } from "@/lib/desk";
 import { isClient } from "@/lib/utils/environment";
 
@@ -161,6 +167,10 @@ const TOUR: readonly DeskSectionKey[] = DESK_SECTIONS;
 const WHEEL_STEP = 40;
 const WHEEL_COOLDOWN = 650;
 const SWIPE_MIN = 40;
+/** Distância (px) do mouse até o marcador para o rótulo aparecer. */
+const TAG_NEAR_PX = 120;
+/** Margem das setas de caminho quando o destino sai da tela. */
+const ARROW_MARGIN = { x: 70, top: 110, bottom: 150 };
 const DRAG_THRESHOLD = 6;
 const APERTURE = 0.0016;
 const PLANE_Y = { ball: 4.5, pencil: 0.48 } as const;
@@ -230,6 +240,8 @@ export class DeskEngine {
   private readonly camTarget = new THREE.Vector3();
   private readonly tags = new Map<DeskSectionKey, HTMLElement>();
   private float: HTMLElement | null = null;
+  private readonly waypoints = new Map<ViewStation, HTMLElement>();
+  private pointerPx: { x: number; y: number } | null = null;
   private readonly coarse: boolean;
   private readonly cleanups: (() => void)[] = [];
   private raf = 0;
@@ -455,6 +467,17 @@ export class DeskEngine {
   setTagElement(key: DeskSectionKey, el: HTMLElement | null): void {
     if (el) this.tags.set(key, el);
     else this.tags.delete(key);
+  }
+
+  setWaypointElement(station: ViewStation, el: HTMLElement | null): void {
+    if (el) this.waypoints.set(station, el);
+    else this.waypoints.delete(station);
+  }
+
+  /** Anda até um ponto de vista vizinho (as setas no cenário). */
+  goToStation(station: ViewStation): void {
+    if (station === "seat") this.setViewMode("seat");
+    else this.setPreset(station);
   }
 
   setFloatElement(el: HTMLElement | null): void {
@@ -714,6 +737,10 @@ export class DeskEngine {
     });
 
     on(canvas, "pointermove", (ev) => {
+      if (ev.pointerType === "mouse") {
+        const r = canvas.getBoundingClientRect();
+        this.pointerPx = { x: ev.clientX - r.left, y: ev.clientY - r.top };
+      }
       if (this.pointers.has(ev.pointerId)) {
         this.pointers.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
       }
@@ -801,6 +828,7 @@ export class DeskEngine {
     on(canvas, "pointercancel", release);
     on(canvas, "pointerleave", () => {
       this.sway = { x: 0, y: 0 };
+      this.pointerPx = null;
       this.hover = null;
     });
   }
@@ -1199,6 +1227,76 @@ export class DeskEngine {
     }
   }
 
+  private currentStation(): ViewStation {
+    if (this.rig.mode === "seat") return "seat";
+    return this.rig.preset ?? nearestPreset(this.rig.orbitTarget);
+  }
+
+  /** Onde a câmera vai ficar ao chegar num ponto de vista. */
+  private stationCamera(station: ViewStation): THREE.Vector3 {
+    if (station === "seat") return new THREE.Vector3(...SEAT_EYE);
+    const scale = this.aspect < 1.6 ? Math.min(2.7, 1.6 / this.aspect) : 1;
+    const boost = this.portrait ? 0.42 : 0;
+    return new THREE.Vector3(
+      ...orbitPose(ORBIT_PRESETS[station], scale, boost).position,
+    );
+  }
+
+  /**
+   * Setas de caminho no cenário, como no Street View: cada vizinho vira uma
+   * seta numa "bússola" desenhada no chão à frente. A posição e o giro vêm
+   * do sentido da caminhada (frente, lados, voltar); subir fica no alto.
+   */
+  private updateWaypoints(w: number, h: number): void {
+    const show =
+      !this.focusKey && this.introT === null && this.rig.mode !== "tour";
+    const links = show ? STATION_LINKS[this.currentStation()] : [];
+    const forward = this.camera.getWorldDirection(new THREE.Vector3());
+    forward.y = 0;
+    forward.normalize();
+    const right = new THREE.Vector3().crossVectors(
+      forward,
+      new THREE.Vector3(0, 1, 0),
+    );
+    const cx = w / 2;
+    // Bússola baixa, perto do chão, para a seta da frente não cobrir o livro.
+    const cy = h * 0.79;
+    const rx = Math.min(w * 0.38, 540);
+    const ry = h * 0.09;
+    const used: { x: number; y: number }[] = [];
+
+    this.waypoints.forEach((el, station) => {
+      const visible = links.includes(station);
+      el.style.opacity = visible ? "1" : "0";
+      el.style.pointerEvents = visible ? "auto" : "none";
+      el.tabIndex = visible ? 0 : -1;
+      if (!visible) return;
+
+      let x: number;
+      let y: number;
+      let angle: number;
+      if (station === "top") {
+        [x, y, angle] = [cx, ARROW_MARGIN.top, 0];
+      } else {
+        const d = this.stationCamera(station).sub(this.camera.position);
+        const side = d.dot(right);
+        const ahead = d.dot(forward);
+        // Destino quase no mesmo lugar (sentar, por exemplo): é "para trás".
+        angle =
+          Math.hypot(side, ahead) < 12 ? Math.PI : Math.atan2(side, ahead);
+        x = cx + Math.sin(angle) * rx;
+        y = cy - Math.cos(angle) * ry;
+        angle *= 180 / Math.PI;
+      }
+      while (used.some((u) => Math.hypot(u.x - x, u.y - y) < 90)) x += 120;
+      used.push({ x, y });
+      x = Math.max(ARROW_MARGIN.x, Math.min(w - ARROW_MARGIN.x, x));
+      y = Math.max(ARROW_MARGIN.top, Math.min(h - ARROW_MARGIN.bottom, y));
+      el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+      el.style.setProperty("--arrow-angle", `${angle}deg`);
+    });
+  }
+
   private updateOverlay(): void {
     const canvas = this.opts.canvas;
     const w = canvas.clientWidth;
@@ -1215,11 +1313,22 @@ export class DeskEngine {
       v.project(this.camera);
       const visible =
         !hideTags && v.z < 1 && Math.abs(v.x) < 1.05 && Math.abs(v.y) < 1.05;
-      el.style.transform = `translate(${(v.x * 0.5 + 0.5) * w}px, ${(-v.y * 0.5 + 0.5) * h}px) translate(-50%, -100%)`;
+      const x = (v.x * 0.5 + 0.5) * w;
+      const y = (-v.y * 0.5 + 0.5) * h;
+      const p = this.pointerPx;
+      // O rótulo só aparece com o mouse perto (ou sobre o objeto);
+      // longe, fica só a bolinha pulsando.
+      const near =
+        this.hover === key ||
+        (p !== null && Math.hypot(p.x - x, p.y - y) < TAG_NEAR_PX);
+      el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
       el.style.opacity = visible ? "1" : "0";
       el.style.pointerEvents = visible ? "auto" : "none";
-      el.dataset.hover = this.hover === key ? "true" : "false";
+      el.tabIndex = visible ? 0 : -1;
+      el.dataset.near = near ? "true" : "false";
     });
+
+    this.updateWaypoints(w, h);
 
     const fl = this.float;
     if (!fl) return;

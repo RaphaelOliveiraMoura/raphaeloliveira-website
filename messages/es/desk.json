@@ -42,17 +42,27 @@
     "seat": "silla",
     "tour": "recorrido",
     "preset": "vista: {name}",
-    "cyclePreset": "Cambiar de vista (teclas 1 a 4)",
+    "cyclePreset": "Cambiar de vista (teclas 1 a 5)",
     "presets": {
       "home": "inicial",
       "top": "desde arriba",
       "side": "de lado",
-      "window": "contra la ventana"
+      "window": "contra la ventana",
+      "close": "de cerca"
     },
     "tourOverview": "vista general",
     "tourProgress": "{current} de {total}",
     "tourPrev": "Parada anterior",
-    "tourNext": "Siguiente parada"
+    "tourNext": "Siguiente parada",
+    "stations": {
+      "home": "volver al inicio",
+      "top": "mirar desde arriba",
+      "side": "rodear por la izquierda",
+      "window": "ir al lado de la lámpara",
+      "close": "acercarse al escritorio",
+      "seat": "sentarse en la silla"
+    },
+    "stationsLabel": "Caminos por la habitación"
   },
   "sections": {
     "about": {

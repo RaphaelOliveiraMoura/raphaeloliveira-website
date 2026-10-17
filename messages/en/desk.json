@@ -42,17 +42,27 @@
     "seat": "chair",
     "tour": "tour",
     "preset": "view: {name}",
-    "cyclePreset": "Change view (keys 1 to 4)",
+    "cyclePreset": "Change view (keys 1 to 5)",
     "presets": {
       "home": "default",
       "top": "from above",
       "side": "from the side",
-      "window": "against the window"
+      "window": "against the window",
+      "close": "up close"
     },
     "tourOverview": "overview",
     "tourProgress": "{current} of {total}",
     "tourPrev": "Previous stop",
-    "tourNext": "Next stop"
+    "tourNext": "Next stop",
+    "stations": {
+      "home": "back to the start",
+      "top": "look from above",
+      "side": "walk around the left",
+      "window": "walk to the lamp side",
+      "close": "step up to the desk",
+      "seat": "sit in the chair"
+    },
+    "stationsLabel": "Paths around the room"
   },
   "sections": {
     "about": {
