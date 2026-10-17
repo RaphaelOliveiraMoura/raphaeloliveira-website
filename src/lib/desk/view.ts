@@ -4,7 +4,9 @@
  */
 
 export type ViewMode = "orbit" | "seat" | "tour";
-export type ViewPreset = "home" | "top" | "side" | "window";
+export type ViewPreset = "home" | "top" | "side" | "window" | "close";
+/** Pontos de vista para "andar" pelo quarto: as vistas da órbita e a cadeira. */
+export type ViewStation = ViewPreset | "seat";
 
 export type Vec3Tuple = [number, number, number];
 
@@ -49,6 +51,7 @@ export const ORBIT_PRESETS: Record<ViewPreset, OrbitState> = {
   top: { yaw: 0, elevation: 1.32, zoom: 1.02, target: [0, 0, -2] },
   side: { yaw: -0.92, elevation: 0.5, zoom: 0.92, target: [0, 6, 0] },
   window: { yaw: 0.98, elevation: 0.3, zoom: 0.95, target: [-10, 10, -4] },
+  close: { yaw: 0, elevation: 0.5, zoom: 0.6, target: [0, 2, -4] },
 };
 
 export const PRESET_ORDER: readonly ViewPreset[] = [
@@ -56,7 +59,39 @@ export const PRESET_ORDER: readonly ViewPreset[] = [
   "top",
   "side",
   "window",
+  "close",
 ];
+
+/**
+ * Caminhos entre os pontos de vista: de cada um, para onde dá para andar.
+ * As ligações são de mão dupla.
+ */
+export const STATION_LINKS: Record<ViewStation, readonly ViewStation[]> = {
+  home: ["side", "window", "close", "top"],
+  top: ["home"],
+  side: ["home", "close"],
+  window: ["home", "close"],
+  close: ["home", "side", "window", "seat"],
+  seat: ["close"],
+};
+
+/** Vista pronta mais parecida com a órbita atual (depois de girar à mão). */
+export function nearestPreset(s: OrbitState): ViewPreset {
+  let best: ViewPreset = "home";
+  let bestScore = Number.POSITIVE_INFINITY;
+  PRESET_ORDER.forEach((preset) => {
+    const p = ORBIT_PRESETS[preset];
+    const score =
+      Math.abs(p.yaw - s.yaw) +
+      Math.abs(p.elevation - s.elevation) +
+      Math.abs(p.zoom - s.zoom) * 1.5;
+    if (score < bestScore) {
+      bestScore = score;
+      best = preset;
+    }
+  });
+  return best;
+}
 
 /** Olhos de quem senta na cadeira, em frente à mesa. */
 export const SEAT_EYE: Vec3Tuple = [0, 46, 96];

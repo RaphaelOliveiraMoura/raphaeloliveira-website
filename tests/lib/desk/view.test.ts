@@ -7,6 +7,9 @@ import {
   ORBIT_DISTANCE,
   ORBIT_LIMITS,
   ORBIT_PRESETS,
+  nearestPreset,
+  PRESET_ORDER,
+  STATION_LINKS,
   ROOM_HALF_WIDTH,
   orbitPose,
   SEAT_EYE,
@@ -109,10 +112,27 @@ describe("seatPose", () => {
   });
 });
 
+describe("pontos de vista", () => {
+  it("toda ligação entre pontos de vista é de mão dupla", () => {
+    Object.entries(STATION_LINKS).forEach(([from, links]) => {
+      links.forEach((to) => {
+        expect(STATION_LINKS[to]).toContain(from);
+      });
+    });
+  });
+
+  it("nearestPreset reconhece cada vista pronta e órbitas perto dela", () => {
+    PRESET_ORDER.forEach((p) =>
+      expect(nearestPreset(ORBIT_PRESETS[p])).toBe(p),
+    );
+    expect(nearestPreset({ ...ORBIT_PRESETS.side, yaw: -0.8 })).toBe("side");
+  });
+});
+
 describe("nextPreset e stepTour", () => {
   it("as vistas prontas giram em ciclo", () => {
     expect(nextPreset("home")).toBe("top");
-    expect(nextPreset("window")).toBe("home");
+    expect(nextPreset("close")).toBe("home");
   });
 
   it("o passeio vai da visão geral (-1) à última parada, sem dar a volta", () => {
