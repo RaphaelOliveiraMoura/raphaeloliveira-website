@@ -46,6 +46,6 @@ export const config = {
   matcher: [
     "/",
     "/(pt-BR|en|es)/:path*",
-    "/((?!api|ingest|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|manifest.json|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|css|js|map|txt|xml|json|woff|woff2|ttf|otf)).*)",
+    "/((?!api|ingest|opengraph-image|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|manifest.json|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|css|js|map|txt|xml|json|woff|woff2|ttf|otf)).*)",
   ],
 };

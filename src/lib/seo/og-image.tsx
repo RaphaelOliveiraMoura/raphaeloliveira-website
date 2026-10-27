@@ -62,9 +62,11 @@ export function generateOgImage({
             fontWeight: 700,
           }}
         >
-          CS
+          RO
         </div>
-        <span style={{ fontSize: "20px", color: "#94a3b8" }}>Core Stack</span>
+        <span style={{ fontSize: "20px", color: "#94a3b8" }}>
+          raphaeloliveira.dev
+        </span>
         {badge && (
           <>
             <span style={{ color: "#475569" }}>•</span>

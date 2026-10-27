@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { SITE_NAME, SITE_URL } from "./site";
+
 interface MetadataInput {
   title: string;
   description: string;
@@ -12,8 +14,8 @@ interface MetadataInput {
   noIndex?: boolean;
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
+// a imagem gerada por app/opengraph-image.tsx; public/og-image.png nunca existiu
+const DEFAULT_OG_IMAGE = `${SITE_URL}/opengraph-image`;
 
 export function generateMetadata(input: MetadataInput): Metadata {
   const url = input.path ? `${SITE_URL}${input.path}` : SITE_URL;
@@ -27,7 +29,7 @@ export function generateMetadata(input: MetadataInput): Metadata {
       title: input.title,
       description: input.description,
       url,
-      siteName: "Core Stack",
+      siteName: SITE_NAME,
       images: [{ url: image, width: 1200, height: 630, alt: input.title }],
       type: input.type ?? "website",
       ...(input.publishedTime && { publishedTime: input.publishedTime }),
