@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 
+import posthog from "posthog-js";
+
 /**
  * Captura erros que ocorrem fora do root layout.
  * Precisa incluir <html> e <body> pois substitui o layout inteiro.
@@ -16,6 +18,8 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error("Global error:", error);
+    // a fronteira de erro segura o erro antes do navegador ver, então ele vai à PostHog à mão
+    if (posthog.__loaded) posthog.captureException(error);
   }, [error]);
 
   return (

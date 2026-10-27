@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 
+import posthog from "posthog-js";
+
 import { Button } from "@/components/ui/button";
 
 import { useTranslations } from "@/lib/i18n";
@@ -17,6 +19,8 @@ export default function Error({ error, reset }: ErrorProps) {
 
   useEffect(() => {
     logger.error("Erro inesperado na aplicação", error);
+    // a fronteira de erro segura o erro antes do navegador ver, então ele vai à PostHog à mão
+    if (posthog.__loaded) posthog.captureException(error);
   }, [error]);
 
   return (
